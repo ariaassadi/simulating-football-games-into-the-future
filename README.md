@@ -1,2 +1,2 @@
-# simulating-football-games-into-the-future
+# Simulating Football Games into the Future
 Master Thesis at Uppsala University
