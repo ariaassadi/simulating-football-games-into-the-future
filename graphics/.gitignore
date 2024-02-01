@@ -1,0 +1,14 @@
+# Unity specific
+Library/
+Temp/
+obj/
+Builds/
+*.csproj.user
+*.suo
+*.sln.user
+*.pidb
+
+# Logs
+*.log
+*.txt
+

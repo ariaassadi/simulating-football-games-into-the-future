@@ -1,0 +1,27 @@
+{
+    "name": "Didimo.StorePackage.MaleBodies",
+    "rootNamespace": "",
+    "references": [
+        "GUID:95b459ff379a9424ea557aacf5fe885a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.didimo.sdk.core",
+            "expression": "[3.0.0,4.2.0)",
+            "define": "DIDIMO_CORE_DEPRECATED"
+        },
+        {
+            "name": "com.didimo.sdk.core",
+            "expression": "4.2.0",
+            "define": "DIDIMO_CORE_ENABLED"
+        }
+    ],
+    "noEngineReferences": false
+}
