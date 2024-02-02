@@ -1,17 +1,18 @@
 # Instructions for How to Run ALVIS
 
-This guide aims to explain how to set up ALVIS in order to run the repositories provided for the football-related master theses at Uppsala University 2024. In order to following this guide, you need to be connected to eduroam.
+This guide aims to explain how to set up ALVIS in order to run the repositories provided for the football-related master theses at Uppsala University 2024. Hopefully this guide will be enough, but you can find more information at [https://www.c3se.chalmers.se/documentation/modules/](https://www.c3se.chalmers.se/documentation/modules/).
 
 ## Join the Alvis Project
 
 Send you university email to David Sumpter and he will add you to the project.
 
-Log in to SUPR and check that you have been added to the project:
-[https://supr.naiss.se/](https://supr.naiss.se/)
+Log in to SUPR and check that you have been added to the project by going to [https://supr.naiss.se/](https://supr.naiss.se/).
 
-If you are using SUPR for the first time, go to Accounts and click on "Request account at ALVIS C3SE". This may take one working day
+If you are using SUPR for the first time, go to Accounts and click on "Request account at ALVIS C3SE". It may take one working day for your account to be approved.
 
 ## Set up Virtual Environment and Bash Script
+
+(From now on, you need to be connected to eudoraom)
 
 Open your Alvis Dashboard:
 [https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
@@ -44,6 +45,7 @@ jupyter lab --config="${CONFIG_FILE}"
 ## Start the Jupyter Session
 
 (Next time you only need to do this step)
+
 From the Alvis Dashboard, start the Jupyter session from "My Interactive Sessions" -> "Jupyter". Under Resource, select "V1oo:1". Under Runtime, select our newly created bash script "~/portal/jupyter/alvis-jupyter.sh".
 
 Start the session and connect to Jupyter. In the Jupyter Launcher, select "My Python".
