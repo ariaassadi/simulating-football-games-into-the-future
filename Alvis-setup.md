@@ -9,6 +9,8 @@ Send you university email to David Sumpter and he will add you to the project.
 Log in to SUPR and check that you have been added to the project:
 [https://supr.naiss.se/](https://supr.naiss.se/)
 
+If you are using SUPR for the first time, go to Accounts and click on "Request account at ALVIS C3SE"
+
 ## Set up Virtual Environment and Bash Script
 
 Open your Alvis Dashboard:
