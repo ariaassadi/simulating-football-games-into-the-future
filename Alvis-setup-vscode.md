@@ -47,7 +47,7 @@ export CODESERVER_EXTENSIONS_DIR=
 ml purge
 module load SciPy-bundle/2021.10-foss-2022a matplotlib/3.5.2-foss-2022a JupyterLab/3.5.0-GCCcore-11.3.0
 # Open the virtual environment
-source ~/football/geten/bin/activate
+source ~/football/my_python/bin/activate
 ```
 ## Start the VSCode Session
 
