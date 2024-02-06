@@ -30,8 +30,8 @@ python -m ipykernel install --user --name=my_python --display-name="My Python"
 ```
 Now we need to create a bash script that will tell VSCode how to access our modules:
 ```bash
-mkdir -p ~/portal/jupyter/
-cd ~/portal/jupyter/
+mkdir -p ~/portal/vscode/
+cd ~/portal/vscode/
 vim alvis-vscode.sh
 ```
 Paste the following content to the bash file:
