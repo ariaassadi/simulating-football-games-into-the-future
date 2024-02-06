@@ -8,7 +8,7 @@ Send you university email to David Sumpter and he will add you to the project.
 
 Log in to SUPR and check that you have been added to the project by going to [https://supr.naiss.se/](https://supr.naiss.se/).
 
-If you are using SUPR for the first time, go to Accounts and click on "Request account at ALVIS C3SE". It may take one working day for your account to be approved.
+If you are using SUPR for the first time, go to Accounts and click on `Request account at ALVIS C3SE`. It may take one working day for your account to be approved. When the account is approved, everything will be ready to use after a few hours.
 
 ## Set up Virtual Environment and Bash Script
 
@@ -17,7 +17,7 @@ If you are using SUPR for the first time, go to Accounts and click on "Request a
 Open your Alvis Dashboard:
 [https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
 
-Open your terminal from "Clusters" -> ">_Alvis Shell Acces". Now do the following to create a virtual environment:
+Open your terminal from `Clusters` -> `>_Alvis Shell Acces`. Now do the following to create a virtual environment:
 ```bash
 mkdir ~/master-thesis
 cd ~/master-thesis
@@ -27,11 +27,12 @@ source my_python/bin/activate
 pip install --no-cache-dir --no-build-isolation mplsoccer
 pip install --no-cache-dir --no-build-isolation pyarrow==15.0.0
 python -m ipykernel install --user --name=my_python --display-name="My Python"
-```
+````
 Now we need to create a bash script that will tell Jupyter how to access our modules:
 ```bash
 mkdir -p ~/portal/jupyter/
-vim ~/portal/jupyter/alvis-jupyter.sh
+cd ~/portal/jupyter/
+vim alvis-jupyter.sh
 ```
 Paste the following content to the bash file:
 ```bash
@@ -46,7 +47,10 @@ jupyter lab --config="${CONFIG_FILE}"
 
 (Next time you only need to do this step)
 
-From the Alvis Dashboard, start the Jupyter session from "My Interactive Sessions" -> "Jupyter". Under Resource, select "V1oo:1". Under Runtime, select your newly created bash script "~/portal/jupyter/alvis-jupyter.sh".
+From the Alvis Dashboard, start the Jupyter session from `My Interactive Sessions` -> `Jupyter`.
+* Under Resource, select `V1oo:1` (or any other resource of your choice)
+* Under Runtime, select your newly created bash script `~/portal/vscode/alvis-jupyter.sh`
+* Under Working Directory, select your `/master-thesis` folder
 
 Start the session and connect to Jupyter. In the Jupyter Launcher, select "My Python".
 
