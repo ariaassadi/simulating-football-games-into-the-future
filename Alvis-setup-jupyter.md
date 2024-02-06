@@ -50,7 +50,7 @@ jupyter lab --config="${CONFIG_FILE}"
 From the Alvis Dashboard, start the Jupyter session from `My Interactive Sessions` -> `Jupyter`.
 * Under Resource, select `V1oo:1` (or any other resource of your choice)
 * Under Runtime, select your newly created bash script `~/portal/vscode/alvis-jupyter.sh`
-* Under Working Directory, select your `/master-thesis` folder
+* Under Select Path, select your `/master-thesis` directory
 
 Start the session and connect to Jupyter. In the Jupyter Launcher, select "My Python".
 
