@@ -57,7 +57,7 @@ source ~/master-thesis/my_python/bin/activate
 From the Alvis Dashboard, start the VSCode session from `My Interactive Sessions` -> `VSCode`.
 * Under Resource, select `V1oo:1` (or any other resource of your choice)
 * Under Runtime, select your newly created bash script `~/portal/vscode/alvis-vscode.sh`
-* Under Working Directory, select your `/master-thesis` folder
+* Under Select Path, select your `/master-thesis` directory
 
 Start the session and connect to VSCode.
 
