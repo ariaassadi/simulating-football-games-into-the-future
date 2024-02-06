@@ -30,7 +30,7 @@ python -m ipykernel install --user --name=my_python --display-name="My Python"
 ```
 Now we need to create a bash script that will tell Jupyter how to access our modules:
 ```bash
-mkdir ~/portal/jupyter/
+mkdir -p ~/portal/jupyter/
 vim ~/portal/jupyter/alvis-jupyter.sh
 ```
 Paste the following content to the bash file:
@@ -46,7 +46,7 @@ jupyter lab --config="${CONFIG_FILE}"
 
 (Next time you only need to do this step)
 
-From the Alvis Dashboard, start the Jupyter session from "My Interactive Sessions" -> "Jupyter". Under Resource, select "V1oo:1". Under Runtime, select our newly created bash script "~/portal/jupyter/alvis-jupyter.sh".
+From the Alvis Dashboard, start the Jupyter session from "My Interactive Sessions" -> "Jupyter". Under Resource, select "V1oo:1". Under Runtime, select your newly created bash script "~/portal/jupyter/alvis-jupyter.sh".
 
 Start the session and connect to Jupyter. In the Jupyter Launcher, select "My Python".
 
