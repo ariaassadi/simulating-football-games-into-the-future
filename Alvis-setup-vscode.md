@@ -31,7 +31,7 @@ python -m ipykernel install --user --name=my_python --display-name="My Python"
 Now we need to create a bash script that will tell VSCode how to access our modules:
 ```bash
 mkdir ~/portal/jupyter/
-vim ~/portal/vscode/alvis-jupyter.sh
+vim ~/portal/vscode/alvis-vscode.sh
 ```
 Paste the following content to the bash file:
 ```bash
@@ -53,7 +53,7 @@ source ~/football/my_python/bin/activate
 
 (Next time you only need to do this step)
 
-From the Alvis Dashboard, start the VSCode session from "My Interactive Sessions" -> "VSCode". Under Resource, select "V1oo:1". Under Runtime, select our newly created bash script "~/portal/vscode/alvis-jupyter.sh".
+From the Alvis Dashboard, start the VSCode session from "My Interactive Sessions" -> "VSCode". Under Resource, select "V1oo:1". Under Runtime, select your newly created bash script "~/portal/vscode/alvis-vscode.sh".
 
 Start the session and connect to VSCode.
 
