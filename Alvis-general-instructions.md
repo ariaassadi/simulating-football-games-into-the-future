@@ -11,6 +11,11 @@ Here are some general guidielines regarding how to use ALVIS:
 Due to the many rules regarding the use of ALVIS, we have provided instructions for running ALVIS. There are two sets of instructions: one for Jupyter (`/Alvis-setup-jupyter.md`), and one for VSCode (`/Alvis-setup-vscode.md`). Follow the one you prefer; we slightly favour VSCode.
 
 ## Useful links
-Further documentation regarding ALVIS can be found at: [https://www.c3se.chalmers.se/about/Alvis/](https://www.c3se.chalmers.se/about/Alvis/)
-Management of the project is facilitated at: [https://supr.naiss.se/](https://supr.naiss.se/)
-Access to the ALVIS Dashboard is provided at: [https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
+Further documentation regarding ALVIS can be found at:
+[https://www.c3se.chalmers.se/about/Alvis/](https://www.c3se.chalmers.se/about/Alvis/)
+
+Management of the project is facilitated at:
+[https://supr.naiss.se/](https://supr.naiss.se/)
+
+Access to the ALVIS Dashboard is provided at:
+[https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
