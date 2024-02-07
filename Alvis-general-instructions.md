@@ -12,10 +12,10 @@ Due to the many rules regarding the use of ALVIS, we have provided instructions 
 
 ## Useful links
 Further documentation regarding ALVIS can be found at:
-[https://www.c3se.chalmers.se/about/Alvis/](https://www.c3se.chalmers.se/about/Alvis/)
+[About ALVIS](https://www.c3se.chalmers.se/about/Alvis/)
 
 Management of the project is facilitated at:
-[https://supr.naiss.se/](https://supr.naiss.se/)
+[SUPR NAISS](https://supr.naiss.se/)
 
 Access to the ALVIS Dashboard is provided at:
 [ALVIS Dashboard](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
