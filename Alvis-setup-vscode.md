@@ -12,7 +12,7 @@ If you are using SUPR for the first time, go to Accounts and click on `Request a
 
 ## Set up Virtual Environment and Bash Script
 
-(From now on, you need to be connected to eudoraom)
+(From now on, you need to be connected to Eduroam)
 
 Open your Alvis Dashboard:
 [https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
