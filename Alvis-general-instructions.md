@@ -1,4 +1,4 @@
-# Alvis General Instructions
+# General Instructions for ALVIS
 Here are some general guidielines regarding how to use ALVIS:
 * You must be on Eduroam to use ALVIS.
 * We cannot use commands like `sudo apt update`, `sudo apt install`, or `pip install`.
@@ -11,11 +11,8 @@ Here are some general guidielines regarding how to use ALVIS:
 Due to the many rules regarding the use of ALVIS, we have provided instructions for running ALVIS. There are two sets of instructions: one for Jupyter (`/Alvis-setup-jupyter.md`), and one for VSCode (`/Alvis-setup-vscode.md`). Follow the one you prefer; we slightly favour VSCode.
 
 ## Useful links
-Further documentation regarding ALVIS can be found at:
-[About ALVIS](https://www.c3se.chalmers.se/about/Alvis/)
+Further documentation regarding ALVIS can be found at: [About ALVIS](https://www.c3se.chalmers.se/about/Alvis/)
 
-Management of the project is facilitated at:
-[SUPR NAISS](https://supr.naiss.se/)
+Management of the project is facilitated at [SUPR NAISS](https://supr.naiss.se/)
 
-Access to the ALVIS Dashboard is provided at:
-[ALVIS Dashboard](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
+Access to the ALVIS Dashboard is provided at: [ALVIS Dashboard](https://portal.c3se.chalmers.se/pun/sys/dashboard/batch_connect/sys/bc_desktop/session_contexts/new)
