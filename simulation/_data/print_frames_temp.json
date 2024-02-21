@@ -1,0 +1,8312 @@
+[
+  {
+    "frame": 0,
+    "period": 1,
+    "utc_time": 1697902275126,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.34,
+          1.89
+        ],
+        "x": -9.34,
+        "y": 1.89,
+        "speed": 0.559016994374938,
+        "direction": 0.463647609000815
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.94,
+          5.29
+        ],
+        "x": -6.94,
+        "y": 5.29,
+        "speed": 1.767766952966375,
+        "direction": 3.2834897081939536
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.23,
+          -7.39
+        ],
+        "x": -6.23,
+        "y": -7.39,
+        "speed": 0.5590169943749653,
+        "direction": 2.677945044588969
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.62,
+          -10.04
+        ],
+        "x": -0.62,
+        "y": -10.04,
+        "speed": 0.5590169943749776,
+        "direction": 2.034443935795676
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.09
+        ],
+        "x": -17.15,
+        "y": -4.09,
+        "speed": 0.5000000000000115,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.43,
+          4.13
+        ],
+        "x": -16.43,
+        "y": 4.13,
+        "speed": 0.3535533905932348,
+        "direction": 2.356194490192256
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -1.09,
+          -14.11
+        ],
+        "x": -1.09,
+        "y": -14.11,
+        "speed": 1.3462912017836426,
+        "direction": 1.951302703907257
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.94,
+          15.59
+        ],
+        "x": -15.94,
+        "y": 15.59,
+        "speed": 0.7905694150420779,
+        "direction": 2.819842099193151
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.96,
+          -17.46
+        ],
+        "x": -11.96,
+        "y": -17.46,
+        "speed": 0.24999999999995026,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -4.94,
+          19.24
+        ],
+        "x": -4.94,
+        "y": 19.24,
+        "speed": 0.5590169943749554,
+        "direction": 5.819537698178709
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50.38,
+          -1.81
+        ],
+        "x": -50.38,
+        "y": -1.81,
+        "speed": 1.8027756377320423,
+        "direction": 3.7295952571373436
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.35,
+          -0.73
+        ],
+        "x": -0.35,
+        "y": -0.73,
+        "speed": 0.5590169943749467,
+        "direction": 3.6052402625906
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.23,
+          3.82
+        ],
+        "x": -0.23,
+        "y": 3.82,
+        "speed": 2.6100766272276363,
+        "direction": 0.29145679447786527
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.17,
+          -10.68
+        ],
+        "x": 16.17,
+        "y": -10.68,
+        "speed": 1.030776406404447,
+        "direction": 1.325817663668001
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.03,
+          -10.8
+        ],
+        "x": -0.03,
+        "y": -10.8,
+        "speed": 1.7500000000000002,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.17,
+          2.26
+        ],
+        "x": 18.17,
+        "y": 2.26,
+        "speed": 1.0307764064044254,
+        "direction": 4.95736764351159
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          19.11,
+          0.28
+        ],
+        "x": 19.11,
+        "y": 0.28,
+        "speed": 1.030776406404404,
+        "direction": 1.3258176636680794
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.27,
+          15.5
+        ],
+        "x": 18.27,
+        "y": 15.5,
+        "speed": 0.9013878188660152,
+        "direction": 3.7295952571373334
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.22,
+          20.41
+        ],
+        "x": 0.22,
+        "y": 20.41,
+        "speed": 0.559016994374938,
+        "direction": 1.1071487177940815
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.36,
+          25.88
+        ],
+        "x": 9.36,
+        "y": 25.88,
+        "speed": 1.06066017177983,
+        "direction": 5.497787143782109
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.28,
+          -28.84
+        ],
+        "x": 0.28,
+        "y": -28.84,
+        "speed": 0.35355339059330154,
+        "direction": 5.497787143782061
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.6,
+          0.22
+        ],
+        "x": 44.6,
+        "y": 0.22,
+        "speed": 1.5000000000000568,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      1.23,
+      0.08
+    ]
+  },
+  {
+    "frame": 1,
+    "period": 1,
+    "utc_time": 1697902275166,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.36,
+          1.88
+        ],
+        "x": -9.36,
+        "y": 1.88,
+        "speed": 0.5590169943749752,
+        "direction": 0.46364760900077057
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.87,
+          5.3
+        ],
+        "x": -6.87,
+        "y": 5.3,
+        "speed": 1.767766952966375,
+        "direction": 3.2834897081939536
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.21,
+          -7.4
+        ],
+        "x": -6.21,
+        "y": -7.4,
+        "speed": 0.5590169943749355,
+        "direction": 2.677945044588987
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.61,
+          -10.06
+        ],
+        "x": -0.61,
+        "y": -10.06,
+        "speed": 0.3535533905932702,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.11
+        ],
+        "x": -17.15,
+        "y": -4.11,
+        "speed": 0.749999999999984,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.42,
+          4.12
+        ],
+        "x": -16.42,
+        "y": 4.12,
+        "speed": 0.3535533905932976,
+        "direction": 2.3561944901924337
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -1.07,
+          -14.16
+        ],
+        "x": -1.07,
+        "y": -14.16,
+        "speed": 1.3462912017836426,
+        "direction": 1.951302703907257
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.91,
+          15.58
+        ],
+        "x": -15.91,
+        "y": 15.58,
+        "speed": 0.5590169943749355,
+        "direction": 2.677945044588987
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.96,
+          -17.47
+        ],
+        "x": -11.96,
+        "y": -17.47,
+        "speed": 0.49999999999998934,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -4.96,
+          19.25
+        ],
+        "x": -4.96,
+        "y": 19.25,
+        "speed": 0.3535533905932976,
+        "direction": 5.497787143782049
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50.32,
+          -1.77
+        ],
+        "x": -50.32,
+        "y": -1.77,
+        "speed": 1.8027756377320423,
+        "direction": 3.7295952571373436
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.33,
+          -0.72
+        ],
+        "x": -0.33,
+        "y": -0.72,
+        "speed": 0.5000000000000004,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.33,
+          3.79
+        ],
+        "x": -0.33,
+        "y": 3.79,
+        "speed": 2.8504385627478466,
+        "direction": 0.2662520491509275
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.16,
+          -10.72
+        ],
+        "x": 16.16,
+        "y": -10.72,
+        "speed": 1.2747548783981777,
+        "direction": 1.3734007669449817
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.1,
+          -10.8
+        ],
+        "x": -0.1,
+        "y": -10.8,
+        "speed": 1.767766952966368,
+        "direction": 0.14189705460416094
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.16,
+          2.3
+        ],
+        "x": 18.16,
+        "y": 2.3,
+        "speed": 1.2747548783982103,
+        "direction": 4.909784540234599
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          19.1,
+          0.24
+        ],
+        "x": 19.1,
+        "y": 0.24,
+        "speed": 1.118033988749929,
+        "direction": 1.1071487177940278
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.3,
+          15.52
+        ],
+        "x": 18.3,
+        "y": 15.52,
+        "speed": 1.0606601717797985,
+        "direction": 3.9269908169873005
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.21,
+          20.39
+        ],
+        "x": 0.21,
+        "y": 20.39,
+        "speed": 0.2500000000000391,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.33,
+          25.91
+        ],
+        "x": 9.33,
+        "y": 25.91,
+        "speed": 1.118033988749911,
+        "direction": 5.819537698178798
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.27,
+          -28.83
+        ],
+        "x": 0.27,
+        "y": -28.83,
+        "speed": 0.5000000000000004,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.54,
+          0.22
+        ],
+        "x": 44.54,
+        "y": 0.22,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      1.64,
+      0.15
+    ]
+  },
+  {
+    "frame": 2,
+    "period": 1,
+    "utc_time": 1697902275206,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.38,
+          1.87
+        ],
+        "x": -9.38,
+        "y": 1.87,
+        "speed": 0.749999999999984,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.8,
+          5.31
+        ],
+        "x": -6.8,
+        "y": 5.31,
+        "speed": 1.749999999999985,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.19,
+          -7.41
+        ],
+        "x": -6.19,
+        "y": -7.41,
+        "speed": 0.3535533905932819,
+        "direction": 2.3561944901923892
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.6,
+          -10.07
+        ],
+        "x": -0.6,
+        "y": -10.07,
+        "speed": 0.3535533905932702,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.14
+        ],
+        "x": -17.15,
+        "y": -4.14,
+        "speed": 1.0000000000000009,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.41,
+          4.11
+        ],
+        "x": -16.41,
+        "y": 4.11,
+        "speed": 0.2500000000000169,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -1.05,
+          -14.21
+        ],
+        "x": -1.05,
+        "y": -14.21,
+        "speed": 1.118033988749876,
+        "direction": 2.0344439357957116
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.89,
+          15.57
+        ],
+        "x": -15.89,
+        "y": 15.57,
+        "speed": 0.5590169943749752,
+        "direction": 2.6779450445890225
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.96,
+          -17.49
+        ],
+        "x": -11.96,
+        "y": -17.49,
+        "speed": 0.5000000000000782,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -4.97,
+          19.26
+        ],
+        "x": -4.97,
+        "y": 19.26,
+        "speed": 0.5590169943749355,
+        "direction": 5.819537698178869
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50.26,
+          -1.73
+        ],
+        "x": -50.26,
+        "y": -1.73,
+        "speed": 1.8027756377318946,
+        "direction": 3.7295952571373983
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.31,
+          -0.72
+        ],
+        "x": -0.31,
+        "y": -0.72,
+        "speed": 0.35355339059327406,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.44,
+          3.76
+        ],
+        "x": -0.44,
+        "y": 3.76,
+        "speed": 3.162277660168377,
+        "direction": 0.321750554396639
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.15,
+          -10.77
+        ],
+        "x": 16.15,
+        "y": -10.77,
+        "speed": 1.2500000000000178,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.17,
+          -10.81
+        ],
+        "x": -0.17,
+        "y": -10.81,
+        "speed": 2.0155644370746364,
+        "direction": 0.12435499454675883
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.15,
+          2.35
+        ],
+        "x": 18.15,
+        "y": 2.35,
+        "speed": 1.0000000000000009,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          19.08,
+          0.2
+        ],
+        "x": 19.08,
+        "y": 0.2,
+        "speed": 0.9013878188659913,
+        "direction": 0.9827937232473389
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.33,
+          15.55
+        ],
+        "x": 18.33,
+        "y": 15.55,
+        "speed": 1.2500000000000442,
+        "direction": 3.7850937623830347
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.21,
+          20.38
+        ],
+        "x": 0.21,
+        "y": 20.38,
+        "speed": 0.5590169943749377,
+        "direction": 1.1071487177940826
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.29,
+          25.93
+        ],
+        "x": 9.29,
+        "y": 25.93,
+        "speed": 1.25,
+        "direction": 5.6396841983862736
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.25,
+          -28.83
+        ],
+        "x": 0.25,
+        "y": -28.83,
+        "speed": 0.4999999999999997,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.49,
+          0.22
+        ],
+        "x": 44.49,
+        "y": 0.22,
+        "speed": 1.5000000000000568,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      2.16,
+      0.28
+    ]
+  },
+  {
+    "frame": 3,
+    "period": 1,
+    "utc_time": 1697902275246,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.41,
+          1.87
+        ],
+        "x": -9.41,
+        "y": 1.87,
+        "speed": 0.7905694150420797,
+        "direction": 0.32175055439664885
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.73,
+          5.31
+        ],
+        "x": -6.73,
+        "y": 5.31,
+        "speed": 1.750000000000007,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.18,
+          -7.42
+        ],
+        "x": -6.18,
+        "y": -7.42,
+        "speed": 0.49999999999998934,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.59,
+          -10.08
+        ],
+        "x": -0.59,
+        "y": -10.08,
+        "speed": 0.5590169943749455,
+        "direction": 2.677945044588996
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.18
+        ],
+        "x": -17.15,
+        "y": -4.18,
+        "speed": 1.0000000000000009,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.41,
+          4.1
+        ],
+        "x": -16.41,
+        "y": 4.1,
+        "speed": 0.3535533905932976,
+        "direction": 2.3561944901924337
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -1.03,
+          -14.25
+        ],
+        "x": -1.03,
+        "y": -14.25,
+        "speed": 1.3462912017836426,
+        "direction": 1.951302703907257
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.87,
+          15.56
+        ],
+        "x": -15.87,
+        "y": 15.56,
+        "speed": 0.5590169943749355,
+        "direction": 2.677945044588987
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.96,
+          -17.51
+        ],
+        "x": -11.96,
+        "y": -17.51,
+        "speed": 0.49999999999998934,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -4.99,
+          19.27
+        ],
+        "x": -4.99,
+        "y": 19.27,
+        "speed": 0.5590169943749554,
+        "direction": 5.819537698178709
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50.2,
+          -1.69
+        ],
+        "x": -50.2,
+        "y": -1.69,
+        "speed": 2.1505813167606633,
+        "direction": 3.761842139572613
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.3,
+          -0.71
+        ],
+        "x": -0.3,
+        "y": -0.71,
+        "speed": 0.35355339059327406,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.56,
+          3.72
+        ],
+        "x": -0.56,
+        "y": 3.72,
+        "speed": 3.335416016031582,
+        "direction": 0.22679884805388786
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.15,
+          -10.82
+        ],
+        "x": 16.15,
+        "y": -10.82,
+        "speed": 1.2747548783981602,
+        "direction": 1.37340076694505
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.25,
+          -10.82
+        ],
+        "x": -0.25,
+        "y": -10.82,
+        "speed": 2.2638462845343543,
+        "direction": 0.11065722117389327
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.15,
+          2.39
+        ],
+        "x": 18.15,
+        "y": 2.39,
+        "speed": 1.030776406404404,
+        "direction": 4.957367643511507
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          19.06,
+          0.17
+        ],
+        "x": 19.06,
+        "y": 0.17,
+        "speed": 1.1180339887498902,
+        "direction": 1.107148717794099
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.37,
+          15.58
+        ],
+        "x": 18.37,
+        "y": 15.58,
+        "speed": 1.0606601717797672,
+        "direction": 3.9269908169872707
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.2,
+          20.36
+        ],
+        "x": 0.2,
+        "y": 20.36,
+        "speed": 0.7905694150421219,
+        "direction": 1.2490457723982655
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.25,
+          25.96
+        ],
+        "x": 9.25,
+        "y": 25.96,
+        "speed": 1.118033988749871,
+        "direction": 5.81953769817878
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.23,
+          -28.83
+        ],
+        "x": 0.23,
+        "y": -28.83,
+        "speed": 0.7905694150421071,
+        "direction": 0.3217505543966891
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.43,
+          0.22
+        ],
+        "x": 44.43,
+        "y": 0.22,
+        "speed": 1.5000000000000568,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      2.77,
+      0.5
+    ]
+  },
+  {
+    "frame": 4,
+    "period": 1,
+    "utc_time": 1697902275286,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.44,
+          1.86
+        ],
+        "x": -9.44,
+        "y": 1.86,
+        "speed": 0.5590169943749776,
+        "direction": 0.46364760900077945
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.66,
+          5.31
+        ],
+        "x": -6.66,
+        "y": 5.31,
+        "speed": 2.0000000000000018,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.16,
+          -7.42
+        ],
+        "x": -6.16,
+        "y": -7.42,
+        "speed": 0.5590169943749554,
+        "direction": 2.6779450445890047
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.57,
+          -10.09
+        ],
+        "x": -0.57,
+        "y": -10.09,
+        "speed": 0.7905694150420911,
+        "direction": 2.8198420991931568
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.22
+        ],
+        "x": -17.15,
+        "y": -4.22,
+        "speed": 1.2499999999999956,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.4,
+          4.09
+        ],
+        "x": -16.4,
+        "y": 4.09,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -1.01,
+          -14.3
+        ],
+        "x": -1.01,
+        "y": -14.3,
+        "speed": 1.118033988749876,
+        "direction": 2.0344439357957116
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.85,
+          15.55
+        ],
+        "x": -15.85,
+        "y": 15.55,
+        "speed": 0.5590169943749554,
+        "direction": 2.677945044588916
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.96,
+          -17.53
+        ],
+        "x": -11.96,
+        "y": -17.53,
+        "speed": 0.5590169943749355,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.01,
+          19.28
+        ],
+        "x": -5.01,
+        "y": 19.28,
+        "speed": 0.3535533905932348,
+        "direction": 5.497787143782227
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50.13,
+          -1.64
+        ],
+        "x": -50.13,
+        "y": -1.64,
+        "speed": 2.0155644370746413,
+        "direction": 3.660738767836312
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.29,
+          -0.7
+        ],
+        "x": -0.29,
+        "y": -0.7,
+        "speed": 0.2500000000000002,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.69,
+          3.69
+        ],
+        "x": -0.69,
+        "y": 3.69,
+        "speed": 3.5794552658190875,
+        "direction": 0.2110933332227452
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.14,
+          -10.87
+        ],
+        "x": 16.14,
+        "y": -10.87,
+        "speed": 1.5000000000000124,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.34,
+          -10.83
+        ],
+        "x": -0.34,
+        "y": -10.83,
+        "speed": 2.263846284534353,
+        "direction": 0.11065722117389334
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.14,
+          2.43
+        ],
+        "x": 18.14,
+        "y": 2.43,
+        "speed": 1.2499999999999956,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          19.04,
+          0.13
+        ],
+        "x": 19.04,
+        "y": 0.13,
+        "speed": 1.0606601717797786,
+        "direction": 0.7853981633974886
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.4,
+          15.61
+        ],
+        "x": 18.4,
+        "y": 15.61,
+        "speed": 1.1180339887499704,
+        "direction": 3.6052402625905993
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.19,
+          20.33
+        ],
+        "x": 0.19,
+        "y": 20.33,
+        "speed": 0.49999999999998934,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.21,
+          25.98
+        ],
+        "x": 9.21,
+        "y": 25.98,
+        "speed": 1.457737973711355,
+        "direction": 5.7427658069089915
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.2,
+          -28.84
+        ],
+        "x": 0.2,
+        "y": -28.84,
+        "speed": 0.7905694150421071,
+        "direction": 0.3217505543966891
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.37,
+          0.22
+        ],
+        "x": 44.37,
+        "y": 0.22,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      3.45,
+      0.73
+    ]
+  },
+  {
+    "frame": 5,
+    "period": 1,
+    "utc_time": 1697902275326,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.46,
+          1.85
+        ],
+        "x": -9.46,
+        "y": 1.85,
+        "speed": 0.749999999999984,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.58,
+          5.31
+        ],
+        "x": -6.58,
+        "y": 5.31,
+        "speed": 2.0155644370746386,
+        "direction": 3.0172376590430345
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.14,
+          -7.43
+        ],
+        "x": -6.14,
+        "y": -7.43,
+        "speed": 0.790569415042085,
+        "direction": 2.8198420991931243
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.54,
+          -10.1
+        ],
+        "x": -0.54,
+        "y": -10.1,
+        "speed": 1.0000000000000009,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.27
+        ],
+        "x": -17.15,
+        "y": -4.27,
+        "speed": 1.2747548783982212,
+        "direction": 1.3734007669449886
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.4,
+          4.09
+        ],
+        "x": -16.4,
+        "y": 4.09,
+        "speed": 0.3535533905932348,
+        "direction": 2.356194490192256
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.99,
+          -14.34
+        ],
+        "x": -0.99,
+        "y": -14.34,
+        "speed": 1.2500000000000189,
+        "direction": 2.21429743558817
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.83,
+          15.54
+        ],
+        "x": -15.83,
+        "y": 15.54,
+        "speed": 0.5590169943749355,
+        "direction": 2.677945044588987
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.97,
+          -17.55
+        ],
+        "x": -11.97,
+        "y": -17.55,
+        "speed": 0.5590169943749355,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.02,
+          19.29
+        ],
+        "x": -5.02,
+        "y": 19.29,
+        "speed": 0.5590169943749752,
+        "direction": 5.819537698178727
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50.06,
+          -1.6
+        ],
+        "x": -50.06,
+        "y": -1.6,
+        "speed": 1.952562418976708,
+        "direction": 3.836330929786478
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.29,
+          -0.69
+        ],
+        "x": -0.29,
+        "y": -0.69,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.83,
+          3.66
+        ],
+        "x": -0.83,
+        "y": 3.66,
+        "speed": 3.5794552658190897,
+        "direction": 0.21109333322274823
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.14,
+          -10.93
+        ],
+        "x": 16.14,
+        "y": -10.93,
+        "speed": 1.5000000000000124,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.43,
+          -10.84
+        ],
+        "x": -0.43,
+        "y": -10.84,
+        "speed": 2.7950849718747364,
+        "direction": 0.17985349979247445
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.14,
+          2.48
+        ],
+        "x": 18.14,
+        "y": 2.48,
+        "speed": 1.0000000000000009,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          19.01,
+          0.1
+        ],
+        "x": 19.01,
+        "y": 0.1,
+        "speed": 0.9013878188660406,
+        "direction": 0.9827937232472569
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.44,
+          15.63
+        ],
+        "x": 18.44,
+        "y": 15.63,
+        "speed": 1.0606601717797672,
+        "direction": 3.9269908169872707
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.19,
+          20.31
+        ],
+        "x": 0.19,
+        "y": 20.31,
+        "speed": 0.7905694150420375,
+        "direction": 1.24904577239823
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.16,
+          26.01
+        ],
+        "x": 9.16,
+        "y": 26.01,
+        "speed": 1.2499999999999822,
+        "direction": 5.639684198386352
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.17,
+          -28.85
+        ],
+        "x": 0.17,
+        "y": -28.85,
+        "speed": 1.0307764064044032,
+        "direction": 0.2449786631268173
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.32,
+          0.22
+        ],
+        "x": 44.32,
+        "y": 0.22,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      4.15,
+      0.92
+    ]
+  },
+  {
+    "frame": 6,
+    "period": 1,
+    "utc_time": 1697902275366,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.49,
+          1.85
+        ],
+        "x": -9.49,
+        "y": 1.85,
+        "speed": 0.749999999999984,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.5,
+          5.3
+        ],
+        "x": -6.5,
+        "y": 5.3,
+        "speed": 1.767766952966375,
+        "direction": 2.9996955989856326
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.11,
+          -7.44
+        ],
+        "x": -6.11,
+        "y": -7.44,
+        "speed": 0.5000000000000115,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.5,
+          -10.1
+        ],
+        "x": -0.5,
+        "y": -10.1,
+        "speed": 1.2499999999999998,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.16,
+          -4.32
+        ],
+        "x": -17.16,
+        "y": -4.32,
+        "speed": 1.2499999999999956,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.39,
+          4.08
+        ],
+        "x": -16.39,
+        "y": 4.08,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.96,
+          -14.38
+        ],
+        "x": -0.96,
+        "y": -14.38,
+        "speed": 1.118033988749876,
+        "direction": 2.0344439357957116
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.81,
+          15.53
+        ],
+        "x": -15.81,
+        "y": 15.53,
+        "speed": 0.24999999999999467,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.98,
+          -17.57
+        ],
+        "x": -11.98,
+        "y": -17.57,
+        "speed": 0.7905694150421201,
+        "direction": 1.2490457723982722
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.04,
+          19.3
+        ],
+        "x": -5.04,
+        "y": 19.3,
+        "speed": 0.7071067811865325,
+        "direction": 5.497787143782138
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -50,
+          -1.55
+        ],
+        "x": -50,
+        "y": -1.55,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.29,
+          -0.69
+        ],
+        "x": -0.29,
+        "y": -0.69,
+        "speed": 0.2500000000000002,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -0.97,
+          3.63
+        ],
+        "x": -0.97,
+        "y": 3.63,
+        "speed": 4.069705149024923,
+        "direction": 0.18534794999569368
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.14,
+          -10.99
+        ],
+        "x": 16.14,
+        "y": -10.99,
+        "speed": 1.7677669529663813,
+        "direction": 1.4288992721907114
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.54,
+          -10.86
+        ],
+        "x": -0.54,
+        "y": -10.86,
+        "speed": 2.795084971874743,
+        "direction": 0.17985349979249018
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.14,
+          2.52
+        ],
+        "x": 18.14,
+        "y": 2.52,
+        "speed": 1.0000000000000009,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.99,
+          0.07
+        ],
+        "x": 18.99,
+        "y": 0.07,
+        "speed": 0.9013878188659915,
+        "direction": 0.982793723247339
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.47,
+          15.66
+        ],
+        "x": 18.47,
+        "y": 15.66,
+        "speed": 1.06066017177983,
+        "direction": 3.9269908169872116
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.18,
+          20.28
+        ],
+        "x": 0.18,
+        "y": 20.28,
+        "speed": 0.7905694150421216,
+        "direction": 1.2490457723982664
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.12,
+          26.04
+        ],
+        "x": 9.12,
+        "y": 26.04,
+        "speed": 1.6770509831248264,
+        "direction": 5.819537698178756
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.13,
+          -28.86
+        ],
+        "x": 0.13,
+        "y": -28.86,
+        "speed": 1.0307764064044247,
+        "direction": 0.2449786631269009
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.27,
+          0.22
+        ],
+        "x": 44.27,
+        "y": 0.22,
+        "speed": 1.2500000000001066,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      4.87,
+      1.09
+    ]
+  },
+  {
+    "frame": 7,
+    "period": 1,
+    "utc_time": 1697902275406,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.52,
+          1.85
+        ],
+        "x": -9.52,
+        "y": 1.85,
+        "speed": 0.7905694150421219,
+        "direction": 0.3217505543966311
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.43,
+          5.29
+        ],
+        "x": -6.43,
+        "y": 5.29,
+        "speed": 2.0155644370746386,
+        "direction": 3.0172376590430345
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.09,
+          -7.44
+        ],
+        "x": -6.09,
+        "y": -7.44,
+        "speed": 0.5590169943749355,
+        "direction": 2.677945044588987
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.45,
+          -10.1
+        ],
+        "x": -0.45,
+        "y": -10.1,
+        "speed": 1.5,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.16,
+          -4.37
+        ],
+        "x": -17.16,
+        "y": -4.37,
+        "speed": 1.5206906325745517,
+        "direction": 1.4056476493802434
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.39,
+          4.08
+        ],
+        "x": -16.39,
+        "y": 4.08,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.94,
+          -14.42
+        ],
+        "x": -0.94,
+        "y": -14.42,
+        "speed": 1.2500000000000173,
+        "direction": 2.2142974355881684
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.8,
+          15.53
+        ],
+        "x": -15.8,
+        "y": 15.53,
+        "speed": 0.3535533905932976,
+        "direction": 2.3561944901924337
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -11.99,
+          -17.6
+        ],
+        "x": -11.99,
+        "y": -17.6,
+        "speed": 0.7905694150420358,
+        "direction": 1.2490457723982367
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.06,
+          19.32
+        ],
+        "x": -5.06,
+        "y": 19.32,
+        "speed": 0.3535533905932505,
+        "direction": 5.497787143782271
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.93,
+          -1.51
+        ],
+        "x": -49.93,
+        "y": -1.51,
+        "speed": 2.1505813167606633,
+        "direction": 3.761842139572613
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.3,
+          -0.69
+        ],
+        "x": -0.3,
+        "y": -0.69,
+        "speed": 0.3535533905932721,
+        "direction": 5.497787143782143
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -1.13,
+          3.6
+        ],
+        "x": -1.13,
+        "y": 3.6,
+        "speed": 3.824264635194593,
+        "direction": 0.1973955598498822
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.13,
+          -11.06
+        ],
+        "x": 16.13,
+        "y": -11.06,
+        "speed": 1.750000000000007,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.65,
+          -10.88
+        ],
+        "x": -0.65,
+        "y": -10.88,
+        "speed": 3.010398644698073,
+        "direction": 0.08314123188843947
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.14,
+          2.56
+        ],
+        "x": 18.14,
+        "y": 2.56,
+        "speed": 1.0000000000000009,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.97,
+          0.04
+        ],
+        "x": 18.97,
+        "y": 0.04,
+        "speed": 1.0606601717797786,
+        "direction": 0.7853981633974886
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.5,
+          15.69
+        ],
+        "x": 18.5,
+        "y": 15.69,
+        "speed": 1.25,
+        "direction": 3.785093762383106
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.17,
+          20.25
+        ],
+        "x": 0.17,
+        "y": 20.25,
+        "speed": 0.7905694150421219,
+        "direction": 1.2490457723982655
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.06,
+          26.07
+        ],
+        "x": 9.06,
+        "y": 26.07,
+        "speed": 1.6007810593582128,
+        "direction": 5.608444364956051
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.09,
+          -28.87
+        ],
+        "x": 0.09,
+        "y": -28.87,
+        "speed": 1.1180339887498898,
+        "direction": 0.46364760900079766
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.22,
+          0.22
+        ],
+        "x": 44.22,
+        "y": 0.22,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      5.58,
+      1.25
+    ]
+  },
+  {
+    "frame": 8,
+    "period": 1,
+    "utc_time": 1697902275446,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.55,
+          1.84
+        ],
+        "x": -9.55,
+        "y": 1.84,
+        "speed": 0.749999999999984,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.35,
+          5.28
+        ],
+        "x": -6.35,
+        "y": 5.28,
+        "speed": 2.0615528128088347,
+        "direction": 2.896613990462924
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.07,
+          -7.45
+        ],
+        "x": -6.07,
+        "y": -7.45,
+        "speed": 0.7500000000000062,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.39,
+          -10.1
+        ],
+        "x": -0.39,
+        "y": -10.1,
+        "speed": 1.520690632574554,
+        "direction": 3.3067413310044165
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.17,
+          -4.43
+        ],
+        "x": -17.17,
+        "y": -4.43,
+        "speed": 1.2500000000000178,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.39,
+          4.08
+        ],
+        "x": -16.39,
+        "y": 4.08,
+        "speed": 0.2500000000000391,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.91,
+          -14.46
+        ],
+        "x": -0.91,
+        "y": -14.46,
+        "speed": 1.118033988749876,
+        "direction": 2.0344439357957116
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.79,
+          15.52
+        ],
+        "x": -15.79,
+        "y": 15.52,
+        "speed": 0.35355339059326624,
+        "direction": 2.356194490192345
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12,
+          -17.63
+        ],
+        "x": -12,
+        "y": -17.63,
+        "speed": 0.7905694150421201,
+        "direction": 1.2490457723982722
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.07,
+          19.33
+        ],
+        "x": -5.07,
+        "y": 19.33,
+        "speed": 0.5590169943749554,
+        "direction": 5.819537698178709
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.86,
+          -1.46
+        ],
+        "x": -49.86,
+        "y": -1.46,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.31,
+          -0.68
+        ],
+        "x": -0.31,
+        "y": -0.68,
+        "speed": 0.3535533905932721,
+        "direction": 0.7853981633974427
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -1.28,
+          3.57
+        ],
+        "x": -1.28,
+        "y": 3.57,
+        "speed": 4.069705149024923,
+        "direction": 0.18534794999569368
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.13,
+          -11.13
+        ],
+        "x": 16.13,
+        "y": -11.13,
+        "speed": 1.7499999999999627,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.77,
+          -10.89
+        ],
+        "x": -0.77,
+        "y": -10.89,
+        "speed": 3.288236609491475,
+        "direction": 0.15264932839526196
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.14,
+          2.6
+        ],
+        "x": 18.14,
+        "y": 2.6,
+        "speed": 1.0307764064044254,
+        "direction": 4.95736764351159
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.94,
+          0.01
+        ],
+        "x": 18.94,
+        "y": 0.01,
+        "speed": 0.9013878188659913,
+        "direction": 0.9827937232473389
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.54,
+          15.72
+        ],
+        "x": 18.54,
+        "y": 15.72,
+        "speed": 1.118033988749871,
+        "direction": 3.6052402625905993
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.16,
+          20.22
+        ],
+        "x": 0.16,
+        "y": 20.22,
+        "speed": 0.9013878188659469,
+        "direction": 0.9827937232472921
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          9.01,
+          26.11
+        ],
+        "x": 9.01,
+        "y": 26.11,
+        "speed": 1.677050983124866,
+        "direction": 5.8195376981787685
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          0.05,
+          -28.89
+        ],
+        "x": 0.05,
+        "y": -28.89,
+        "speed": 1.6770509831248552,
+        "direction": 0.46364760900082125
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.17,
+          0.22
+        ],
+        "x": 44.17,
+        "y": 0.22,
+        "speed": 1.2747548783983007,
+        "direction": 0.19739555984986454
+      }
+    ],
+    "ball": [
+      6.27,
+      1.43
+    ]
+  },
+  {
+    "frame": 9,
+    "period": 1,
+    "utc_time": 1697902275486,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.58,
+          1.84
+        ],
+        "x": -9.58,
+        "y": 1.84,
+        "speed": 0.749999999999984,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.27,
+          5.26
+        ],
+        "x": -6.27,
+        "y": 5.26,
+        "speed": 1.7677669529663531,
+        "direction": 2.999695598985631
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.04,
+          -7.45
+        ],
+        "x": -6.04,
+        "y": -7.45,
+        "speed": 0.5000000000000115,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.33,
+          -10.09
+        ],
+        "x": -0.33,
+        "y": -10.09,
+        "speed": 2.0155644370746373,
+        "direction": 3.2659476481365517
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.17,
+          -4.48
+        ],
+        "x": -17.17,
+        "y": -4.48,
+        "speed": 1.520690632574537,
+        "direction": 1.405647649380301
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.38,
+          4.08
+        ],
+        "x": -16.38,
+        "y": 4.08,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.89,
+          -14.5
+        ],
+        "x": -0.89,
+        "y": -14.5,
+        "speed": 1.0606601717798103,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.78,
+          15.51
+        ],
+        "x": -15.78,
+        "y": 15.51,
+        "speed": 0.35355339059326624,
+        "direction": 2.356194490192345
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.01,
+          -17.66
+        ],
+        "x": -12.01,
+        "y": -17.66,
+        "speed": 0.9013878188660152,
+        "direction": 0.9827937232473564
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.09,
+          19.34
+        ],
+        "x": -5.09,
+        "y": 19.34,
+        "speed": 0.5590169943749355,
+        "direction": 5.176036589385496
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.79,
+          -1.42
+        ],
+        "x": -49.79,
+        "y": -1.42,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.32,
+          -0.69
+        ],
+        "x": -0.32,
+        "y": -0.69,
+        "speed": 0.35355339059327406,
+        "direction": 0.7853981633974483
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -1.44,
+          3.54
+        ],
+        "x": -1.44,
+        "y": 3.54,
+        "speed": 4.3156691254080215,
+        "direction": 0.17467219900824096
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.13,
+          -11.2
+        ],
+        "x": 16.13,
+        "y": -11.2,
+        "speed": 2.015564437074633,
+        "direction": 1.4464413322481597
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -0.9,
+          -10.91
+        ],
+        "x": -0.9,
+        "y": -10.91,
+        "speed": 3.259601202601324,
+        "direction": 0.0767718912697764
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.13,
+          2.64
+        ],
+        "x": 18.13,
+        "y": 2.64,
+        "speed": 1.2499999999999956,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.92,
+          -0.02
+        ],
+        "x": 18.92,
+        "y": -0.02,
+        "speed": 1.0606601717798414,
+        "direction": 0.7853981633974294
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.58,
+          15.74
+        ],
+        "x": 18.58,
+        "y": 15.74,
+        "speed": 1.06066017177983,
+        "direction": 3.9269908169872116
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.14,
+          20.19
+        ],
+        "x": 0.14,
+        "y": 20.19,
+        "speed": 1.0307764064044806,
+        "direction": 1.325817663668048
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.95,
+          26.14
+        ],
+        "x": 8.95,
+        "y": 26.14,
+        "speed": 1.802775637731956,
+        "direction": 5.695182703632018
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.01,
+          -28.92
+        ],
+        "x": -0.01,
+        "y": -28.92,
+        "speed": 1.4577379737112939,
+        "direction": 0.5404195002705486
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.12,
+          0.21
+        ],
+        "x": 44.12,
+        "y": 0.21,
+        "speed": 0.9999999999999787,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      6.93,
+      1.64
+    ]
+  },
+  {
+    "frame": 10,
+    "period": 1,
+    "utc_time": 1697902275526,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.61,
+          1.84
+        ],
+        "x": -9.61,
+        "y": 1.84,
+        "speed": 0.7500000000000284,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.2,
+          5.25
+        ],
+        "x": -6.2,
+        "y": 5.25,
+        "speed": 2.0615528128088294,
+        "direction": 2.896613990462934
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -6.02,
+          -7.45
+        ],
+        "x": -6.02,
+        "y": -7.45,
+        "speed": 0.749999999999984,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.25,
+          -10.08
+        ],
+        "x": -0.25,
+        "y": -10.08,
+        "speed": 2.0155644370746364,
+        "direction": 3.2659476481365517
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.18,
+          -4.54
+        ],
+        "x": -17.18,
+        "y": -4.54,
+        "speed": 1.2499999999999956,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.38,
+          4.08
+        ],
+        "x": -16.38,
+        "y": 4.08,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.86,
+          -14.53
+        ],
+        "x": -0.86,
+        "y": -14.53,
+        "speed": 0.9013878188660212,
+        "direction": 2.158798930342447
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.77,
+          15.5
+        ],
+        "x": -15.77,
+        "y": 15.5,
+        "speed": 0.24999999999999467,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.03,
+          -17.69
+        ],
+        "x": -12.03,
+        "y": -17.69,
+        "speed": 0.9013878188659659,
+        "direction": 0.9827937232472608
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.1,
+          19.36
+        ],
+        "x": -5.1,
+        "y": 19.36,
+        "speed": 0.7071067811865481,
+        "direction": 5.49778714378216
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.72,
+          -1.38
+        ],
+        "x": -49.72,
+        "y": -1.38,
+        "speed": 2.15058131676066,
+        "direction": 3.761842139572611
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.33,
+          -0.7
+        ],
+        "x": -0.33,
+        "y": -0.7,
+        "speed": 0.35355339059327406,
+        "direction": 0.7853981633974483
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -1.61,
+          3.51
+        ],
+        "x": -1.61,
+        "y": 3.51,
+        "speed": 4.279310692155919,
+        "direction": 0.11710874456686186
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.12,
+          -11.28
+        ],
+        "x": 16.12,
+        "y": -11.28,
+        "speed": 2.2499999999999964,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.03,
+          -10.92
+        ],
+        "x": -1.03,
+        "y": -10.92,
+        "speed": 3.508917211904547,
+        "direction": 0.07130746478528886
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.13,
+          2.69
+        ],
+        "x": 18.13,
+        "y": 2.69,
+        "speed": 1.0000000000000009,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.89,
+          -0.05
+        ],
+        "x": 18.89,
+        "y": -0.05,
+        "speed": 0.9013878188659913,
+        "direction": 0.9827937232473389
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.61,
+          15.77
+        ],
+        "x": 18.61,
+        "y": 15.77,
+        "speed": 1.25,
+        "direction": 3.785093762383106
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.13,
+          20.15
+        ],
+        "x": 0.13,
+        "y": 20.15,
+        "speed": 1.1180339887498758,
+        "direction": 1.107148717794082
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.89,
+          26.18
+        ],
+        "x": 8.89,
+        "y": 26.18,
+        "speed": 2.015564437074633,
+        "direction": 5.764039192933074
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.06,
+          -28.95
+        ],
+        "x": -0.06,
+        "y": -28.95,
+        "speed": 2.015564437074627,
+        "direction": 0.5191461142465137
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.08,
+          0.21
+        ],
+        "x": 44.08,
+        "y": 0.21,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      7.58,
+      1.79
+    ]
+  },
+  {
+    "frame": 11,
+    "period": 1,
+    "utc_time": 1697902275566,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.64,
+          1.84
+        ],
+        "x": -9.64,
+        "y": 1.84,
+        "speed": 0.749999999999984,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.12,
+          5.23
+        ],
+        "x": -6.12,
+        "y": 5.23,
+        "speed": 1.8200274723201397,
+        "direction": 2.863292994584677
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.99,
+          -7.45
+        ],
+        "x": -5.99,
+        "y": -7.45,
+        "speed": 0.5590169943749554,
+        "direction": 3.6052402625905815
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.17,
+          -10.07
+        ],
+        "x": -0.17,
+        "y": -10.07,
+        "speed": 2.5495097567963905,
+        "direction": 3.3389882134396696
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.18,
+          -4.59
+        ],
+        "x": -17.18,
+        "y": -4.59,
+        "speed": 1.0307764064044254,
+        "direction": 1.325817663667996
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.38,
+          4.08
+        ],
+        "x": -16.38,
+        "y": 4.08,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.84,
+          -14.56
+        ],
+        "x": -0.84,
+        "y": -14.56,
+        "speed": 1.0606601717798085,
+        "direction": 2.356194490192354
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.77,
+          15.49
+        ],
+        "x": -15.77,
+        "y": 15.49,
+        "speed": 0.24999999999999467,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.05,
+          -17.72
+        ],
+        "x": -12.05,
+        "y": -17.72,
+        "speed": 1.1180339887499504,
+        "direction": 1.107148717794126
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.12,
+          19.38
+        ],
+        "x": -5.12,
+        "y": 19.38,
+        "speed": 0.7071067811865325,
+        "direction": 5.497787143782138
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.65,
+          -1.33
+        ],
+        "x": -49.65,
+        "y": -1.33,
+        "speed": 1.8027756377318946,
+        "direction": 3.7295952571373983
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.34,
+          -0.71
+        ],
+        "x": -0.34,
+        "y": -0.71,
+        "speed": 0.9013878188659974,
+        "direction": 0.9827937232473304
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -1.78,
+          3.49
+        ],
+        "x": -1.78,
+        "y": 3.49,
+        "speed": 4.315669125408016,
+        "direction": 0.17467219900824119
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.12,
+          -11.37
+        ],
+        "x": 16.12,
+        "y": -11.37,
+        "speed": 2.015564437074644,
+        "direction": 1.446441332248116
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.17,
+          -10.93
+        ],
+        "x": -1.17,
+        "y": -10.93,
+        "speed": 3.5089172119045524,
+        "direction": 0.07130746478528875
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.13,
+          2.73
+        ],
+        "x": 18.13,
+        "y": 2.73,
+        "speed": 1.2499999999999956,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.87,
+          -0.08
+        ],
+        "x": 18.87,
+        "y": -0.08,
+        "speed": 1.0606601717798412,
+        "direction": 0.7853981633974293
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.65,
+          15.8
+        ],
+        "x": 18.65,
+        "y": 15.8,
+        "speed": 1.1180339887499504,
+        "direction": 3.6052402625905637
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.11,
+          20.11
+        ],
+        "x": 0.11,
+        "y": 20.11,
+        "speed": 1.1180339887498758,
+        "direction": 1.107148717794082
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.82,
+          26.22
+        ],
+        "x": 8.82,
+        "y": 26.22,
+        "speed": 2.015564437074677,
+        "direction": 5.764039192933036
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.13,
+          -28.99
+        ],
+        "x": -0.13,
+        "y": -28.99,
+        "speed": 1.9525624189766748,
+        "direction": 0.6947382761967102
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          44.03,
+          0.21
+        ],
+        "x": 44.03,
+        "y": 0.21,
+        "speed": 1.0307764064043943,
+        "direction": 0.24497866312686872
+      }
+    ],
+    "ball": [
+      8.22,
+      1.92
+    ]
+  },
+  {
+    "frame": 12,
+    "period": 1,
+    "utc_time": 1697902275606,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.67,
+          1.84
+        ],
+        "x": -9.67,
+        "y": 1.84,
+        "speed": 0.7905694150420797,
+        "direction": 5.961434752782937
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -6.05,
+          5.21
+        ],
+        "x": -6.05,
+        "y": 5.21,
+        "speed": 1.8200274723201122,
+        "direction": 2.8632929945846852
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.97,
+          -7.44
+        ],
+        "x": -5.97,
+        "y": -7.44,
+        "speed": 0.749999999999984,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          -0.07,
+          -10.05
+        ],
+        "x": -0.07,
+        "y": -10.05,
+        "speed": 2.3048861143232293,
+        "direction": 3.3602615994637492
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.19,
+          -4.63
+        ],
+        "x": -17.19,
+        "y": -4.63,
+        "speed": 1.0000000000000009,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.38,
+          4.08
+        ],
+        "x": -16.38,
+        "y": 4.08,
+        "speed": 0.3535533905932976,
+        "direction": 5.497787143782227
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.81,
+          -14.59
+        ],
+        "x": -0.81,
+        "y": -14.59,
+        "speed": 0.7071067811865404,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.77,
+          15.48
+        ],
+        "x": -15.77,
+        "y": 15.48,
+        "speed": 0.24999999999999467,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.07,
+          -17.76
+        ],
+        "x": -12.07,
+        "y": -17.76,
+        "speed": 0.9013878188659412,
+        "direction": 0.9827937232473017
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.14,
+          19.4
+        ],
+        "x": -5.14,
+        "y": 19.4,
+        "speed": 0.5590169943750248,
+        "direction": 5.17603658938546
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.59,
+          -1.29
+        ],
+        "x": -49.59,
+        "y": -1.29,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.36,
+          -0.74
+        ],
+        "x": -0.36,
+        "y": -0.74,
+        "speed": 0.5590169943749479,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -1.95,
+          3.46
+        ],
+        "x": -1.95,
+        "y": 3.46,
+        "speed": 4.562071897723663,
+        "direction": 0.16514867741462583
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.11,
+          -11.45
+        ],
+        "x": 16.11,
+        "y": -11.45,
+        "speed": 2.2499999999999964,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.31,
+          -10.94
+        ],
+        "x": -1.31,
+        "y": -10.94,
+        "speed": 3.7583240945932244,
+        "direction": 0.06656816377582243
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.13,
+          2.78
+        ],
+        "x": 18.13,
+        "y": 2.78,
+        "speed": 1.2500000000000067,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.84,
+          -0.11
+        ],
+        "x": 18.84,
+        "y": -0.11,
+        "speed": 0.9013878188659917,
+        "direction": 0.9827937232473392
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.69,
+          15.82
+        ],
+        "x": 18.69,
+        "y": 15.82,
+        "speed": 0.9013878188659412,
+        "direction": 3.729595257137388
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.09,
+          20.07
+        ],
+        "x": 0.09,
+        "y": 20.07,
+        "speed": 1.1180339887498758,
+        "direction": 1.1071487177940822
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.75,
+          26.26
+        ],
+        "x": 8.75,
+        "y": 26.26,
+        "speed": 2.015564437074633,
+        "direction": 5.764039192933074
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.19,
+          -29.04
+        ],
+        "x": -0.19,
+        "y": -29.04,
+        "speed": 2.3584952830141606,
+        "direction": 0.5585993153435688
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.99,
+          0.2
+        ],
+        "x": 43.99,
+        "y": 0.2,
+        "speed": 0.9999999999999787,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      8.84,
+      2.03
+    ]
+  },
+  {
+    "frame": 13,
+    "period": 1,
+    "utc_time": 1697902275646,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.7,
+          1.85
+        ],
+        "x": -9.7,
+        "y": 1.85,
+        "speed": 0.7500000000000284,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.98,
+          5.19
+        ],
+        "x": -5.98,
+        "y": 5.19,
+        "speed": 2.1360009363293866,
+        "direction": 2.7828219833192187
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.94,
+          -7.44
+        ],
+        "x": -5.94,
+        "y": -7.44,
+        "speed": 0.5590169943749653,
+        "direction": 3.605240262590617
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.02,
+          -10.03
+        ],
+        "x": 0.02,
+        "y": -10.03,
+        "speed": 2.8504385627478404,
+        "direction": 3.407844702740713
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.19,
+          -4.67
+        ],
+        "x": -17.19,
+        "y": -4.67,
+        "speed": 0.7500000000000062,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.39,
+          4.09
+        ],
+        "x": -16.39,
+        "y": 4.09,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.79,
+          -14.61
+        ],
+        "x": -0.79,
+        "y": -14.61,
+        "speed": 1.0606601717798418,
+        "direction": 2.3561944901923266
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.77,
+          15.47
+        ],
+        "x": -15.77,
+        "y": 15.47,
+        "speed": 0.24999999999999467,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.09,
+          -17.79
+        ],
+        "x": -12.09,
+        "y": -17.79,
+        "speed": 1.118033988749871,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.15,
+          19.42
+        ],
+        "x": -5.15,
+        "y": 19.42,
+        "speed": 0.7071067811865325,
+        "direction": 5.497787143782138
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.52,
+          -1.25
+        ],
+        "x": -49.52,
+        "y": -1.25,
+        "speed": 1.9039432764659836,
+        "direction": 3.546484439874875
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.37,
+          -0.76
+        ],
+        "x": -0.37,
+        "y": -0.76,
+        "speed": 1.030776406404416,
+        "direction": 1.3258176636680326
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -2.13,
+          3.43
+        ],
+        "x": -2.13,
+        "y": 3.43,
+        "speed": 4.776243293635699,
+        "direction": 0.10487693873023402
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.11,
+          -11.54
+        ],
+        "x": 16.11,
+        "y": -11.54,
+        "speed": 2.2638462845343894,
+        "direction": 1.460139105621025
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.46,
+          -10.95
+        ],
+        "x": -1.46,
+        "y": -10.95,
+        "speed": 4.0000000000000036,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.13,
+          2.83
+        ],
+        "x": 18.13,
+        "y": 2.83,
+        "speed": 1.2747548783981821,
+        "direction": 4.909784540234533
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.82,
+          -0.14
+        ],
+        "x": 18.82,
+        "y": -0.14,
+        "speed": 1.0606601717798412,
+        "direction": 0.7853981633974293
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.72,
+          15.84
+        ],
+        "x": 18.72,
+        "y": 15.84,
+        "speed": 1.2500000000000442,
+        "direction": 3.7850937623830347
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.07,
+          20.03
+        ],
+        "x": 0.07,
+        "y": 20.03,
+        "speed": 1.3462912017836426,
+        "direction": 1.1902899496825365
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.68,
+          26.3
+        ],
+        "x": 8.68,
+        "y": 26.3,
+        "speed": 2.358495283014162,
+        "direction": 5.724585991836018
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.27,
+          -29.09
+        ],
+        "x": -0.27,
+        "y": -29.09,
+        "speed": 2.150581316760667,
+        "direction": 0.6202494859828281
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.95,
+          0.2
+        ],
+        "x": 43.95,
+        "y": 0.2,
+        "speed": 1.0000000000001563,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      9.43,
+      2.16
+    ]
+  },
+  {
+    "frame": 14,
+    "period": 1,
+    "utc_time": 1697902275686,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.73,
+          1.85
+        ],
+        "x": -9.73,
+        "y": 1.85,
+        "speed": 0.7905694150420797,
+        "direction": 5.961434752782937
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.9,
+          5.16
+        ],
+        "x": -5.9,
+        "y": 5.16,
+        "speed": 1.8200274723201397,
+        "direction": 2.863292994584677
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.92,
+          -7.43
+        ],
+        "x": -5.92,
+        "y": -7.43,
+        "speed": 0.5590169943749355,
+        "direction": 3.6052402625905993
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.13,
+          -10
+        ],
+        "x": 0.13,
+        "y": -10,
+        "speed": 2.8504385627478404,
+        "direction": 3.407844702740713
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.19,
+          -4.7
+        ],
+        "x": -17.19,
+        "y": -4.7,
+        "speed": 0.5590169943749554,
+        "direction": 2.0344439357957738
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.39,
+          4.09
+        ],
+        "x": -16.39,
+        "y": 4.09,
+        "speed": 0.24999999999999467,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.76,
+          -14.64
+        ],
+        "x": -0.76,
+        "y": -14.64,
+        "speed": 0.7071067811865404,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.77,
+          15.46
+        ],
+        "x": -15.77,
+        "y": 15.46,
+        "speed": 0.3535533905932976,
+        "direction": 0.7853981633975371
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.11,
+          -17.83
+        ],
+        "x": -12.11,
+        "y": -17.83,
+        "speed": 1.1180339887499704,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.17,
+          19.44
+        ],
+        "x": -5.17,
+        "y": 19.44,
+        "speed": 0.9013878188659535,
+        "direction": 5.300391583932305
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.45,
+          -1.22
+        ],
+        "x": -49.45,
+        "y": -1.22,
+        "speed": 1.8027756377320423,
+        "direction": 3.7295952571373436
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.38,
+          -0.8
+        ],
+        "x": -0.38,
+        "y": -0.8,
+        "speed": 1.2747548783981946,
+        "direction": 1.3734007669450154
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -2.32,
+          3.41
+        ],
+        "x": -2.32,
+        "y": 3.41,
+        "speed": 4.56207189772367,
+        "direction": 0.16514867741462805
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.1,
+          -11.63
+        ],
+        "x": 16.1,
+        "y": -11.63,
+        "speed": 2.2638462845343548,
+        "direction": 1.4601391056209836
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.62,
+          -10.95
+        ],
+        "x": -1.62,
+        "y": -10.95,
+        "speed": 4.00780488547035,
+        "direction": 0.06241880999596711
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.12,
+          2.88
+        ],
+        "x": 18.12,
+        "y": 2.88,
+        "speed": 1.5206906325745626,
+        "direction": 4.8775376577993415
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.79,
+          -0.17
+        ],
+        "x": 18.79,
+        "y": -0.17,
+        "speed": 0.9013878188659913,
+        "direction": 0.9827937232473389
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.76,
+          15.87
+        ],
+        "x": 18.76,
+        "y": 15.87,
+        "speed": 0.9013878188659659,
+        "direction": 3.729595257137429
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.05,
+          19.98
+        ],
+        "x": 0.05,
+        "y": 19.98,
+        "speed": 1.4577379737113405,
+        "direction": 1.0303768265243187
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.6,
+          26.35
+        ],
+        "x": 8.6,
+        "y": 26.35,
+        "speed": 2.236067977499782,
+        "direction": 5.819537698178789
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.34,
+          -29.14
+        ],
+        "x": -0.34,
+        "y": -29.14,
+        "speed": 2.7041634565979735,
+        "direction": 0.5880026035475578
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.91,
+          0.2
+        ],
+        "x": 43.91,
+        "y": 0.2,
+        "speed": 1.0307764064043945,
+        "direction": 0.2449786631268694
+      }
+    ],
+    "ball": [
+      10,
+      2.31
+    ]
+  },
+  {
+    "frame": 15,
+    "period": 1,
+    "utc_time": 1697902275726,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.76,
+          1.86
+        ],
+        "x": -9.76,
+        "y": 1.86,
+        "speed": 0.7905694150420797,
+        "direction": 5.961434752782937
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.83,
+          5.14
+        ],
+        "x": -5.83,
+        "y": 5.14,
+        "speed": 1.9039432764659772,
+        "direction": 2.736700867304719
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.9,
+          -7.42
+        ],
+        "x": -5.9,
+        "y": -7.42,
+        "speed": 0.5000000000000115,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.24,
+          -9.97
+        ],
+        "x": 0.24,
+        "y": -9.97,
+        "speed": 3.0923292192132523,
+        "direction": 3.3865713167166662
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.18,
+          -4.72
+        ],
+        "x": -17.18,
+        "y": -4.72,
+        "speed": 0.2500000000000169,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.39,
+          4.1
+        ],
+        "x": -16.39,
+        "y": 4.1,
+        "speed": 0.3535533905932505,
+        "direction": 5.497787143782005
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.74,
+          -14.66
+        ],
+        "x": -0.74,
+        "y": -14.66,
+        "speed": 0.7905694150420938,
+        "direction": 2.8198420991931576
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.78,
+          15.45
+        ],
+        "x": -15.78,
+        "y": 15.45,
+        "speed": 0.5590169943749355,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.13,
+          -17.87
+        ],
+        "x": -12.13,
+        "y": -17.87,
+        "speed": 1.0606601717797672,
+        "direction": 0.7853981633974187
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.19,
+          19.47
+        ],
+        "x": -5.19,
+        "y": 19.47,
+        "speed": 0.7905694150421201,
+        "direction": 5.034139534781314
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.39,
+          -1.18
+        ],
+        "x": -49.39,
+        "y": -1.18,
+        "speed": 1.6770509831248934,
+        "direction": 3.605240262590584
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.39,
+          -0.85
+        ],
+        "x": -0.39,
+        "y": -0.85,
+        "speed": 1.3462912017836266,
+        "direction": 1.1902899496825328
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -2.5,
+          3.38
+        ],
+        "x": -2.5,
+        "y": 3.38,
+        "speed": 4.808846015417834,
+        "direction": 0.1566018769820144
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.09,
+          -11.72
+        ],
+        "x": 16.09,
+        "y": -11.72,
+        "speed": 2.304886114323216,
+        "direction": 1.3521273809209589
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.78,
+          -10.96
+        ],
+        "x": -1.78,
+        "y": -10.96,
+        "speed": 4.257346591481601,
+        "direction": 6.224429484463855
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.11,
+          2.94
+        ],
+        "x": 18.11,
+        "y": 2.94,
+        "speed": 1.274754878398193,
+        "direction": 4.909784540234531
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.77,
+          -0.2
+        ],
+        "x": 18.77,
+        "y": -0.2,
+        "speed": 0.9013878188659913,
+        "direction": 0.9827937232473389
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.79,
+          15.89
+        ],
+        "x": 18.79,
+        "y": 15.89,
+        "speed": 1.2499999999999734,
+        "direction": 3.7850937623830774
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          0.02,
+          19.93
+        ],
+        "x": 0.02,
+        "y": 19.93,
+        "speed": 1.4577379737113405,
+        "direction": 1.0303768265243187
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.52,
+          26.39
+        ],
+        "x": 8.52,
+        "y": 26.39,
+        "speed": 2.358495283014162,
+        "direction": 5.724585991836018
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.43,
+          -29.2
+        ],
+        "x": -0.43,
+        "y": -29.2,
+        "speed": 2.85043856274785,
+        "direction": 0.6610431688506887
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.87,
+          0.19
+        ],
+        "x": 43.87,
+        "y": 0.19,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      10.55,
+      2.41
+    ]
+  },
+  {
+    "frame": 16,
+    "period": 1,
+    "utc_time": 1697902275766,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.79,
+          1.87
+        ],
+        "x": -9.79,
+        "y": 1.87,
+        "speed": 0.7905694150421201,
+        "direction": 5.961434752782962
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.76,
+          5.11
+        ],
+        "x": -5.76,
+        "y": 5.11,
+        "speed": 1.6770509831248361,
+        "direction": 2.677945044588981
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.88,
+          -7.42
+        ],
+        "x": -5.88,
+        "y": -7.42,
+        "speed": 0.7905694150420991,
+        "direction": 3.4633432079864264
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.36,
+          -9.94
+        ],
+        "x": 0.36,
+        "y": -9.94,
+        "speed": 3.162277660168372,
+        "direction": 3.4633432079864286
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.18,
+          -4.73
+        ],
+        "x": -17.18,
+        "y": -4.73,
+        "speed": 0.3535533905932505,
+        "direction": 3.9269908169873746
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.4,
+          4.11
+        ],
+        "x": -16.4,
+        "y": 4.11,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.71,
+          -14.67
+        ],
+        "x": -0.71,
+        "y": -14.67,
+        "speed": 0.7071067811865404,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.79,
+          15.43
+        ],
+        "x": -15.79,
+        "y": 15.43,
+        "speed": 0.7071067811865638,
+        "direction": 0.7853981633974039
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.16,
+          -17.9
+        ],
+        "x": -12.16,
+        "y": -17.9,
+        "speed": 1.2500000000000442,
+        "direction": 0.9272952180016548
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.2,
+          19.5
+        ],
+        "x": -5.2,
+        "y": 19.5,
+        "speed": 0.9013878188660152,
+        "direction": 5.30039158393223
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.33,
+          -1.15
+        ],
+        "x": -49.33,
+        "y": -1.15,
+        "speed": 2.0155644370746413,
+        "direction": 3.660738767836312
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.41,
+          -0.9
+        ],
+        "x": -0.41,
+        "y": -0.9,
+        "speed": 1.5206906325745535,
+        "direction": 1.4056476493802694
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -2.69,
+          3.35
+        ],
+        "x": -2.69,
+        "y": 3.35,
+        "speed": 5.024937810560449,
+        "direction": 0.09966865249116202
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.07,
+          -11.81
+        ],
+        "x": 16.07,
+        "y": -11.81,
+        "speed": 2.2638462845343548,
+        "direction": 1.4601391056209836
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -1.95,
+          -10.95
+        ],
+        "x": -1.95,
+        "y": -10.95,
+        "speed": 4.2500000000000036,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.1,
+          2.99
+        ],
+        "x": 18.1,
+        "y": 2.99,
+        "speed": 1.5206906325745517,
+        "direction": 4.877537657799342
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.75,
+          -0.23
+        ],
+        "x": 18.75,
+        "y": -0.23,
+        "speed": 1.2500000000000173,
+        "direction": 0.9272952180015941
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.83,
+          15.92
+        ],
+        "x": 18.83,
+        "y": 15.92,
+        "speed": 0.9013878188660152,
+        "direction": 3.7295952571373334
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.01,
+          19.88
+        ],
+        "x": -0.01,
+        "y": 19.88,
+        "speed": 1.6770509831248135,
+        "direction": 1.107148717794082
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.44,
+          26.44
+        ],
+        "x": 8.44,
+        "y": 26.44,
+        "speed": 2.358495283014115,
+        "direction": 5.72458599183605
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.52,
+          -29.27
+        ],
+        "x": -0.52,
+        "y": -29.27,
+        "speed": 2.7041634565979735,
+        "direction": 0.5880026035475578
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.82,
+          0.19
+        ],
+        "x": 43.82,
+        "y": 0.19,
+        "speed": 1.0307764064043945,
+        "direction": 6.038206644052717
+      }
+    ],
+    "ball": [
+      11.09,
+      2.51
+    ]
+  },
+  {
+    "frame": 17,
+    "period": 1,
+    "utc_time": 1697902275806,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.82,
+          1.88
+        ],
+        "x": -9.82,
+        "y": 1.88,
+        "speed": 0.7905694150420797,
+        "direction": 5.961434752782937
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.7,
+          5.08
+        ],
+        "x": -5.7,
+        "y": 5.08,
+        "speed": 1.903943276465986,
+        "direction": 2.7367008673047084
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.85,
+          -7.41
+        ],
+        "x": -5.85,
+        "y": -7.41,
+        "speed": 0.5590169943749355,
+        "direction": 3.6052402625905993
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.48,
+          -9.9
+        ],
+        "x": 0.48,
+        "y": -9.9,
+        "speed": 3.1622776601683866,
+        "direction": 3.463343207986442
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.17,
+          -4.72
+        ],
+        "x": -17.17,
+        "y": -4.72,
+        "speed": 0.7071067811865952,
+        "direction": 3.9269908169871526
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.4,
+          4.11
+        ],
+        "x": -16.4,
+        "y": 4.11,
+        "speed": 0.3535533905932976,
+        "direction": 5.497787143782227
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.69,
+          -14.69
+        ],
+        "x": -0.69,
+        "y": -14.69,
+        "speed": 0.5590169943749429,
+        "direction": 2.6779450445889936
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.81,
+          15.41
+        ],
+        "x": -15.81,
+        "y": 15.41,
+        "speed": 0.5590169943749355,
+        "direction": 1.1071487177940904
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.19,
+          -17.94
+        ],
+        "x": -12.19,
+        "y": -17.94,
+        "speed": 1.25,
+        "direction": 0.9272952180015838
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.22,
+          19.53
+        ],
+        "x": -5.22,
+        "y": 19.53,
+        "speed": 0.9013878188659535,
+        "direction": 5.300391583932305
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.26,
+          -1.11
+        ],
+        "x": -49.26,
+        "y": -1.11,
+        "speed": 1.6770509831247344,
+        "direction": 3.6052402625906317
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.42,
+          -0.96
+        ],
+        "x": -0.42,
+        "y": -0.96,
+        "speed": 1.7500000000000016,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -2.89,
+          3.33
+        ],
+        "x": -2.89,
+        "y": 3.33,
+        "speed": 5.055937104039165,
+        "direction": 0.14888994760949867
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.06,
+          -11.9
+        ],
+        "x": 16.06,
+        "y": -11.9,
+        "speed": 2.5495097567963816,
+        "direction": 1.3734007669450192
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -2.12,
+          -10.95
+        ],
+        "x": -2.12,
+        "y": -10.95,
+        "speed": 4.257346591481598,
+        "direction": 6.224429484463864
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.09,
+          3.05
+        ],
+        "x": 18.09,
+        "y": 3.05,
+        "speed": 1.5206906325745626,
+        "direction": 4.8775376577993415
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.72,
+          -0.27
+        ],
+        "x": 18.72,
+        "y": -0.27,
+        "speed": 1.1180339887498896,
+        "direction": 1.1071487177940988
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.86,
+          15.94
+        ],
+        "x": 18.86,
+        "y": 15.94,
+        "speed": 0.9013878188660397,
+        "direction": 3.7295952571373743
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.04,
+          19.82
+        ],
+        "x": -0.04,
+        "y": 19.82,
+        "speed": 2.0155644370746435,
+        "direction": 1.0516502125483753
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.36,
+          26.49
+        ],
+        "x": 8.36,
+        "y": 26.49,
+        "speed": 2.4622144504490504,
+        "direction": 5.864960977600331
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.61,
+          -29.33
+        ],
+        "x": -0.61,
+        "y": -29.33,
+        "speed": 3.0516389039334295,
+        "direction": 0.6107259643892107
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.78,
+          0.2
+        ],
+        "x": 43.78,
+        "y": 0.2,
+        "speed": 1.2500000000001066,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      11.61,
+      2.6
+    ]
+  },
+  {
+    "frame": 18,
+    "period": 1,
+    "utc_time": 1697902275846,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.85,
+          1.89
+        ],
+        "x": -9.85,
+        "y": 1.89,
+        "speed": 0.7905694150421219,
+        "direction": 5.961434752782955
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.63,
+          5.05
+        ],
+        "x": -5.63,
+        "y": 5.05,
+        "speed": 1.6770509831248361,
+        "direction": 2.677945044588981
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.83,
+          -7.4
+        ],
+        "x": -5.83,
+        "y": -7.4,
+        "speed": 0.5590169943749653,
+        "direction": 3.605240262590617
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.6,
+          -9.86
+        ],
+        "x": 0.6,
+        "y": -9.86,
+        "speed": 3.4003676271838548,
+        "direction": 3.440091585175966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.15,
+          -4.7
+        ],
+        "x": -17.15,
+        "y": -4.7,
+        "speed": 0.7071067811865481,
+        "direction": 3.9269908169872636
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.41,
+          4.12
+        ],
+        "x": -16.41,
+        "y": 4.12,
+        "speed": 0.3535533905932976,
+        "direction": 5.497787143782227
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.67,
+          -14.7
+        ],
+        "x": -0.67,
+        "y": -14.7,
+        "speed": 0.5590169943749653,
+        "direction": 2.677945044588925
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.82,
+          15.39
+        ],
+        "x": -15.82,
+        "y": 15.39,
+        "speed": 0.9013878188660152,
+        "direction": 0.9827937232473564
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.22,
+          -17.98
+        ],
+        "x": -12.22,
+        "y": -17.98,
+        "speed": 1.2499999999999734,
+        "direction": 0.9272952180016122
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.24,
+          19.56
+        ],
+        "x": -5.24,
+        "y": 19.56,
+        "speed": 0.9013878188660152,
+        "direction": 5.30039158393223
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.2,
+          -1.08
+        ],
+        "x": -49.2,
+        "y": -1.08,
+        "speed": 1.6770509831248934,
+        "direction": 3.605240262590584
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.42,
+          -1.03
+        ],
+        "x": -0.42,
+        "y": -1.03,
+        "speed": 1.7677669529663704,
+        "direction": 1.4288992721907328
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -3.09,
+          3.3
+        ],
+        "x": -3.09,
+        "y": 3.3,
+        "speed": 5.055937104039175,
+        "direction": 0.14888994760949617
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.04,
+          -12
+        ],
+        "x": 16.04,
+        "y": -12,
+        "speed": 2.304886114323216,
+        "direction": 1.3521273809209589
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -2.29,
+          -10.94
+        ],
+        "x": -2.29,
+        "y": -10.94,
+        "speed": 4.50693909432999,
+        "direction": 6.227686801933871
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.08,
+          3.11
+        ],
+        "x": 18.08,
+        "y": 3.11,
+        "speed": 1.5811388300841875,
+        "direction": 5.034139534781325
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.7,
+          -0.31
+        ],
+        "x": 18.7,
+        "y": -0.31,
+        "speed": 1.1180339887498896,
+        "direction": 1.1071487177940988
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.89,
+          15.96
+        ],
+        "x": 18.89,
+        "y": 15.96,
+        "speed": 1.06066017177983,
+        "direction": 3.9269908169872116
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.08,
+          19.75
+        ],
+        "x": -0.08,
+        "y": 19.75,
+        "speed": 2.0155644370746435,
+        "direction": 1.0516502125483755
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.27,
+          26.53
+        ],
+        "x": 8.27,
+        "y": 26.53,
+        "speed": 2.5739075352467125,
+        "direction": 5.7760868027872725
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.71,
+          -29.4
+        ],
+        "x": -0.71,
+        "y": -29.4,
+        "speed": 2.915475947422681,
+        "direction": 0.5404195002706005
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.73,
+          0.2
+        ],
+        "x": 43.73,
+        "y": 0.2,
+        "speed": 1.249999999999929,
+        "direction": 0
+      }
+    ],
+    "ball": [
+      12.11,
+      2.7
+    ]
+  },
+  {
+    "frame": 19,
+    "period": 1,
+    "utc_time": 1697902275886,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.88,
+          1.9
+        ],
+        "x": -9.88,
+        "y": 1.9,
+        "speed": 0.7905694150420797,
+        "direction": 5.961434752782937
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.57,
+          5.02
+        ],
+        "x": -5.57,
+        "y": 5.02,
+        "speed": 1.9039432764659772,
+        "direction": 2.736700867304719
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.81,
+          -7.39
+        ],
+        "x": -5.81,
+        "y": -7.39,
+        "speed": 0.35355339059326624,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.73,
+          -9.82
+        ],
+        "x": 0.73,
+        "y": -9.82,
+        "speed": 3.7165171868296327,
+        "direction": 3.4846165940105007
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.13,
+          -4.68
+        ],
+        "x": -17.13,
+        "y": -4.68,
+        "speed": 1.030776406404404,
+        "direction": 4.4674103172578725
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.42,
+          4.13
+        ],
+        "x": -16.42,
+        "y": 4.13,
+        "speed": 0.24999999999995026,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.65,
+          -14.71
+        ],
+        "x": -0.65,
+        "y": -14.71,
+        "speed": 0.3535533905932702,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.84,
+          15.36
+        ],
+        "x": -15.84,
+        "y": 15.36,
+        "speed": 0.901387818865978,
+        "direction": 0.5880026035475675
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.25,
+          -18.02
+        ],
+        "x": -12.25,
+        "y": -18.02,
+        "speed": 1.2499999999999734,
+        "direction": 0.9272952180016122
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.26,
+          19.59
+        ],
+        "x": -5.26,
+        "y": 19.59,
+        "speed": 0.9013878188660274,
+        "direction": 5.30039158393225
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.14,
+          -1.05
+        ],
+        "x": -49.14,
+        "y": -1.05,
+        "speed": 1.6770509831248934,
+        "direction": 3.605240262590584
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.43,
+          -1.1
+        ],
+        "x": -0.43,
+        "y": -1.1,
+        "speed": 2.2638462845343503,
+        "direction": 1.4601391056210007
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -3.29,
+          3.27
+        ],
+        "x": -3.29,
+        "y": 3.27,
+        "speed": 5.303300858899105,
+        "direction": 0.14189705460416305
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16.02,
+          -12.09
+        ],
+        "x": 16.02,
+        "y": -12.09,
+        "speed": 2.5495097567963816,
+        "direction": 1.3734007669450192
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -2.47,
+          -10.93
+        ],
+        "x": -2.47,
+        "y": -10.93,
+        "speed": 4.776243293635698,
+        "direction": 6.178308368449355
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.06,
+          3.17
+        ],
+        "x": 18.06,
+        "y": 3.17,
+        "speed": 1.5811388300841875,
+        "direction": 5.034139534781325
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.68,
+          -0.35
+        ],
+        "x": 18.68,
+        "y": -0.35,
+        "speed": 1.346291201783623,
+        "direction": 1.1902899496825394
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.92,
+          15.99
+        ],
+        "x": 18.92,
+        "y": 15.99,
+        "speed": 0.9013878188659659,
+        "direction": 3.729595257137429
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.12,
+          19.68
+        ],
+        "x": -0.12,
+        "y": 19.68,
+        "speed": 2.0155644370746435,
+        "direction": 1.0516502125483753
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.18,
+          26.58
+        ],
+        "x": 8.18,
+        "y": 26.58,
+        "speed": 2.795084971874737,
+        "direction": 5.819537698178773
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.81,
+          -29.46
+        ],
+        "x": -0.81,
+        "y": -29.46,
+        "speed": 3.2596012026013277,
+        "direction": 0.5667292175235082
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.68,
+          0.2
+        ],
+        "x": 43.68,
+        "y": 0.2,
+        "speed": 1.2747548783981266,
+        "direction": 6.085789747329695
+      }
+    ],
+    "ball": [
+      12.6,
+      2.79
+    ]
+  },
+  {
+    "frame": 20,
+    "period": 1,
+    "utc_time": 1697902275926,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.91,
+          1.91
+        ],
+        "x": -9.91,
+        "y": 1.91,
+        "speed": 1.118033988749876,
+        "direction": 5.819537698178771
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.5,
+          4.99
+        ],
+        "x": -5.5,
+        "y": 4.99,
+        "speed": 1.6770509831248361,
+        "direction": 2.677945044588981
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.8,
+          -7.38
+        ],
+        "x": -5.8,
+        "y": -7.38,
+        "speed": 0.5590169943749355,
+        "direction": 3.6052402625905993
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          0.87,
+          -9.77
+        ],
+        "x": 0.87,
+        "y": -9.77,
+        "speed": 3.7165171868296176,
+        "direction": 3.4846165940104896
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.12,
+          -4.64
+        ],
+        "x": -17.12,
+        "y": -4.64,
+        "speed": 1.2500000000000178,
+        "direction": 4.068887871591388
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.43,
+          4.13
+        ],
+        "x": -16.43,
+        "y": 4.13,
+        "speed": 0.3535533905932976,
+        "direction": 5.497787143782227
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.64,
+          -14.72
+        ],
+        "x": -0.64,
+        "y": -14.72,
+        "speed": 0.3535533905932702,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.87,
+          15.34
+        ],
+        "x": -15.87,
+        "y": 15.34,
+        "speed": 1.06066017177983,
+        "direction": 0.7853981633974187
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.28,
+          -18.06
+        ],
+        "x": -12.28,
+        "y": -18.06,
+        "speed": 1.250000000000071,
+        "direction": 0.9272952180016264
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.28,
+          19.62
+        ],
+        "x": -5.28,
+        "y": 19.62,
+        "speed": 0.9013878188659412,
+        "direction": 5.300391583932284
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.08,
+          -1.02
+        ],
+        "x": -49.08,
+        "y": -1.02,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.44,
+          -1.19
+        ],
+        "x": -0.44,
+        "y": -1.19,
+        "speed": 2.2500000000000018,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -3.5,
+          3.24
+        ],
+        "x": -3.5,
+        "y": 3.24,
+        "speed": 5.273755777432246,
+        "direction": 0.09495170634275642
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          16,
+          -12.19
+        ],
+        "x": 16,
+        "y": -12.19,
+        "speed": 2.304886114323216,
+        "direction": 1.3521273809209589
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -2.66,
+          -10.91
+        ],
+        "x": -2.66,
+        "y": -10.91,
+        "speed": 4.776243293635698,
+        "direction": 6.178308368449355
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.04,
+          3.23
+        ],
+        "x": 18.04,
+        "y": 3.23,
+        "speed": 1.5811388300841875,
+        "direction": 5.034139534781325
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.66,
+          -0.4
+        ],
+        "x": 18.66,
+        "y": -0.4,
+        "speed": 1.1180339887498896,
+        "direction": 1.1071487177940988
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.95,
+          16.01
+        ],
+        "x": 18.95,
+        "y": 16.01,
+        "speed": 0.7071067811865325,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.16,
+          19.61
+        ],
+        "x": -0.16,
+        "y": 19.61,
+        "speed": 2.3584952830141144,
+        "direction": 1.0121970114513248
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          8.08,
+          26.63
+        ],
+        "x": 8.08,
+        "y": 26.63,
+        "speed": 2.573907535246756,
+        "direction": 5.776086802787242
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -0.92,
+          -29.53
+        ],
+        "x": -0.92,
+        "y": -29.53,
+        "speed": 3.2596012026013277,
+        "direction": 0.5667292175235082
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.63,
+          0.21
+        ],
+        "x": 43.63,
+        "y": 0.21,
+        "speed": 1.520690632574611,
+        "direction": 6.1180366297649655
+      }
+    ],
+    "ball": [
+      13.06,
+      2.88
+    ]
+  },
+  {
+    "frame": 21,
+    "period": 1,
+    "utc_time": 1697902275966,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.95,
+          1.93
+        ],
+        "x": -9.95,
+        "y": 1.93,
+        "speed": 0.7905694150421219,
+        "direction": 5.961434752782955
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.44,
+          4.96
+        ],
+        "x": -5.44,
+        "y": 4.96,
+        "speed": 1.903943276465986,
+        "direction": 2.7367008673047084
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.78,
+          -7.37
+        ],
+        "x": -5.78,
+        "y": -7.37,
+        "speed": 0.3535533905932819,
+        "direction": 3.926990816987197
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.01,
+          -9.72
+        ],
+        "x": 1.01,
+        "y": -9.72,
+        "speed": 3.9528470752104776,
+        "direction": 3.4633432079864397
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.09,
+          -4.6
+        ],
+        "x": -17.09,
+        "y": -4.6,
+        "speed": 1.346291201783618,
+        "direction": 4.331882603272331
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.44,
+          4.14
+        ],
+        "x": -16.44,
+        "y": 4.14,
+        "speed": 0.3535533905932505,
+        "direction": 5.497787143782005
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.63,
+          -14.73
+        ],
+        "x": -0.63,
+        "y": -14.73,
+        "speed": 0.3535533905932702,
+        "direction": 2.356194490192356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.9,
+          15.31
+        ],
+        "x": -15.9,
+        "y": 15.31,
+        "speed": 1.2500000000000087,
+        "direction": 0.9272952180016335
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.31,
+          -18.1
+        ],
+        "x": -12.31,
+        "y": -18.1,
+        "speed": 1.414213562373065,
+        "direction": 0.7853981633974483
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.3,
+          19.65
+        ],
+        "x": -5.3,
+        "y": 19.65,
+        "speed": 1.1180339887499604,
+        "direction": 5.176036589385478
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -49.01,
+          -0.98
+        ],
+        "x": -49.01,
+        "y": -0.98,
+        "speed": 1.6770509831247344,
+        "direction": 3.6052402625906317
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.44,
+          -1.28
+        ],
+        "x": -0.44,
+        "y": -1.28,
+        "speed": 2.263846284534356,
+        "direction": 1.460139105621001
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -3.71,
+          3.22
+        ],
+        "x": -3.71,
+        "y": 3.22,
+        "speed": 5.522680508593635,
+        "direction": 0.09065988720074511
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.98,
+          -12.28
+        ],
+        "x": 15.98,
+        "y": -12.28,
+        "speed": 2.549509756796425,
+        "direction": 1.3734007669450228
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -2.85,
+          -10.89
+        ],
+        "x": -2.85,
+        "y": -10.89,
+        "speed": 4.7762432936357015,
+        "direction": 6.178308368449345
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18.02,
+          3.29
+        ],
+        "x": 18.02,
+        "y": 3.29,
+        "speed": 1.5811388300841875,
+        "direction": 5.034139534781325
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.64,
+          -0.44
+        ],
+        "x": 18.64,
+        "y": -0.44,
+        "speed": 1.3462912017836217,
+        "direction": 1.190289949682539
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          18.97,
+          16.03
+        ],
+        "x": 18.97,
+        "y": 16.03,
+        "speed": 0.9013878188660152,
+        "direction": 3.7295952571373334
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.21,
+          19.53
+        ],
+        "x": -0.21,
+        "y": 19.53,
+        "speed": 2.3584952830141903,
+        "direction": 1.0121970114513443
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.99,
+          26.68
+        ],
+        "x": 7.99,
+        "y": 26.68,
+        "speed": 2.795084971874757,
+        "direction": 5.8195376981787765
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.03,
+          -29.6
+        ],
+        "x": -1.03,
+        "y": -29.6,
+        "speed": 3.3541019662496674,
+        "direction": 0.463647609000798
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.57,
+          0.22
+        ],
+        "x": 43.57,
+        "y": 0.22,
+        "speed": 1.2747548783981266,
+        "direction": 6.085789747329694
+      }
+    ],
+    "ball": [
+      13.52,
+      2.96
+    ]
+  },
+  {
+    "frame": 22,
+    "period": 1,
+    "utc_time": 1697902276006,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -9.98,
+          1.94
+        ],
+        "x": -9.98,
+        "y": 1.94,
+        "speed": 0.9013878188659842,
+        "direction": 5.695182703632009
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.37,
+          4.93
+        ],
+        "x": -5.37,
+        "y": 4.93,
+        "speed": 1.8027756377320052,
+        "direction": 2.5535900500422293
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.77,
+          -7.36
+        ],
+        "x": -5.77,
+        "y": -7.36,
+        "speed": 0.5590169943749455,
+        "direction": 3.605240262590635
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.16,
+          -9.67
+        ],
+        "x": 1.16,
+        "y": -9.67,
+        "speed": 4.038873605350886,
+        "direction": 3.5220990307021602
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.07,
+          -4.55
+        ],
+        "x": -17.07,
+        "y": -4.55,
+        "speed": 1.581138830084177,
+        "direction": 4.390638425988052
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.45,
+          4.15
+        ],
+        "x": -16.45,
+        "y": 4.15,
+        "speed": 0.49999999999998934,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.62,
+          -14.74
+        ],
+        "x": -0.62,
+        "y": -14.74,
+        "speed": 0.24999999999999467,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.93,
+          15.27
+        ],
+        "x": -15.93,
+        "y": 15.27,
+        "speed": 1.2500000000000087,
+        "direction": 0.643501108793263
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.35,
+          -18.14
+        ],
+        "x": -12.35,
+        "y": -18.14,
+        "speed": 1.4142135623730963,
+        "direction": 0.7853981633974261
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.32,
+          19.69
+        ],
+        "x": -5.32,
+        "y": 19.69,
+        "speed": 1.118033988749871,
+        "direction": 5.176036589385496
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.95,
+          -0.95
+        ],
+        "x": -48.95,
+        "y": -0.95,
+        "speed": 1.6770509831248919,
+        "direction": 3.605240262590583
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.45,
+          -1.37
+        ],
+        "x": -0.45,
+        "y": -1.37,
+        "speed": 2.4999999999999964,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -3.93,
+          3.2
+        ],
+        "x": -3.93,
+        "y": 3.2,
+        "speed": 5.550900827793635,
+        "direction": 0.13552771398550173
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.96,
+          -12.38
+        ],
+        "x": 15.96,
+        "y": -12.38,
+        "speed": 2.6100766272276372,
+        "direction": 1.279339532317018
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -3.04,
+          -10.87
+        ],
+        "x": -3.04,
+        "y": -10.87,
+        "speed": 4.808846015417832,
+        "direction": 6.126583430197574
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          18,
+          3.35
+        ],
+        "x": 18,
+        "y": 3.35,
+        "speed": 1.4577379737113358,
+        "direction": 5.252808480655292
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.62,
+          -0.49
+        ],
+        "x": 18.62,
+        "y": -0.49,
+        "speed": 1.346291201783623,
+        "direction": 1.1902899496825394
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19,
+          16.05
+        ],
+        "x": 19,
+        "y": 16.05,
+        "speed": 0.7071067811865325,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.26,
+          19.45
+        ],
+        "x": -0.26,
+        "y": 19.45,
+        "speed": 2.704163456597989,
+        "direction": 0.9827937232473284
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.89,
+          26.73
+        ],
+        "x": 7.89,
+        "y": 26.73,
+        "speed": 2.795084971874737,
+        "direction": 5.819537698178773
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.15,
+          -29.66
+        ],
+        "x": -1.15,
+        "y": -29.66,
+        "speed": 3.691205765058356,
+        "direction": 0.49394136891958257
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.52,
+          0.23
+        ],
+        "x": 43.52,
+        "y": 0.23,
+        "speed": 1.520690632574611,
+        "direction": 6.1180366297649655
+      }
+    ],
+    "ball": [
+      13.95,
+      3.04
+    ]
+  },
+  {
+    "frame": 23,
+    "period": 1,
+    "utc_time": 1697902276046,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.01,
+          1.96
+        ],
+        "x": -10.01,
+        "y": 1.96,
+        "speed": 1.1180339887499156,
+        "direction": 5.819537698178789
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.31,
+          4.89
+        ],
+        "x": -5.31,
+        "y": 4.89,
+        "speed": 1.6770509831248264,
+        "direction": 2.677945044588993
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.75,
+          -7.35
+        ],
+        "x": -5.75,
+        "y": -7.35,
+        "speed": 0.24999999999999467,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.31,
+          -9.61
+        ],
+        "x": 1.31,
+        "y": -9.61,
+        "speed": 4.038873605350864,
+        "direction": 3.522099030702151
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.05,
+          -4.49
+        ],
+        "x": -17.05,
+        "y": -4.49,
+        "speed": 1.346291201783618,
+        "direction": 4.331882603272331
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.47,
+          4.15
+        ],
+        "x": -16.47,
+        "y": 4.15,
+        "speed": 0.3535533905932976,
+        "direction": 5.497787143782227
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.62,
+          -14.75
+        ],
+        "x": -0.62,
+        "y": -14.75,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -15.97,
+          15.24
+        ],
+        "x": -15.97,
+        "y": 15.24,
+        "speed": 1.4142135623731276,
+        "direction": 0.7853981633974483
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.39,
+          -18.18
+        ],
+        "x": -12.39,
+        "y": -18.18,
+        "speed": 1.7677669529663624,
+        "direction": 0.785398163397466
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.34,
+          19.73
+        ],
+        "x": -5.34,
+        "y": 19.73,
+        "speed": 0.9013878188660274,
+        "direction": 5.30039158393225
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.89,
+          -0.92
+        ],
+        "x": -48.89,
+        "y": -0.92,
+        "speed": 1.9039432764659836,
+        "direction": 3.546484439874875
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.45,
+          -1.47
+        ],
+        "x": -0.45,
+        "y": -1.47,
+        "speed": 2.500000000000002,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -4.15,
+          3.17
+        ],
+        "x": -4.15,
+        "y": 3.17,
+        "speed": 5.755432216610657,
+        "direction": 0.043450895391530006
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.93,
+          -12.48
+        ],
+        "x": 15.93,
+        "y": -12.48,
+        "speed": 2.5495097567963816,
+        "direction": 1.3734007669450192
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -3.23,
+          -10.84
+        ],
+        "x": -3.23,
+        "y": -10.84,
+        "speed": 5.055937104039173,
+        "direction": 6.134295359570093
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.97,
+          3.4
+        ],
+        "x": 17.97,
+        "y": 3.4,
+        "speed": 1.3462912017836282,
+        "direction": 5.092895357497046
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.6,
+          -0.54
+        ],
+        "x": 18.6,
+        "y": -0.54,
+        "speed": 1.030776406404423,
+        "direction": 1.3258176636679952
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.02,
+          16.07
+        ],
+        "x": 19.02,
+        "y": 16.07,
+        "speed": 0.5590169943749554,
+        "direction": 4.2487413713838125
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.32,
+          19.36
+        ],
+        "x": -0.32,
+        "y": 19.36,
+        "speed": 2.5739075352467466,
+        "direction": 1.063697822402559
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.79,
+          26.78
+        ],
+        "x": 7.79,
+        "y": 26.78,
+        "speed": 2.7950849718746973,
+        "direction": 5.819537698178801
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.28,
+          -29.73
+        ],
+        "x": -1.28,
+        "y": -29.73,
+        "speed": 3.5794552658190724,
+        "direction": 0.43240777557053006
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.46,
+          0.24
+        ],
+        "x": 43.46,
+        "y": 0.24,
+        "speed": 1.520690632574611,
+        "direction": 6.1180366297649655
+      }
+    ],
+    "ball": [
+      14.38,
+      3.1
+    ]
+  },
+  {
+    "frame": 24,
+    "period": 1,
+    "utc_time": 1697902276086,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.05,
+          1.98
+        ],
+        "x": -10.05,
+        "y": 1.98,
+        "speed": 0.9013878188659842,
+        "direction": 5.695182703632009
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.25,
+          4.86
+        ],
+        "x": -5.25,
+        "y": 4.86,
+        "speed": 1.6770509831248361,
+        "direction": 2.677945044588981
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.74,
+          -7.35
+        ],
+        "x": -5.74,
+        "y": -7.35,
+        "speed": 0.35355339059326624,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.46,
+          -9.55
+        ],
+        "x": 1.46,
+        "y": -9.55,
+        "speed": 4.506939094329989,
+        "direction": 3.4808852680438402
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.03,
+          -4.44
+        ],
+        "x": -17.03,
+        "y": -4.44,
+        "speed": 1.5811388300841982,
+        "direction": 4.390638425988056
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.48,
+          4.16
+        ],
+        "x": -16.48,
+        "y": 4.16,
+        "speed": 0.5590169943749355,
+        "direction": 5.81953769817878
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.62,
+          -14.75
+        ],
+        "x": -0.62,
+        "y": -14.75,
+        "speed": 0.3535533905932702,
+        "direction": 0.7853981633974372
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -16.01,
+          15.2
+        ],
+        "x": -16.01,
+        "y": 15.2,
+        "speed": 1.414213562373065,
+        "direction": 0.7853981633974483
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.44,
+          -18.23
+        ],
+        "x": -12.44,
+        "y": -18.23,
+        "speed": 1.6007810593582406,
+        "direction": 0.8960553845713396
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.36,
+          19.76
+        ],
+        "x": -5.36,
+        "y": 19.76,
+        "speed": 1.118033988749871,
+        "direction": 5.176036589385496
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.82,
+          -0.89
+        ],
+        "x": -48.82,
+        "y": -0.89,
+        "speed": 1.9039432764659836,
+        "direction": 3.546484439874875
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.45,
+          -1.57
+        ],
+        "x": -0.45,
+        "y": -1.57,
+        "speed": 2.749999999999997,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -4.38,
+          3.16
+        ],
+        "x": -4.38,
+        "y": 3.16,
+        "speed": 5.7716981903076086,
+        "direction": 0.08673833867598503
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.91,
+          -12.58
+        ],
+        "x": 15.91,
+        "y": -12.58,
+        "speed": 2.371708245126276,
+        "direction": 1.2490457723982604
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -3.43,
+          -10.81
+        ],
+        "x": -3.43,
+        "y": -10.81,
+        "speed": 5.0559371040391685,
+        "direction": 6.134295359570083
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.95,
+          3.45
+        ],
+        "x": 17.95,
+        "y": 3.45,
+        "speed": 1.346291201783618,
+        "direction": 5.092895357497048
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.59,
+          -0.58
+        ],
+        "x": 18.59,
+        "y": -0.58,
+        "speed": 1.4577379737113405,
+        "direction": 1.030376826524296
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.03,
+          16.09
+        ],
+        "x": 19.03,
+        "y": 16.09,
+        "speed": 0.7071067811865325,
+        "direction": 3.9269908169872414
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.37,
+          19.27
+        ],
+        "x": -0.37,
+        "y": 19.27,
+        "speed": 2.850438562747842,
+        "direction": 0.909753157944209
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.69,
+          26.83
+        ],
+        "x": 7.69,
+        "y": 26.83,
+        "speed": 3.0207614933986577,
+        "direction": 5.856557814052706
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.41,
+          -29.79
+        ],
+        "x": -1.41,
+        "y": -29.79,
+        "speed": 3.807886552931979,
+        "direction": 0.4048917862850968
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.4,
+          0.25
+        ],
+        "x": 43.4,
+        "y": 0.25,
+        "speed": 1.7677669529663758,
+        "direction": 6.141288252575423
+      }
+    ],
+    "ball": [
+      14.79,
+      3.16
+    ]
+  },
+  {
+    "frame": 25,
+    "period": 1,
+    "utc_time": 1697902276126,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.08,
+          2
+        ],
+        "x": -10.08,
+        "y": 2,
+        "speed": 1.118033988749876,
+        "direction": 5.819537698178771
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.19,
+          4.83
+        ],
+        "x": -5.19,
+        "y": 4.83,
+        "speed": 1.8027756377320052,
+        "direction": 2.5535900500422293
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.73,
+          -7.34
+        ],
+        "x": -5.73,
+        "y": -7.34,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.63,
+          -9.49
+        ],
+        "x": 1.63,
+        "y": -9.49,
+        "speed": 4.272001872658773,
+        "direction": 3.5003633238603675
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -17.01,
+          -4.38
+        ],
+        "x": -17.01,
+        "y": -4.38,
+        "speed": 1.581138830084205,
+        "direction": 4.390638425987999
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.5,
+          4.17
+        ],
+        "x": -16.5,
+        "y": 4.17,
+        "speed": 0.49999999999998934,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.63,
+          -14.76
+        ],
+        "x": -0.63,
+        "y": -14.76,
+        "speed": 0.5590169943749455,
+        "direction": 0.4636476090007972
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -16.05,
+          15.16
+        ],
+        "x": -16.05,
+        "y": 15.16,
+        "speed": 1.6007810593582406,
+        "direction": 0.674740942223557
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.48,
+          -18.28
+        ],
+        "x": -12.48,
+        "y": -18.28,
+        "speed": 1.7677669529662998,
+        "direction": 0.7853981633974305
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.38,
+          19.8
+        ],
+        "x": -5.38,
+        "y": 19.8,
+        "speed": 1.2499999999999867,
+        "direction": 5.355890089177988
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.75,
+          -0.86
+        ],
+        "x": -48.75,
+        "y": -0.86,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.45,
+          -1.68
+        ],
+        "x": -0.45,
+        "y": -1.68,
+        "speed": 3.0000000000000027,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -4.61,
+          3.14
+        ],
+        "x": -4.61,
+        "y": 3.14,
+        "speed": 5.755432216610657,
+        "direction": 0.04345089539153193
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.88,
+          -12.67
+        ],
+        "x": 15.88,
+        "y": -12.67,
+        "speed": 2.6100766272276372,
+        "direction": 1.279339532317018
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -3.63,
+          -10.78
+        ],
+        "x": -3.63,
+        "y": -10.78,
+        "speed": 5.344389581607983,
+        "direction": 6.09496380187482
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.93,
+          3.5
+        ],
+        "x": 17.93,
+        "y": 3.5,
+        "speed": 1.4577379737113358,
+        "direction": 5.252808480655292
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.56,
+          -0.63
+        ],
+        "x": 18.56,
+        "y": -0.63,
+        "speed": 1.346291201783623,
+        "direction": 1.1902899496825394
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.05,
+          16.11
+        ],
+        "x": 19.05,
+        "y": 16.11,
+        "speed": 0.5590169943749157,
+        "direction": 4.248741371383955
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.44,
+          19.18
+        ],
+        "x": -0.44,
+        "y": 19.18,
+        "speed": 3.051638903933455,
+        "direction": 0.9600703624056947
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.58,
+          26.88
+        ],
+        "x": 7.58,
+        "y": 26.88,
+        "speed": 3.0207614933986577,
+        "direction": 5.856557814052706
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.55,
+          -29.85
+        ],
+        "x": -1.55,
+        "y": -29.85,
+        "speed": 4.038873605350864,
+        "direction": 0.38050637711235774
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.33,
+          0.26
+        ],
+        "x": 43.33,
+        "y": 0.26,
+        "speed": 1.581138830084075,
+        "direction": 5.961434752782919
+      }
+    ],
+    "ball": [
+      15.18,
+      3.24
+    ]
+  },
+  {
+    "frame": 26,
+    "period": 1,
+    "utc_time": 1697902276166,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.12,
+          2.02
+        ],
+        "x": -10.12,
+        "y": 2.02,
+        "speed": 0.9013878188660212,
+        "direction": 5.695182703632035
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.13,
+          4.79
+        ],
+        "x": -5.13,
+        "y": 4.79,
+        "speed": 1.6770509831248361,
+        "direction": 2.677945044588981
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.73,
+          -7.34
+        ],
+        "x": -5.73,
+        "y": -7.34,
+        "speed": 0.2500000000000169,
+        "direction": 3.141592653589793
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.79,
+          -9.43
+        ],
+        "x": 1.79,
+        "y": -9.43,
+        "speed": 4.506939094329989,
+        "direction": 3.4808852680438402
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -16.99,
+          -4.32
+        ],
+        "x": -16.99,
+        "y": -4.32,
+        "speed": 1.3462912017836386,
+        "direction": 4.331882603272337
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.52,
+          4.17
+        ],
+        "x": -16.52,
+        "y": 4.17,
+        "speed": 0.5590169943749355,
+        "direction": 5.81953769817878
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.65,
+          -14.77
+        ],
+        "x": -0.65,
+        "y": -14.77,
+        "speed": 0.5590169943749455,
+        "direction": 0.4636476090007972
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -16.1,
+          15.12
+        ],
+        "x": -16.1,
+        "y": 15.12,
+        "speed": 1.7677669529662998,
+        "direction": 0.785398163397466
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.53,
+          -18.33
+        ],
+        "x": -12.53,
+        "y": -18.33,
+        "speed": 2.1213203435596917,
+        "direction": 0.7853981633974632
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.41,
+          19.84
+        ],
+        "x": -5.41,
+        "y": 19.84,
+        "speed": 0.9013878188660152,
+        "direction": 5.30039158393223
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.68,
+          -0.82
+        ],
+        "x": -48.68,
+        "y": -0.82,
+        "speed": 1.9039432764659827,
+        "direction": 3.546484439874874
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.45,
+          -1.8
+        ],
+        "x": -0.45,
+        "y": -1.8,
+        "speed": 3.010398644698071,
+        "direction": 1.653937558683338
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -4.84,
+          3.13
+        ],
+        "x": -4.84,
+        "y": 3.13,
+        "speed": 6.005206074732162,
+        "direction": 0.0416425790985875
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.85,
+          -12.77
+        ],
+        "x": 15.85,
+        "y": -12.77,
+        "speed": 2.692582403567236,
+        "direction": 1.1902899496825379
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -3.84,
+          -10.74
+        ],
+        "x": -3.84,
+        "y": -10.74,
+        "speed": 5.344389581607991,
+        "direction": 6.094963801874811
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.9,
+          3.55
+        ],
+        "x": 17.9,
+        "y": 3.55,
+        "speed": 1.2499999999999645,
+        "direction": 5.355890089177935
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.54,
+          -0.68
+        ],
+        "x": 18.54,
+        "y": -0.68,
+        "speed": 1.3462912017836204,
+        "direction": 1.1902899496825385
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.06,
+          16.13
+        ],
+        "x": 19.06,
+        "y": 16.13,
+        "speed": 0.5590169943749554,
+        "direction": 4.2487413713838125
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.51,
+          19.08
+        ],
+        "x": -0.51,
+        "y": 19.08,
+        "speed": 3.051638903933381,
+        "direction": 0.9600703624056783
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.47,
+          26.93
+        ],
+        "x": 7.47,
+        "y": 26.93,
+        "speed": 2.795084971874737,
+        "direction": 5.819537698178773
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.7,
+          -29.91
+        ],
+        "x": -1.7,
+        "y": -29.91,
+        "speed": 4.038873605350869,
+        "direction": 0.38050637711235724
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.27,
+          0.28
+        ],
+        "x": 43.27,
+        "y": 0.28,
+        "speed": 1.7677669529663758,
+        "direction": 6.141288252575423
+      }
+    ],
+    "ball": [
+      15.56,
+      3.3
+    ]
+  },
+  {
+    "frame": 27,
+    "period": 1,
+    "utc_time": 1697902276206,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.15,
+          2.04
+        ],
+        "x": -10.15,
+        "y": 2.04,
+        "speed": 1.118033988749876,
+        "direction": 5.819537698178771
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.07,
+          4.76
+        ],
+        "x": -5.07,
+        "y": 4.76,
+        "speed": 1.6770509831248461,
+        "direction": 2.677945044588999
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.72,
+          -7.34
+        ],
+        "x": -5.72,
+        "y": -7.34,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          1.96,
+          -9.37
+        ],
+        "x": 1.96,
+        "y": -9.37,
+        "speed": 4.596194077712544,
+        "direction": 3.5321996972874725
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -16.97,
+          -4.27
+        ],
+        "x": -16.97,
+        "y": -4.27,
+        "speed": 1.2747548783981821,
+        "direction": 4.5149934205348465
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.54,
+          4.18
+        ],
+        "x": -16.54,
+        "y": 4.18,
+        "speed": 0.49999999999998934,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.67,
+          -14.78
+        ],
+        "x": -0.67,
+        "y": -14.78,
+        "speed": 0.5590169943749429,
+        "direction": 0.46364760900079943
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -16.15,
+          15.07
+        ],
+        "x": -16.15,
+        "y": 15.07,
+        "speed": 1.6007810593582406,
+        "direction": 0.674740942223557
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.59,
+          -18.39
+        ],
+        "x": -12.59,
+        "y": -18.39,
+        "speed": 2.1213203435596286,
+        "direction": 0.7853981633974335
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.43,
+          19.87
+        ],
+        "x": -5.43,
+        "y": 19.87,
+        "speed": 1.118033988749881,
+        "direction": 5.176036589385514
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.61,
+          -0.79
+        ],
+        "x": -48.61,
+        "y": -0.79,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.44,
+          -1.92
+        ],
+        "x": -0.44,
+        "y": -1.92,
+        "speed": 3.0000000000000027,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -5.08,
+          3.12
+        ],
+        "x": -5.08,
+        "y": 3.12,
+        "speed": 6.000000000000005,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.81,
+          -12.87
+        ],
+        "x": 15.81,
+        "y": -12.87,
+        "speed": 2.371708245126332,
+        "direction": 1.2490457723982484
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -4.05,
+          -10.7
+        ],
+        "x": -4.05,
+        "y": -10.7,
+        "speed": 5.590169943749464,
+        "direction": 6.103331807387112
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.87,
+          3.59
+        ],
+        "x": 17.87,
+        "y": 3.59,
+        "speed": 0.9013878188659965,
+        "direction": 5.300391583932243
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.52,
+          -0.73
+        ],
+        "x": 18.52,
+        "y": -0.73,
+        "speed": 1.346291201783623,
+        "direction": 1.1902899496825394
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.07,
+          16.15
+        ],
+        "x": 19.07,
+        "y": 16.15,
+        "speed": 0.35355339059326624,
+        "direction": 3.926990816987419
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.58,
+          18.98
+        ],
+        "x": -0.58,
+        "y": 18.98,
+        "speed": 3.2015621187164536,
+        "direction": 0.8960553845713505
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.37,
+          26.98
+        ],
+        "x": 7.37,
+        "y": 26.98,
+        "speed": 3.162277660168375,
+        "direction": 5.96143475278295
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -1.85,
+          -29.97
+        ],
+        "x": -1.85,
+        "y": -29.97,
+        "speed": 4.190763653560051,
+        "direction": 0.30288486837497597
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.2,
+          0.29
+        ],
+        "x": 43.2,
+        "y": 0.29,
+        "speed": 1.5811388300842437,
+        "direction": 5.961434752782955
+      }
+    ],
+    "ball": [
+      15.92,
+      3.37
+    ]
+  },
+  {
+    "frame": 28,
+    "period": 1,
+    "utc_time": 1697902276246,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.19,
+          2.06
+        ],
+        "x": -10.19,
+        "y": 2.06,
+        "speed": 1.0606601717798378,
+        "direction": 5.49778714378216
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -5.01,
+          4.73
+        ],
+        "x": -5.01,
+        "y": 4.73,
+        "speed": 1.6770509831248361,
+        "direction": 2.677945044588981
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.72,
+          -7.34
+        ],
+        "x": -5.72,
+        "y": -7.34,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          2.13,
+          -9.3
+        ],
+        "x": 2.13,
+        "y": -9.3,
+        "speed": 4.924428900898057,
+        "direction": 3.5598169831690223
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -16.96,
+          -4.22
+        ],
+        "x": -16.96,
+        "y": -4.22,
+        "speed": 1.0307764064044254,
+        "direction": 4.467410317257789
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.56,
+          4.18
+        ],
+        "x": -16.56,
+        "y": 4.18,
+        "speed": 0.5590169943749455,
+        "direction": 5.8195376981787446
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.69,
+          -14.79
+        ],
+        "x": -0.69,
+        "y": -14.79,
+        "speed": 0.7500000000000007,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -16.2,
+          15.03
+        ],
+        "x": -16.2,
+        "y": 15.03,
+        "speed": 1.7677669529663624,
+        "direction": 0.7853981633974305
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.65,
+          -18.45
+        ],
+        "x": -12.65,
+        "y": -18.45,
+        "speed": 2.1213203435596917,
+        "direction": 0.7853981633974632
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.45,
+          19.91
+        ],
+        "x": -5.45,
+        "y": 19.91,
+        "speed": 1.0606601717798458,
+        "direction": 5.497787143782123
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.54,
+          -0.75
+        ],
+        "x": -48.54,
+        "y": -0.75,
+        "speed": 2.015564437074644,
+        "direction": 3.660738767836315
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.44,
+          -2.04
+        ],
+        "x": -0.44,
+        "y": -2.04,
+        "speed": 3.0000000000000027,
+        "direction": 1.5707963267948966
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -5.32,
+          3.12
+        ],
+        "x": -5.32,
+        "y": 3.12,
+        "speed": 5.999999999999983,
+        "direction": 0
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.78,
+          -12.96
+        ],
+        "x": 15.78,
+        "y": -12.96,
+        "speed": 2.5739075352467338,
+        "direction": 1.063697822402568
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -4.27,
+          -10.66
+        ],
+        "x": -4.27,
+        "y": -10.66,
+        "speed": 5.344389581608013,
+        "direction": 6.094963801874812
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.85,
+          3.62
+        ],
+        "x": 17.85,
+        "y": 3.62,
+        "speed": 0.9013878188660366,
+        "direction": 5.300391583932332
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.5,
+          -0.78
+        ],
+        "x": 18.5,
+        "y": -0.78,
+        "speed": 1.2500000000000155,
+        "direction": 0.9272952180015931
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.08,
+          16.16
+        ],
+        "x": 19.08,
+        "y": 16.16,
+        "speed": 0.5590169943749554,
+        "direction": 4.2487413713838125
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.66,
+          18.88
+        ],
+        "x": -0.66,
+        "y": 18.88,
+        "speed": 3.4003676271838486,
+        "direction": 0.9420000403794614
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.25,
+          27.02
+        ],
+        "x": 7.25,
+        "y": 27.02,
+        "speed": 3.0207614933986577,
+        "direction": 5.856557814052706
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -2.01,
+          -30.02
+        ],
+        "x": -2.01,
+        "y": -30.02,
+        "speed": 4.190763653560061,
+        "direction": 0.3028848683749752
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.14,
+          0.31
+        ],
+        "x": 43.14,
+        "y": 0.31,
+        "speed": 1.7677669529663758,
+        "direction": 6.141288252575423
+      }
+    ],
+    "ball": [
+      16.28,
+      3.42
+    ]
+  },
+  {
+    "frame": 29,
+    "period": 1,
+    "utc_time": 1697902276286,
+    "home_team": [
+      {
+        "is_home": true,
+        "jersey_number": 18,
+        "position": [
+          -10.22,
+          2.09
+        ],
+        "x": -10.22,
+        "y": 2.09,
+        "speed": 1.118033988749876,
+        "direction": 5.819537698178771
+      },
+      {
+        "is_home": true,
+        "jersey_number": 7,
+        "position": [
+          -4.95,
+          4.7
+        ],
+        "x": -4.95,
+        "y": 4.7,
+        "speed": 1.4577379737113245,
+        "direction": 2.6011731533192037
+      },
+      {
+        "is_home": true,
+        "jersey_number": 8,
+        "position": [
+          -5.72,
+          -7.34
+        ],
+        "x": -5.72,
+        "y": -7.34,
+        "speed": 0,
+        "direction": 0
+      },
+      {
+        "is_home": true,
+        "jersey_number": 9,
+        "position": [
+          2.31,
+          -9.22
+        ],
+        "x": 2.31,
+        "y": -9.22,
+        "speed": 4.828301978956998,
+        "direction": 3.5124839424024565
+      },
+      {
+        "is_home": true,
+        "jersey_number": 5,
+        "position": [
+          -16.95,
+          -4.18
+        ],
+        "x": -16.95,
+        "y": -4.18,
+        "speed": 1.030776406404404,
+        "direction": 4.4674103172578725
+      },
+      {
+        "is_home": true,
+        "jersey_number": 4,
+        "position": [
+          -16.58,
+          4.19
+        ],
+        "x": -16.58,
+        "y": 4.19,
+        "speed": 0.7905694150421201,
+        "direction": 5.961434752782962
+      },
+      {
+        "is_home": true,
+        "jersey_number": 19,
+        "position": [
+          -0.72,
+          -14.79
+        ],
+        "x": -0.72,
+        "y": -14.79,
+        "speed": 0.7905694150421078,
+        "direction": 0.3217505543966888
+      },
+      {
+        "is_home": true,
+        "jersey_number": 13,
+        "position": [
+          -16.25,
+          14.98
+        ],
+        "x": -16.25,
+        "y": 14.98,
+        "speed": 1.6007810593582406,
+        "direction": 0.674740942223557
+      },
+      {
+        "is_home": true,
+        "jersey_number": 21,
+        "position": [
+          -12.71,
+          -18.51
+        ],
+        "x": -12.71,
+        "y": -18.51,
+        "speed": 2.4748737341528324,
+        "direction": 0.7853981633974356
+      },
+      {
+        "is_home": true,
+        "jersey_number": 20,
+        "position": [
+          -5.48,
+          19.94
+        ],
+        "x": -5.48,
+        "y": 19.94,
+        "speed": 1.2499999999999734,
+        "direction": 5.355890089177974
+      },
+      {
+        "is_home": true,
+        "jersey_number": 1,
+        "position": [
+          -48.47,
+          -0.71
+        ],
+        "x": -48.47,
+        "y": -0.71,
+        "speed": 2.136000936329342,
+        "direction": 3.500363323860371
+      }
+    ],
+    "away_team": [
+      {
+        "is_home": false,
+        "jersey_number": 17,
+        "position": [
+          -0.44,
+          -2.16
+        ],
+        "x": -0.44,
+        "y": -2.16,
+        "speed": 3.259601202601321,
+        "direction": 1.6475682180646747
+      },
+      {
+        "is_home": false,
+        "jersey_number": 9,
+        "position": [
+          -5.56,
+          3.12
+        ],
+        "x": -5.56,
+        "y": 3.12,
+        "speed": 6.254998001598401,
+        "direction": 6.243206620056297
+      },
+      {
+        "is_home": false,
+        "jersey_number": 24,
+        "position": [
+          15.73,
+          -13.05
+        ],
+        "x": 15.73,
+        "y": -13.05,
+        "speed": 2.462214450449032,
+        "direction": 1.1525719972156583
+      },
+      {
+        "is_home": false,
+        "jersey_number": 13,
+        "position": [
+          -4.48,
+          -10.62
+        ],
+        "x": -4.48,
+        "y": -10.62,
+        "speed": 5.6402570863392265,
+        "direction": 6.059708706038958
+      },
+      {
+        "is_home": false,
+        "jersey_number": 15,
+        "position": [
+          17.83,
+          3.65
+        ],
+        "x": 17.83,
+        "y": 3.65,
+        "speed": 1.060660171779783,
+        "direction": 5.4977871437820935
+      },
+      {
+        "is_home": false,
+        "jersey_number": 4,
+        "position": [
+          18.47,
+          -0.82
+        ],
+        "x": 18.47,
+        "y": -0.82,
+        "speed": 1.457737973711295,
+        "direction": 1.0303768265243485
+      },
+      {
+        "is_home": false,
+        "jersey_number": 2,
+        "position": [
+          19.09,
+          16.18
+        ],
+        "x": 19.09,
+        "y": 16.18,
+        "speed": 0.2500000000000391,
+        "direction": 4.71238898038469
+      },
+      {
+        "is_home": false,
+        "jersey_number": 10,
+        "position": [
+          -0.74,
+          18.77
+        ],
+        "x": -0.74,
+        "y": 18.77,
+        "speed": 3.201562118716382,
+        "direction": 0.8960553845713338
+      },
+      {
+        "is_home": false,
+        "jersey_number": 27,
+        "position": [
+          7.14,
+          27.07
+        ],
+        "x": 7.14,
+        "y": 27.07,
+        "speed": 3.0207614933986373,
+        "direction": 5.856557814052703
+      },
+      {
+        "is_home": false,
+        "jersey_number": 7,
+        "position": [
+          -2.17,
+          -30.07
+        ],
+        "x": -2.17,
+        "y": -30.07,
+        "speed": 4.190763653560061,
+        "direction": 0.3028848683749752
+      },
+      {
+        "is_home": false,
+        "jersey_number": 20,
+        "position": [
+          43.07,
+          0.32
+        ],
+        "x": 43.07,
+        "y": 0.32,
+        "speed": 1.520690632574611,
+        "direction": 6.1180366297649655
+      }
+    ],
+    "ball": [
+      16.62,
+      3.47
+    ]
+  }
+]
