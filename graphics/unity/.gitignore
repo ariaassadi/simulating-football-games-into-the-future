@@ -8,6 +8,11 @@ Builds/
 *.sln.user
 *.pidb
 
+# Data
+*.sqlite
+*.csv
+Assets/Static/Coordinates*
+
 # Logs
 *.log
 *.txt
