@@ -5,3 +5,5 @@
 .python-version
 __pycache__
 .python-version
+.idea
+data/
