@@ -12,23 +12,29 @@ public class CreateAndMovePlayers : MonoBehaviour
     [SerializeField] private GameObject awayTeam;
     [SerializeField] private GameObject ball;
 
+    [SerializeField] private Texture2D playIcon;
+    [SerializeField] private Texture2D pauseIcon;
+
+    [SerializeField] private GameObject playPauseButton;
+
 
     private TimeOverlay timeOverlay;
 
     public int startFrame = 10;
     public int endFrame = 20;
 
-    private int currentFrame;
-    private int currentFrameObjectsTracked;
+    private int currentFrameStartIndex;
+    private int currentFrameEndIndex;
     private int currentFrameNr;
 
     private Game[] playerData;
     private Game[] frameData;
 
-    private int currentIndex = 0;
-    private float timeInterval = 0.04f;
-    private float playbackSpeed = 1.0f;
-    [SerializeField] private bool isPlaying = false;
+    // private int currentIndex = 0;
+
+    // private float timeInterval = 0.04f;
+    // private float playbackSpeed = 1.0f;
+    private bool isPlaying = false;
 
     void Start()
     {
@@ -51,8 +57,8 @@ public class CreateAndMovePlayers : MonoBehaviour
             }
 
             currentFrameNr = 0;
-            currentFrame = 0;
-            currentFrameObjectsTracked = frameData[0].ObjectsTracked;
+            currentFrameStartIndex = 0;
+            currentFrameEndIndex = frameData[0].ObjectsTracked;
         }
         else
         {
@@ -63,78 +69,175 @@ public class CreateAndMovePlayers : MonoBehaviour
     float timer = 0f;
     float interval = 0.04f; // 40 milliseconds in seconds
 
+
     void Update()
     {
-
         if (isPlaying)
         {
-            currentIndex = Mathf.Clamp(currentIndex + Mathf.RoundToInt(playbackSpeed * Time.deltaTime / timeInterval), 0, playerData.Length - 1);
+            Play();
+        }
+    }
 
-            if (currentIndex < frameData.Length)
+    private void Play()
+    {
+        if (currentFrameNr < frameData.Length)
+        {
+            timer += Time.deltaTime;
+
+            if (timer >= interval)
             {
+                timer = 0f;
+
                 MoveObjects();
                 if (timeOverlay != null)
                 {
-                    if (currentIndex < frameData.Length)
-                        timeOverlay.Timer(frameData[currentIndex].MsSinceStart);
+                    if (currentFrameNr < frameData.Length)
+                        timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+                    // Debug.Log("Time: " + frames[currentFrameNr].MsSinceStart);
                 }
                 else
                     Debug.Log("TimeOverlay is null");
+
                 currentFrameNr++;
                 if (currentFrameNr < frameData.Length)
-                    currentFrameObjectsTracked += frameData[currentFrameNr].ObjectsTracked;
-            }
-            else
-            {
-                Debug.Log("Frame has completed");
+                    currentFrameEndIndex += frameData[currentFrameNr].ObjectsTracked;
             }
         }
-
+        else
+        {
+            Debug.Log("Frame has completed");
+        }
     }
 
     public void PlayPause()
     {
+        Debug.Log("PlayPause");
         isPlaying = !isPlaying;
+        if (isPlaying)
+        {
+            playPauseButton.GetComponent<UnityEngine.UI.RawImage>().texture = pauseIcon;
+        }
+        else
+        {
+            playPauseButton.GetComponent<UnityEngine.UI.RawImage>().texture = playIcon;
+        }
     }
 
+    private void SetPlayFalse()
+    {
+        isPlaying = false;
+        playPauseButton.GetComponent<UnityEngine.UI.RawImage>().texture = playIcon;
+    }
+
+    public void FastForward()
+    {
+        SetPlayFalse();
+        Debug.Log("FastForward");
+        if (currentFrameNr + 25 < frameData.Length)
+            currentFrameNr += 25;
+        else
+            currentFrameNr = frameData.Length - 1;
+        if (currentFrameNr < frameData.Length)
+        {
+            for (int i = 24; i >= 0; i--)
+            {
+                currentFrameEndIndex += frameData[currentFrameNr - i].ObjectsTracked;
+            }
+            currentFrameStartIndex = currentFrameEndIndex - frameData[currentFrameNr].ObjectsTracked;
+            timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+        }
+        currentFrameEndIndex += frameData[currentFrameNr].ObjectsTracked;
+        MoveObjects();
+    }
+
+    public void FastBackward()
+    {
+        SetPlayFalse();
+        Debug.Log("FastBackward");
+        if ((currentFrameNr - 25) > 0)
+        {
+
+            currentFrameNr -= 25;
+            if (currentFrameNr < frameData.Length)
+            {
+                for (int i = 0; i < 25; i++)
+                {
+                    currentFrameEndIndex -= frameData[currentFrameNr + i].ObjectsTracked;
+                }
+                currentFrameStartIndex = currentFrameEndIndex - frameData[currentFrameNr].ObjectsTracked;
+            }
+            timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+        }
+        else
+        {
+            currentFrameNr = 0;
+            currentFrameStartIndex = 0;
+            currentFrameEndIndex = frameData[0].ObjectsTracked;
+            timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+        }
+
+        Debug.Log("Current frame start: " + currentFrameStartIndex);
+        Debug.Log("Current frame end: " + currentFrameEndIndex);
+        MoveObjects();
+    }
     public void StepForward()
     {
+        SetPlayFalse();
+        Debug.Log("StepForward");
         currentFrameNr++;
         if (currentFrameNr < frameData.Length)
-            currentFrameObjectsTracked = frameData[currentFrameNr].ObjectsTracked;
+        {
+            // currentFrameStartIndex = currentFrameEndIndex;
+            currentFrameEndIndex += frameData[currentFrameNr].ObjectsTracked;
+            timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+        }
         MoveObjects();
     }
 
     public void StepBackward()
     {
+        SetPlayFalse();
+        Debug.Log("StepBackward");
         currentFrameNr--;
-        if (currentFrameNr < frameData.Length)
-            currentFrameObjectsTracked = frameData[currentFrameNr].ObjectsTracked;
+        if (currentFrameNr < frameData.Length && currentFrameNr > 0)
+        {
+            currentFrameEndIndex -= frameData[currentFrameNr + 1].ObjectsTracked;
+            currentFrameStartIndex = currentFrameEndIndex - frameData[currentFrameNr].ObjectsTracked;
+            timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+        }
+        else
+        {
+            currentFrameNr = 0;
+            currentFrameStartIndex = 0;
+            currentFrameEndIndex = frameData[0].ObjectsTracked;
+            timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
+        }
         MoveObjects();
     }
 
-    private void MoveObjects()
+    void MoveObjects()
     {
         Vector3 position;
         Transform playerTransform;
+        Debug.Log("Current frame: " + currentFrameStartIndex);
 
-        for (; currentFrame < currentFrameObjectsTracked; currentFrame++)
+        for (int currentFrameIndex = currentFrameStartIndex; currentFrameIndex < currentFrameEndIndex; currentFrameIndex++)
         {
-            string playerName = playerData[currentFrame].PlayerName;
+            string playerName = playerData[currentFrameIndex].PlayerName;
             playerTransform = GameObject.Find(playerName)?.transform;
 
             if (playerTransform == null)
             {
                 Debug.Log("Player not found: " + playerName);
-                if (playerData[currentFrame].TeamDirection == "right")
+                if (playerData[currentFrameIndex].TeamDirection == "right")
                 {
-                    position = new Vector3(105 - playerData[currentFrame].X, 0, 68 - playerData[currentFrame].Y);
-                    SpawnPlayer(position, playerData[currentFrame], playerAwayPrefab, awayTeam);
+                    position = new Vector3(105 - playerData[currentFrameIndex].X, 0, 68 - playerData[currentFrameIndex].Y);
+                    SpawnPlayer(position, playerData[currentFrameIndex], playerAwayPrefab, awayTeam);
                 }
                 else
                 {
-                    position = new Vector3(playerData[currentFrame].X, 0, playerData[currentFrame].Y);
-                    SpawnPlayer(position, playerData[currentFrame], playerHomePrefab, homeTeam);
+                    position = new Vector3(playerData[currentFrameIndex].X, 0, playerData[currentFrameIndex].Y);
+                    SpawnPlayer(position, playerData[currentFrameIndex], playerHomePrefab, homeTeam);
                 }
                 playerTransform = GameObject.Find(playerName)?.transform;
             }
@@ -143,107 +246,26 @@ public class CreateAndMovePlayers : MonoBehaviour
                 // Cache the player's transform for reuse
                 position = playerTransform.position;
 
-                if (playerData[currentFrame].TeamDirection == "right")
+                if (playerData[currentFrameIndex].TeamDirection == "right")
                 {
-                    position.x = 105 - playerData[currentFrame].X;
-                    position.z = 68 - playerData[currentFrame].Y;
+                    position.x = 105 - playerData[currentFrameIndex].X;
+                    position.z = 68 - playerData[currentFrameIndex].Y;
                 }
-                else if (playerData[currentFrame].TeamDirection == "left")
+                else if (playerData[currentFrameIndex].TeamDirection == "left")
                 {
-                    position.x = playerData[currentFrame].X;
-                    position.z = playerData[currentFrame].Y;
+                    position.x = playerData[currentFrameIndex].X;
+                    position.z = playerData[currentFrameIndex].Y;
                 }
                 else
                 {
-                    position.x = playerData[currentFrame].X;
-                    position.z = playerData[currentFrame].Y;
+                    position.x = playerData[currentFrameIndex].X;
+                    position.z = playerData[currentFrameIndex].Y;
                     position.y = 0.1f;
                 }
             }
             playerTransform.position = position;
         }
     }
-
-    // void Update()
-    // {
-    //     if (currentFrameNr < frameData.Length)
-    //     {
-    //         timer += Time.deltaTime;
-
-    //         if (timer >= interval)
-    //         {
-    //             timer = 0f;
-
-    //             MoveObjects();
-    //             if (timeOverlay != null)
-    //             {
-    //                 if (currentFrameNr < frameData.Length)
-    //                     timeOverlay.Timer(frameData[currentFrameNr].MsSinceStart);
-    //                 // Debug.Log("Time: " + frames[currentFrameNr].MsSinceStart);
-    //             }
-    //             else
-    //                 Debug.Log("TimeOverlay is null");
-
-    //             currentFrameNr++;
-    //             if (currentFrameNr < frameData.Length)
-    //                 currentFrameObjectsTracked += frameData[currentFrameNr].ObjectsTracked;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("Frame has completed");
-    //     }
-    // }
-    // void MoveObjects()
-    // {
-    //     Vector3 position;
-    //     Transform playerTransform;
-
-    //     for (; currentFrame < currentFrameObjectsTracked; currentFrame++)
-    //     {
-    //         string playerName = playerData[currentFrame].PlayerName;
-    //         playerTransform = GameObject.Find(playerName)?.transform;
-
-    //         if (playerTransform == null)
-    //         {
-    //             Debug.Log("Player not found: " + playerName);
-    //             if (playerData[currentFrame].TeamDirection == "right")
-    //             {
-    //                 position = new Vector3(105 - playerData[currentFrame].X, 0, 68 - playerData[currentFrame].Y);
-    //                 SpawnPlayer(position, playerData[currentFrame], playerAwayPrefab, awayTeam);
-    //             }
-    //             else
-    //             {
-    //                 position = new Vector3(playerData[currentFrame].X, 0, playerData[currentFrame].Y);
-    //                 SpawnPlayer(position, playerData[currentFrame], playerHomePrefab, homeTeam);
-    //             }
-    //             playerTransform = GameObject.Find(playerName)?.transform;
-    //         }
-    //         else
-    //         {
-    //             // Cache the player's transform for reuse
-    //             position = playerTransform.position;
-
-    //             if (playerData[currentFrame].TeamDirection == "right")
-    //             {
-    //                 position.x = 105 - playerData[currentFrame].X;
-    //                 position.z = 68 - playerData[currentFrame].Y;
-    //             }
-    //             else if (playerData[currentFrame].TeamDirection == "left")
-    //             {
-    //                 position.x = playerData[currentFrame].X;
-    //                 position.z = playerData[currentFrame].Y;
-    //             }
-    //             else
-    //             {
-    //                 position.x = playerData[currentFrame].X;
-    //                 position.z = playerData[currentFrame].Y;
-    //                 position.y = 0.1f;
-    //             }
-    //         }
-    //         playerTransform.position = position;
-    //     }
-    // }
 
 
     void SpawnObject(Game player)
