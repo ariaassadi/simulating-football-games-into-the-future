@@ -21,7 +21,7 @@ Open your terminal from `Clusters` -> `>_Alvis Shell Acces`. Now do the followin
 ```bash
 mkdir ~/master-thesis
 cd ~/master-thesis
-module load SciPy-bundle/2021.10-foss-2022a matplotlib/3.5.2-foss-2022a JupyterLab/3.5.0-GCCcore-11.3.0 TensorFlow/2.11.0-foss-2022a-CUDA-11.7.0
+module load SciPy-bundle/2021.10-foss-2022a matplotlib/3.5.2-foss-2022a JupyterLab/3.5.0-GCCcore-11.3.0 TensorFlow/2.11.0-foss-2022a-CUDA-11.7.0 scikit-learn/1.1.2-foss-2022a
 virtualenv --system-site-packages my_python
 source my_python/bin/activate
 pip install --no-cache-dir --no-build-isolation openpyxl
@@ -40,7 +40,7 @@ Paste the following content to the bash file:
 # Ensure we don't have any conflicting modules loaded
 ml purge
 # Load the following modules. This will install many packages
-module load SciPy-bundle/2021.10-foss-2022a matplotlib/3.5.2-foss-2022a JupyterLab/3.5.0-GCCcore-11.3.0 TensorFlow/2.11.0-foss-2022a-CUDA-11.7.0
+module load SciPy-bundle/2021.10-foss-2022a matplotlib/3.5.2-foss-2022a JupyterLab/3.5.0-GCCcore-11.3.0 TensorFlow/2.11.0-foss-2022a-CUDA-11.7.0 scikit-learn/1.1.2-foss-2022a
 # You can launch jupyter, but you must specify the config file as below: 
 jupyter lab --config="${CONFIG_FILE}"
 ```
