@@ -31,7 +31,7 @@ color_ball_light = ajax_black_light
 
 # Draw a legend underneth the pitch
 def draw_legend(ax, home_team, away_team):
-    y_legend = -3
+    y_legend = -2.8
     # Home team
     ax.scatter(pitch_length/2 -28, y_legend, s=player_size, color=color_home_team, edgecolors=color_edge, linewidth=1.8, zorder=2)
     ax.text(pitch_length/2 - 26, y_legend, home_team, ha='left', va='center', fontsize=14)
