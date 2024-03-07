@@ -3,14 +3,16 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 from mplsoccer import Pitch
 import pandas as pd
+import numpy as np
 import os
 
 from settings import *
 
 # Define variables for plotting
 draw_velocities = False
+draw_orientations = True
 draw_shirt_numbers = False
-draw_offsides = True
+draw_offsides = False
 
 player_size = 300
 ball_size = 200
@@ -104,6 +106,24 @@ def visualize_game_snippet(frames_df, start_frame, end_frame):
             for _, row in away_team_frame_df[~away_team_frame_df[['v_x', 'v_y']].isna().any(axis=1)].iterrows():
                 ax['pitch'].arrow(row['x'], row['y'], row['v_x'], row['v_y'], color=color_edge, head_width=0.5, head_length=0.5, zorder=1)
         
+        # Draw arrows for the orientation of each player
+        if draw_orientations:
+            arrow_length = 5
+
+            # Draw the orientation for home players with valid velocities
+            for _, row in home_team_frame_df[~home_team_frame_df['orientation'].isna()].iterrows():
+                # Calculate the end point of the arrow based on orientation
+                dx = np.cos(np.radians(row['orientation'])) * arrow_length
+                dy = np.sin(np.radians(row['orientation'])) * arrow_length
+                ax['pitch'].arrow(row['x'], row['y'], dx, dy, color=color_edge, head_width=0.5, head_length=0.5, zorder=1)
+            
+            # Draw the orientation for away players with valid velocities
+            for _, row in away_team_frame_df[~away_team_frame_df['orientation'].isna()].iterrows():
+                # Calculate the end point of the arrow based on orientation
+                dx = np.cos(np.radians(row['orientation'])) * arrow_length
+                dy = np.sin(np.radians(row['orientation'])) * arrow_length
+                ax['pitch'].arrow(row['x'], row['y'], dx, dy, color=color_edge, head_width=0.5, head_length=0.5, zorder=1)
+
         # Draw offside lines and mark players that are standing in offside positions 
         if draw_offsides:
             # Scatter the offside players again, but with other colors
