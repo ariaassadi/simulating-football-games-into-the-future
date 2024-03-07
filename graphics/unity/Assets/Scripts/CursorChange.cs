@@ -12,7 +12,6 @@ public class CursorChange : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         Vector2 hotspot = new Vector2(handPointer.width * 0.4f, handPointer.height / 8); // Center hotspot
 
-        Debug.Log("CursorChange");
 
         // Change cursor to pointer (hand) when entering the button
         Cursor.SetCursor(handPointer, hotspot, CursorMode.Auto);

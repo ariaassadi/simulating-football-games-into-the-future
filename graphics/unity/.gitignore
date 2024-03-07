@@ -17,3 +17,6 @@ Assets/Static/Coordinates*
 *.log
 *.txt
 
+# Builds
+2sec*
+UnityPlayer.so

@@ -107,7 +107,7 @@ public class CameraController : MonoBehaviour
     {
         // Move the camera to a birds eye view
         transform.position = new Vector3(52.5f, 100f, 34f);
-        transform.rotation = Quaternion.Euler(90, 180, 0);
+        transform.rotation = Quaternion.Euler(90, 0, 0);
 
         mainCamera.orthographic = true;
         mainCamera.orthographicSize = 34f;
