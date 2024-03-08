@@ -8,6 +8,10 @@ FPS = 25
 pitch_length = 105
 pitch_width = 68
 
+# Variables describing the data
+n_roles = 13
+n_team_directions = 3
+
 # Original colors
 ajax_red = '#e40615'
 ajax_white = '#ffffff'
