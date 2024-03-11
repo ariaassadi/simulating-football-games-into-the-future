@@ -9,27 +9,30 @@ public class TimeSlider : MonoBehaviour
     [SerializeField] private GameObject timeSlider;
     [SerializeField] private TMP_Text startTime;
     [SerializeField] private TMP_Text endTime;
-    [SerializeField] private GameObject createAndMovePlayers;
+    private GameObject gameManager;
+
+    [SerializeField] private GameObject gameUI;
 
     private int startFrame;
     private int endFrame;
 
     private void Start()
     {
-        if (createAndMovePlayers == null)
+        gameManager = GameObject.Find("GameManager");
+        if (gameManager == null)
         {
             Debug.LogError("createAndMovePlayers is not assigned.");
             return;
         }
 
-        if (!createAndMovePlayers.TryGetComponent<CreateAndMovePlayers>(out var createAndMovePlayersComponent))
+        if (!gameManager.TryGetComponent<GameManager>(out var gameManagerComponent))
         {
-            Debug.LogError("CreateAndMovePlayers component not found on createAndMovePlayers GameObject.");
+            Debug.LogError("GameManager component not found on GameManager GameObject.");
             return;
         }
 
-        startFrame = createAndMovePlayersComponent.StartFrame();
-        endFrame = createAndMovePlayersComponent.EndFrame();
+        startFrame = gameManagerComponent.StartFrame();
+        endFrame = gameManagerComponent.EndFrame();
 
         timeSlider.GetComponent<UnityEngine.UI.Slider>().minValue = startFrame;
         timeSlider.GetComponent<UnityEngine.UI.Slider>().maxValue = endFrame - 1;
@@ -60,8 +63,8 @@ public class TimeSlider : MonoBehaviour
         int frame = (int)timeSlider.GetComponent<UnityEngine.UI.Slider>().value;
         startTime.text = FrameToTime(frame).ToString();
 
-        createAndMovePlayers.GetComponent<TimeOverlay>().Timer(frame * 40);
-        createAndMovePlayers.GetComponent<CreateAndMovePlayers>().MoveTo(frame);
+        gameUI.GetComponent<TimeOverlay>().Timer(frame * 40);
+        gameManager.GetComponent<GameManager>().MoveTo(frame);
     }
 
 }

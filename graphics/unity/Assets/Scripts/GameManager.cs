@@ -2,26 +2,37 @@ using UnityEngine;
 using System.Data;
 using System;
 using Unity.VisualScripting;
+using System.Threading.Tasks;
+using TMPro;
 
-public class CreateAndMovePlayers : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
+
+    // Prefabs for the players and the ball
     [SerializeField] private GameObject playerHomePrefab;
     [SerializeField] private GameObject playerAwayPrefab;
     [SerializeField] private GameObject ballPrefab;
 
+    // The game objects for the home team, away team and the ball
     [SerializeField] private GameObject homeTeam;
     [SerializeField] private GameObject awayTeam;
     [SerializeField] private GameObject ball;
 
+    // The play and pause icons
     [SerializeField] private Texture2D playIcon;
     [SerializeField] private Texture2D pauseIcon;
 
+    // The play and pause button
     [SerializeField] private GameObject playPauseButton;
 
     [SerializeField] private GameObject timeSlider;
 
+    [SerializeField] private TMP_Text homeTeamNameShort;
+    [SerializeField] private TMP_Text awayTeamNameShort;
 
-    private TimeOverlay timeOverlay;
+    // Scripts
+    [SerializeField] private GameObject gameUI;
+    private GameObject uiManager;
 
     [SerializeField] private int startFrame = 0;
     [SerializeField] private int endFrame = 67500;
@@ -30,57 +41,156 @@ public class CreateAndMovePlayers : MonoBehaviour
     private int currentFrameEndIndex;
     private int currentFrameNr;
 
-    private Schedule[] schedule;
-
     private Game[] playerData;
     private Game[] frameData;
 
     float timer = 0f;
     float interval = 0.04f; // 40 milliseconds in seconds
     private bool isPlaying = false;
+    private bool changingGame = false;
 
     private int[][] framesStartAndEndIndex;
 
-    void Start()
+
+    private void Start()
     {
-        timeOverlay = GetComponent<TimeOverlay>();
-
-        schedule = DatabaseManager.query_schedule_db($"SELECT match_id FROM schedule");
-
-        if (schedule != null)
+        uiManager = GameObject.Find("UIManager");
+        if (uiManager == null)
         {
-            string query = $"SELECT player, x, y, frame, team, orientation FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{schedule[0].MatchId}'";
-
-            Debug.Log($"Select: {query} END");
-            // Retrieve players data
-            playerData = DatabaseManager.query_db(query);
-
-            // Retrieve frames data
-            frameData = DatabaseManager.query_db($"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 GROUP BY frame");
-
-            Debug.Log(playerData.Length);
-            Debug.Log(frameData.Length);
-
-            CalculateFramesStartAndEndIndex();
-
-            if (playerData != null && frameData != null && frameData.Length > 0)
-            {
-                // Loop through frames
-                for (int i = 0; i < frameData[0].ObjectsTracked; i++)
-                {
-                    SpawnObject(playerData[i]);
-                }
-
-                currentFrameNr = 0;
-                currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
-                currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
-            }
-            else
-            {
-                Debug.Log("No frames found");
-            }
+            Debug.LogError("UIManager is not assigned.");
+            return;
         }
     }
+
+
+    void Update()
+    {
+        if (isPlaying && !changingGame)
+        {
+            Play();
+        }
+    }
+
+    public async Task<bool> LoadGameAsync(string match_id)
+    {
+        string query = $"SELECT player, x, y, frame, team, orientation FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
+
+        Debug.Log($"Select: {query} END");
+
+        // Retrieve players data asynchronously
+        Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(query));
+        playerData = await playerDataTask;
+
+        // Retrieve frames data asynchronously
+        Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db($"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}' GROUP BY frame"));
+        frameData = await frameDataTask;
+
+        Debug.Log(playerData.Length);
+        Debug.Log(frameData.Length);
+
+        CalculateFramesStartAndEndIndex();
+
+        if (playerData != null && frameData != null && frameData.Length > 0)
+        {
+            // Loop through frames
+            for (int i = 0; i < frameData[0].ObjectsTracked; i++)
+            {
+                SpawnObject(playerData[i]);
+            }
+
+            currentFrameNr = 0;
+            currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
+            currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+
+            return true; // Loading successful
+        }
+        else
+        {
+            Debug.Log("No frames found");
+            return false; // Loading failed
+        }
+    }
+
+    public async Task<bool> LoadGameAsync(Schedule schedule)
+    {
+        // Inistialize loading screen
+        Debug.Log("Loading game: " + schedule.MatchId);
+        // Remove all objects from the scene
+        changingGame = true;
+        RemoveObjects();
+        changingGame = false;
+        gameUI.GetComponent<TimeOverlay>().Timer(0);
+        homeTeamNameShort.text = schedule.HomeTeamNameShort;
+        awayTeamNameShort.text = schedule.AwayTeamNameShort;
+
+        return await LoadGameAsync(schedule.MatchId);
+    }
+
+    // private void LoadGame(string match_id)
+    // {
+
+    //     string query = $"SELECT player, x, y, frame, team, orientation FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
+
+    //     Debug.Log($"Select: {query} END");
+    //     // Retrieve players data
+    //     playerData = DatabaseManager.query_db(query);
+
+    //     // Retrieve frames data
+    //     frameData = DatabaseManager.query_db($"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}' GROUP BY frame");
+
+    //     Debug.Log(playerData.Length);
+    //     Debug.Log(frameData.Length);
+
+    //     CalculateFramesStartAndEndIndex();
+
+    //     if (playerData != null && frameData != null && frameData.Length > 0)
+    //     {
+    //         // Loop through frames
+    //         for (int i = 0; i < frameData[0].ObjectsTracked; i++)
+    //         {
+    //             SpawnObject(playerData[i]);
+    //         }
+
+    //         currentFrameNr = 0;
+    //         currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
+    //         currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("No frames found");
+    //     }
+
+    // }
+
+    // public void LoadGame(Schedule schedule)
+    // {
+    //     // Inistialize loading screen
+    //     Debug.Log("Loading game: " + schedule.MatchId);
+    //     // Remove all objects from the scene
+    //     changingGame = true;
+    //     RemoveObjects();
+    //     changingGame = false;
+    //     LoadGame(schedule.MatchId);
+    // }
+
+    private void RemoveObjects()
+    {
+        DestroyChildren(homeTeam);
+        DestroyChildren(awayTeam);
+        DestroyChildren(ball);
+        Debug.Log("Objects removed");
+        // playerData = null;
+        // frameData = null;
+    }
+
+    private void DestroyChildren(GameObject parent)
+    {
+        foreach (Transform child in parent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
 
     private void CalculateFramesStartAndEndIndex()
     {
@@ -111,13 +221,6 @@ public class CreateAndMovePlayers : MonoBehaviour
         return framesStartAndEndIndex[frameNr][1];
     }
 
-    void Update()
-    {
-        if (isPlaying)
-        {
-            Play();
-        }
-    }
 
     private void Play()
     {
@@ -216,6 +319,24 @@ public class CreateAndMovePlayers : MonoBehaviour
         MoveObjects();
     }
 
+    public void StepBackward()
+    {
+        SetPlayFalse();
+        Debug.Log("StepBackward");
+        currentFrameNr--;
+        if (currentFrameNr < frameData.Length && currentFrameNr > 0)
+        {
+            currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
+            currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+        }
+        else
+        {
+            currentFrameNr = 0;
+            currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
+            currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+        }
+        MoveObjects();
+    }
     public void MoveTo(int frameNr)
     {
         SetPlayFalse();
@@ -236,26 +357,7 @@ public class CreateAndMovePlayers : MonoBehaviour
         MoveObjects();
     }
 
-    public void StepBackward()
-    {
-        SetPlayFalse();
-        Debug.Log("StepBackward");
-        currentFrameNr--;
-        if (currentFrameNr < frameData.Length && currentFrameNr > 0)
-        {
-            currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
-            currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
-        }
-        else
-        {
-            currentFrameNr = 0;
-            currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
-            currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
-        }
-        MoveObjects();
-    }
-
-    void MoveObjects()
+    private void MoveObjects()
     {
         Vector3 position;
         Transform playerTransform;
@@ -288,11 +390,11 @@ public class CreateAndMovePlayers : MonoBehaviour
         }
         // Update the time slider
         timeSlider.GetComponent<TimeSlider>().ChangeTime(currentFrameNr);
-        timeOverlay.Timer(currentFrameNr);
+        gameUI.GetComponent<TimeOverlay>().Timer(currentFrameNr);
     }
 
 
-    void SpawnObject(Game player)
+    private void SpawnObject(Game player)
     {
         Vector3 position;
         if (player.Team == "home_team")
@@ -311,13 +413,13 @@ public class CreateAndMovePlayers : MonoBehaviour
             SpawnBall(position, player);
         }
     }
-    void SpawnPlayer(Vector3 position, Game player, GameObject playerPrefab, GameObject team)
+    private void SpawnPlayer(Vector3 position, Game player, GameObject playerPrefab, GameObject team)
     {
         GameObject playerObject = Instantiate(playerPrefab, position, Quaternion.Euler(0, player.Orientation, 0), team.transform) as GameObject;
         playerObject.name = player.Player;
     }
 
-    void SpawnBall(Vector3 position, Game player)
+    private void SpawnBall(Vector3 position, Game player)
     {
         GameObject ballObject = Instantiate(ballPrefab, position, Quaternion.identity, ball.transform) as GameObject;
         ballObject.name = player.Player;

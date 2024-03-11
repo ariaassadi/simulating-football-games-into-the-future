@@ -83,36 +83,14 @@ public class Schedule
 public class DatabaseManager : MonoBehaviour
 {
     // QUERIES
-    // public static Game[] query_games_db(int startFrame, int endFrame, int period, string match_id)
-    // {
-    //     // Open connection to the database
-    //     var DataSource = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-    //     var options = new SQLiteConnectionString(DataSource, false);
-    //     var conn = new SQLiteConnection(options);
-    //     // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");
-
-    //     // var query = from game in db.Table<Game>()
-    //     //             where game.Frame >= startFrame &&
-    //     //                   game.Frame <= endFrame &&
-    //     //                   game.Period == period &&
-    //     //                   game.MatchId == match_id
-    //     //             select player, x, y, frame, team_direction, orientation;
-    //     // string query = $"SELECT player, x, y, frame, team_direction, orientation FROM games_table_orientation WHERE frame>={startFrame} AND frame<={endFrame} AND period=1 AND match_id={match_id}";
-
-    //     var query = conn.Table<Game>()
-    //             .Where(g => g.Frame >= startFrame && g.Frame <= endFrame && g.Period == period && g.MatchId == match_id)
-    //             .Select(g => new { g.Player, g.X, g.Frame, g.TeamDirection, g.Orientation })
-    //             .ToList();
-
-    //     Game[] frames = query.ToArray();
-    //     db.Close();
-    //     return frames;
-    // }
+    private static string conn;
 
     public static Game[] query_db(string query)
     {
+
+        conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+        // conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
         // Open connection to the database
-        string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
         var db = new SQLiteConnection(conn);
         // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");
 
@@ -124,7 +102,9 @@ public class DatabaseManager : MonoBehaviour
 
     public static Schedule[] query_schedule_db(string query)
     {
-        string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+        conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+        // string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+
         var db = new SQLiteConnection(conn);
         // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");
         Schedule[] frames = db.Query<Schedule>(query).ToArray();

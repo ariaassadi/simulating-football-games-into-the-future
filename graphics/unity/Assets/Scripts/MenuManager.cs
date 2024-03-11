@@ -16,6 +16,8 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private GameObject chooseGameUI;
 
+    [SerializeField] private GameObject loadingScreen;
+
     private void Start()
     {
         menuUI.SetActive(true);
@@ -23,6 +25,7 @@ public class MenuManager : MonoBehaviour
         settingsUI.SetActive(false);
         controlsUI.SetActive(false);
         chooseGameUI.SetActive(false);
+        loadingScreen.SetActive(false);
     }
     private void Update()
     {
@@ -39,6 +42,7 @@ public class MenuManager : MonoBehaviour
         controlsUI.SetActive(false);
         settingsUI.SetActive(false);
         chooseGameUI.SetActive(false);
+        loadingScreen.SetActive(false);
 
         gameUI.SetActive(true);
     }
@@ -49,6 +53,7 @@ public class MenuManager : MonoBehaviour
         gameUI.SetActive(false);
         settingsUI.SetActive(false);
         chooseGameUI.SetActive(false);
+        loadingScreen.SetActive(false);
 
         controlsUI.SetActive(true);
 
@@ -60,6 +65,7 @@ public class MenuManager : MonoBehaviour
         controlsUI.SetActive(false);
         gameUI.SetActive(false);
         chooseGameUI.SetActive(false);
+        loadingScreen.SetActive(false);
 
         settingsUI.SetActive(true);
     }
@@ -70,9 +76,27 @@ public class MenuManager : MonoBehaviour
         controlsUI.SetActive(false);
         gameUI.SetActive(false);
         settingsUI.SetActive(false);
+        loadingScreen.SetActive(false);
 
         chooseGameUI.SetActive(true);
         chooseGameUI.GetComponent<ChooseGame>().GetSchedule();
+    }
+
+    public void ShowLoadingScreen()
+    {
+        Debug.Log("Loading Screen");
+        loadingScreen.SetActive(true);
+        menuUI.SetActive(false);
+        controlsUI.SetActive(false);
+        gameUI.SetActive(false);
+        settingsUI.SetActive(false);
+        chooseGameUI.SetActive(false);
+
+    }
+
+    public bool ShowingLoadingScreen()
+    {
+        return loadingScreen.activeSelf;
     }
 
     public void QuitApplication()

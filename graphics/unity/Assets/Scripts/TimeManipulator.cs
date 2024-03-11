@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    [SerializeField] private GameObject playerSpawner;
+    [SerializeField] private GameObject gameManager;
 
     private float timeManipulationSpeed = 0.04f;
 
@@ -13,7 +13,7 @@ public class TimeManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K))
         {
-            playerSpawner.GetComponent<CreateAndMovePlayers>().PlayPause();
+            gameManager.GetComponent<GameManager>().PlayPause();
         }
         timer += Time.deltaTime;
 
@@ -22,19 +22,19 @@ public class TimeManager : MonoBehaviour
             timer = 0f;
             if (Input.GetKey(KeyCode.J))
             {
-                playerSpawner.GetComponent<CreateAndMovePlayers>().FastBackward();
+                gameManager.GetComponent<GameManager>().FastBackward();
             }
             else if (Input.GetKey(KeyCode.Period))
             {
-                playerSpawner.GetComponent<CreateAndMovePlayers>().StepForward();
+                gameManager.GetComponent<GameManager>().StepForward();
             }
             else if (Input.GetKey(KeyCode.L))
             {
-                playerSpawner.GetComponent<CreateAndMovePlayers>().FastForward();
+                gameManager.GetComponent<GameManager>().FastForward();
             }
             else if (Input.GetKey(KeyCode.Comma))
             {
-                playerSpawner.GetComponent<CreateAndMovePlayers>().StepBackward();
+                gameManager.GetComponent<GameManager>().StepBackward();
             }
         }
 
