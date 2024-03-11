@@ -14,12 +14,15 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private GameObject settingsUI;
 
+    [SerializeField] private GameObject chooseGameUI;
+
     private void Start()
     {
         menuUI.SetActive(true);
         gameUI.SetActive(false);
         settingsUI.SetActive(false);
         controlsUI.SetActive(false);
+        chooseGameUI.SetActive(false);
     }
     private void Update()
     {
@@ -30,12 +33,12 @@ public class MenuManager : MonoBehaviour
         // gameUI.SetActive(!gameUI.activeSelf);
     }
 
-
     public void ShowGame()
     {
         menuUI.SetActive(false);
         controlsUI.SetActive(false);
         settingsUI.SetActive(false);
+        chooseGameUI.SetActive(false);
 
         gameUI.SetActive(true);
     }
@@ -45,6 +48,7 @@ public class MenuManager : MonoBehaviour
         menuUI.SetActive(false);
         gameUI.SetActive(false);
         settingsUI.SetActive(false);
+        chooseGameUI.SetActive(false);
 
         controlsUI.SetActive(true);
 
@@ -55,8 +59,20 @@ public class MenuManager : MonoBehaviour
         menuUI.SetActive(false);
         controlsUI.SetActive(false);
         gameUI.SetActive(false);
+        chooseGameUI.SetActive(false);
 
         settingsUI.SetActive(true);
+    }
+
+    public void ShowChooseGame()
+    {
+        menuUI.SetActive(false);
+        controlsUI.SetActive(false);
+        gameUI.SetActive(false);
+        settingsUI.SetActive(false);
+
+        chooseGameUI.SetActive(true);
+        chooseGameUI.GetComponent<ChooseGame>().GetSchedule();
     }
 
     public void QuitApplication()

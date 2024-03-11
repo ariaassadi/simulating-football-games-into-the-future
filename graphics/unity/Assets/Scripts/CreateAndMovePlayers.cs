@@ -45,18 +45,18 @@ public class CreateAndMovePlayers : MonoBehaviour
     {
         timeOverlay = GetComponent<TimeOverlay>();
 
-        schedule = DatabaseManager.query_schedule_db($"SELECT match_id FROM game_schedule");
+        schedule = DatabaseManager.query_schedule_db($"SELECT match_id FROM schedule");
 
         if (schedule != null)
         {
-            string query = $"SELECT player, x, y, frame, team_direction, orientation FROM games_table_orientation WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{schedule[0].MatchId}'";
+            string query = $"SELECT player, x, y, frame, team, orientation FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{schedule[0].MatchId}'";
 
             Debug.Log($"Select: {query} END");
             // Retrieve players data
             playerData = DatabaseManager.query_db(query);
 
             // Retrieve frames data
-            frameData = DatabaseManager.query_db($"SELECT frame, objects_tracked FROM games_table_orientation WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 GROUP BY frame");
+            frameData = DatabaseManager.query_db($"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 GROUP BY frame");
 
             Debug.Log(playerData.Length);
             Debug.Log(frameData.Length);
@@ -270,17 +270,7 @@ public class CreateAndMovePlayers : MonoBehaviour
             if (playerTransform == null)
             {
                 Debug.Log("Player not found: " + playerName);
-                if (playerData[currentFrameIndex].TeamDirection == "right")
-                {
-                    position = new Vector3(playerData[currentFrameIndex].X, 0, playerData[currentFrameIndex].Y);
-                    SpawnPlayer(position, playerData[currentFrameIndex], playerHomePrefab, homeTeam);
-                }
-                else
-                {
-                    position = new Vector3(playerData[currentFrameIndex].X, 0, playerData[currentFrameIndex].Y);
-                    SpawnPlayer(position, playerData[currentFrameIndex], playerAwayPrefab, awayTeam);
-                }
-                playerTransform = GameObject.Find(playerName)?.transform;
+                SpawnObject(playerData[currentFrameIndex]);
             }
             else
             {
@@ -293,8 +283,8 @@ public class CreateAndMovePlayers : MonoBehaviour
                 position.x = playerData[currentFrameIndex].X;
                 position.z = playerData[currentFrameIndex].Y;
                 playerTransform.rotation = Quaternion.Euler(0, playerData[currentFrameIndex].Orientation + 90, 0);
+                playerTransform.position = position;
             }
-            playerTransform.position = position;
         }
         // Update the time slider
         timeSlider.GetComponent<TimeSlider>().ChangeTime(currentFrameNr);
@@ -305,12 +295,12 @@ public class CreateAndMovePlayers : MonoBehaviour
     void SpawnObject(Game player)
     {
         Vector3 position;
-        if (player.TeamDirection == "right")
+        if (player.Team == "home_team")
         {
-            position = new Vector3(105 - player.X, 0, 68 - player.Y);
+            position = new Vector3(player.X, 0, player.Y);
             SpawnPlayer(position, player, playerHomePrefab, homeTeam);
         }
-        else if (player.TeamDirection == "left")
+        else if (player.Team == "away_team")
         {
             position = new Vector3(player.X, 0, player.Y);
             SpawnPlayer(position, player, playerAwayPrefab, awayTeam);
