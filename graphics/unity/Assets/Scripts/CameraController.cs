@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 1f;
     public float verticalSpeed = 3f;
-    public Camera mainCamera;
+    private Camera mainCamera;
 
     KeyCode lastKeyPressed;
 
@@ -18,7 +18,8 @@ public class CameraController : MonoBehaviour
         mainCamera = GetComponent<Camera>();
 
         // Set the initial camera position and rotation
-        lastKeyPressed = KeyCode.M;
+        lastKeyPressed = KeyCode.N;
+        SideView();
     }
 
     void Update()

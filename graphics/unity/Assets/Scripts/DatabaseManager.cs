@@ -83,13 +83,14 @@ public class Schedule
 public class DatabaseManager : MonoBehaviour
 {
     // QUERIES
-    private static string conn;
+    private static string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+    // private static string conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
 
     public static Game[] query_db(string query)
     {
 
-        conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
         // conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+
         // Open connection to the database
         var db = new SQLiteConnection(conn);
         // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");
@@ -102,8 +103,8 @@ public class DatabaseManager : MonoBehaviour
 
     public static Schedule[] query_schedule_db(string query)
     {
-        conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-        // string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+        // conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+        // conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
 
         var db = new SQLiteConnection(conn);
         // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");

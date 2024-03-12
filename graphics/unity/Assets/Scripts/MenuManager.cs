@@ -91,7 +91,6 @@ public class MenuManager : MonoBehaviour
         gameUI.SetActive(false);
         settingsUI.SetActive(false);
         chooseGameUI.SetActive(false);
-
     }
 
     public bool ShowingLoadingScreen()
