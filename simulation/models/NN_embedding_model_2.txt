@@ -1,0 +1,3 @@
+{'loss': [10.893533706665039], 'val_loss': [17.76154327392578]}
+Training error: 2.14
+Validation error: 4.02
