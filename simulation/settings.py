@@ -22,5 +22,5 @@ ajax_black = '#000000'
 # Lighter shades
 ajax_red_light = '#ff9ea8'
 ajax_white_light = '#e9e9e9'
-ajax_yellow_light = '#fff8c5'
+ajax_yellow_light = '#f7de97'
 ajax_black_light = '#424242'
