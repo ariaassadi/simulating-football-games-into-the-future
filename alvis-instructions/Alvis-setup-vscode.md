@@ -27,6 +27,7 @@ source my_python/bin/activate
 pip install --no-cache-dir --no-build-isolation openpyxl
 pip install --no-cache-dir --no-build-isolation mplsoccer
 pip install --no-cache-dir --no-build-isolation pyarrow==15.0.0
+pip install --no-cache-dir --no-build-isolation imageio
 python -m ipykernel install --user --name=my_python --display-name="My Python"
 ```
 Now we need to create a bash script that will tell VSCode how to access our modules:
