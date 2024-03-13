@@ -11,8 +11,9 @@ import os
 from settings import *
 
 # Define variables for plotting
-draw_velocities = True
+draw_velocities = False
 draw_orientations = False
+draw_angle_to_ball = True
 draw_shirt_numbers = False
 draw_offsides = False
 draw_prediction_lines = True
@@ -115,6 +116,24 @@ def visualize_game_animation(frames_df, start_frame, end_frame):
             # Draw the velocity for away players with valid velocities
             for _, row in away_team_frame_df[~away_team_frame_df[['v_x', 'v_y']].isna().any(axis=1)].iterrows():
                 ax['pitch'].arrow(row['x'], row['y'], row['v_x'], row['v_y'], color=color_edge, head_width=0.5, head_length=0.5, zorder=1)
+        
+        # Draw arrows for the angle_to_ball for each player
+        if draw_angle_to_ball:
+            arrow_length = 4
+
+            # Draw the angle_to_ball for home players with valid velocities
+            for _, row in home_team_frame_df[~home_team_frame_df['angle_to_ball'].isna()].iterrows():
+                # Calculate the end point of the arrow based on orientation
+                dx = np.cos(np.radians(row['angle_to_ball'])) * arrow_length
+                dy = np.sin(np.radians(row['angle_to_ball'])) * arrow_length
+                ax['pitch'].arrow(row['x'], row['y'], dx, dy, color=color_edge, head_width=0.5, head_length=0.5, zorder=1)
+            
+            # Draw the angle_to_ball for away players with valid velocities
+            for _, row in away_team_frame_df[~away_team_frame_df['angle_to_ball'].isna()].iterrows():
+                # Calculate the end point of the arrow based on orientation
+                dx = np.cos(np.radians(row['angle_to_ball'])) * arrow_length
+                dy = np.sin(np.radians(row['angle_to_ball'])) * arrow_length
+                ax['pitch'].arrow(row['x'], row['y'], dx, dy, color=color_edge, head_width=0.5, head_length=0.5, zorder=1)
         
         # Draw arrows for the orientation of each player
         if draw_orientations:
@@ -347,7 +366,7 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     imageio.mimsave(gif_path, frames, fps=8)
 
 # Visualize the result from a training session
-def visualize_training_results(training_results):
+def visualize_training_results(training_results, model_name):
     epochs = range(1, len(training_results['loss']) + 1)
 
     plt.plot(epochs, training_results['loss'], 'b', color=ajax_red, label='Training loss')
@@ -360,4 +379,6 @@ def visualize_training_results(training_results):
     plt.grid(True, alpha=0.3)  # Add grid with less visibility
     plt.legend()
 
-    plt.show()
+    # Save figure
+    save_path = f"images/models/training_results_{model_name}.png"
+    plt.savefig(save_path)
