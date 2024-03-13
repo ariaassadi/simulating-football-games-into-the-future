@@ -94,7 +94,7 @@ def euclidean_distance_loss(y_true, y_pred):
 
 
 # Prepare data before training
-def prepare_data(frames_dfs, ball_has_to_be_in_motion=False):
+def prepare_data(frames_dfs, include_ball=True, ball_has_to_be_in_motion=False):
 
     # Initialize lists to store features and labels
     X_data = []
@@ -107,6 +107,10 @@ def prepare_data(frames_dfs, ball_has_to_be_in_motion=False):
 
         # Drop rows with NaN values in the labels (y)
         frames_df.dropna(subset=y_cols, inplace=True)
+
+        # Drop rows where 'team' is ball, if specified
+        if not include_ball:
+            frames_df = frames_df[frames_df['team'] == 'ball']
 
         # Drop rows where ball is not in motion, if specified
         if ball_has_to_be_in_motion:
@@ -333,8 +337,8 @@ def define_NN_model(input_shape):
 
 def train_NN_model(train_frames_dfs, val_frames_dfs):
     # Prepare the data
-    X_train, y_train = prepare_data(train_frames_dfs, ball_has_to_be_in_motion=True)
-    X_val, y_val = prepare_data(val_frames_dfs, ball_has_to_be_in_motion=True)
+    X_train, y_train = prepare_data(train_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
+    X_val, y_val = prepare_data(val_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
 
     # Only keep numerical columns
     X_train = X_train[numerical_cols]
@@ -423,8 +427,8 @@ def define_NN_model_with_embedding(numerical_input_shape, n_team_directions=3, n
 
 def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs):
     # Prepare data
-    X_train, y_train = prepare_data(train_frames_dfs, ball_has_to_be_in_motion=True)
-    X_val, y_val = prepare_data(val_frames_dfs, ball_has_to_be_in_motion=True)
+    X_train, y_train = prepare_data(train_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
+    X_val, y_val = prepare_data(val_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
 
     # Adjust for embeddings for both training and validation sets
     X_train_numerical, X_train_categorical = adjust_for_embeddings(X_train)
