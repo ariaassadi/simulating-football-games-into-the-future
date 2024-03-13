@@ -75,6 +75,12 @@ public class Schedule
     [Column("away_team_name_short")]
     public string AwayTeamNameShort { get; set; }
 
+    [Column("home_team_color")]
+    public string HomeTeamColor { get; set; }
+
+    [Column("away_team_color")]
+    public string AwayTeamColor { get; set; }
+
     [Column("match_id")]
     public string MatchId { get; set; }
 }

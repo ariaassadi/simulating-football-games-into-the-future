@@ -9,16 +9,20 @@ public class GameTools : MonoBehaviour
 
     [SerializeField] private GameObject gameToolsUI;
 
+    private GameObject selectedToolBorder;
+
     private Component uiManager;
 
     private float distance;
 
-    private bool distanceSelected = false;
+    private bool distanceSelected;
     private string toolSelected = "";
 
     private void Start()
     {
         GameObject menumanager = GameObject.Find("UIManager");
+        distanceSelected = false;
+
         if (menumanager != null)
         {
             uiManager = menumanager.GetComponent<MenuManager>();
@@ -31,6 +35,14 @@ public class GameTools : MonoBehaviour
         {
             Debug.LogError("MenuManager not found");
         }
+    }
+
+    public void DeselectAllTools()
+    {
+        distanceSelected = false;
+        toolSelected = "";
+        gameToolsUI.GetComponent<GameToolsUI>().EmptyDistance();
+        DistanceDeselect();
     }
 
     private void CalculateDistance()
@@ -46,6 +58,10 @@ public class GameTools : MonoBehaviour
 
     private void ResetPlayers(int nrPlayers)
     {
+        for (int i = 0; i < nrPlayers; i++)
+        {
+            players[i].transform.GetChild(0).gameObject.SetActive(false);
+        }
         players = new GameObject[nrPlayers];
         distance = 0;
     }
@@ -61,6 +77,7 @@ public class GameTools : MonoBehaviour
         if (distanceSelected)
         {
             distanceSelected = false;
+            ResetPlayers(2);
             players = null;
             LineRenderer lineRenderer = GetComponent<LineRenderer>();
             if (lineRenderer != null)
@@ -73,11 +90,23 @@ public class GameTools : MonoBehaviour
         }
         else
         {
+            selectedToolBorder = border;
             distanceSelected = true;
             toolSelected = "distance";
             border.GetComponent<Image>().color = Color.white;
             players = new GameObject[2];
         }
+    }
+    private void DistanceDeselect()
+    {
+        distanceSelected = false;
+        toolSelected = "";
+        if (selectedToolBorder != null)
+        {
+            selectedToolBorder.GetComponent<Image>().color = HexToRGB("#12326e");
+            selectedToolBorder = null;
+        }
+        gameToolsUI.GetComponent<GameToolsUI>().EmptyDistance();
     }
 
     private void Update()
@@ -150,17 +179,28 @@ public class GameTools : MonoBehaviour
         }
     }
 
+    private void RemoveLine()
+    {
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer != null)
+        {
+            // Reset the LineRenderer
+            lineRenderer.positionCount = 0;
+        }
+    }
 
     public void ChoosePlayer(GameObject player)
     {
         // Append the player to the list of players
         if (players[0] == null)
         {
+            player.transform.GetChild(0).gameObject.SetActive(true);
             players[0] = player;
             Debug.Log("Player 1: " + player.name);
         }
         else if (players[1] == null)
         {
+            player.transform.GetChild(0).gameObject.SetActive(true);
             players[1] = player;
             Debug.Log("Player 2: " + player.name);
         }
@@ -168,6 +208,9 @@ public class GameTools : MonoBehaviour
         {
             ResetPlayers(2);
             players[0] = player;
+            player.transform.GetChild(0).gameObject.SetActive(true);
+            Debug.Log("Player 1: " + player.name);
+            RemoveLine();
         }
     }
 

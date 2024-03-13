@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Data;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     // Prefabs for the players and the ball
     [SerializeField] private GameObject playerHomePrefab;
     [SerializeField] private GameObject playerAwayPrefab;
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject ballPrefab;
 
     // The game objects for the home team, away team and the ball
@@ -26,8 +28,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject timeSlider;
 
-    [SerializeField] private TMP_Text homeTeamNameShort;
-    [SerializeField] private TMP_Text awayTeamNameShort;
+    [SerializeField] private GameObject homeTeamNameShort;
+    [SerializeField] private GameObject awayTeamNameShort;
 
     // Scripts
     [SerializeField] private GameObject gameUI;
@@ -42,6 +44,8 @@ public class GameManager : MonoBehaviour
 
     private Game[] playerData;
     private Game[] frameData;
+
+    private Schedule gameInfo;
 
     float timer = 0f;
     float interval = 0.04f; // 40 milliseconds in seconds, the interval between frames
@@ -76,20 +80,23 @@ public class GameManager : MonoBehaviour
     public async Task<bool> LoadGameAsync(string match_id)
     {
         // SQL query to retrieve player data for a specific match and period
-        string query = $"SELECT player, x, y, frame, team, orientation FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
+        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
 
-        Debug.Log($"Select: {query} END");
+        string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}' GROUP BY frame";
+
+
+        Debug.Log($"Select: {query_tracking} END");
 
         // Retrieve players data asynchronously
-        Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(query));
+        Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(query_tracking));
         playerData = await playerDataTask;
 
         // Retrieve frames data asynchronously
-        Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db($"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}' GROUP BY frame"));
+        Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(query_frames));
         frameData = await frameDataTask;
 
-        Debug.Log(playerData.Length);
-        Debug.Log(frameData.Length);
+        Debug.Log("Number of rows: " + playerData.Length);
+        Debug.Log("Number of frames: " + frameData.Length);
 
         CalculateFramesStartAndEndIndex();
 
@@ -119,13 +126,16 @@ public class GameManager : MonoBehaviour
     {
         // Inistialize loading screen
         Debug.Log("Loading game: " + schedule.MatchId);
+        gameInfo = schedule;
         // Remove all objects from the scene
         changingGame = true;
         RemoveObjects();
         changingGame = false;
         gameUI.GetComponent<TimeOverlay>().Timer(0);
-        homeTeamNameShort.text = schedule.HomeTeamNameShort;
-        awayTeamNameShort.text = schedule.AwayTeamNameShort;
+        homeTeamNameShort.GetComponentInChildren<TMP_Text>().text = schedule.HomeTeamNameShort;
+        homeTeamNameShort.GetComponentInChildren<Image>().color = Utils.HexToColor(schedule.HomeTeamColor);
+        awayTeamNameShort.GetComponentInChildren<TMP_Text>().text = schedule.AwayTeamNameShort;
+        awayTeamNameShort.GetComponentInChildren<Image>().color = Utils.HexToColor(schedule.AwayTeamColor);
 
         return await LoadGameAsync(schedule.MatchId);
     }
@@ -136,6 +146,12 @@ public class GameManager : MonoBehaviour
         DestroyChildren(homeTeam);
         DestroyChildren(awayTeam);
         DestroyChildren(ball);
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer != null)
+        {
+            Destroy(lineRenderer);
+        }
+        gameObject.GetComponent<GameTools>().DeselectAllTools();
         Debug.Log("Objects removed");
 
         // Reset the time slider
@@ -367,12 +383,12 @@ public class GameManager : MonoBehaviour
         if (player.Team == "home_team")
         {
             position = new Vector3(player.X, 0, player.Y);
-            SpawnPlayer(position, player, playerHomePrefab, homeTeam);
+            SpawnPlayer(position, player, homeTeam, gameInfo.HomeTeamColor);
         }
         else if (player.Team == "away_team")
         {
             position = new Vector3(player.X, 0, player.Y);
-            SpawnPlayer(position, player, playerAwayPrefab, awayTeam);
+            SpawnPlayer(position, player, awayTeam, gameInfo.AwayTeamColor);
         }
         else
         {
@@ -382,11 +398,13 @@ public class GameManager : MonoBehaviour
     }
 
     // Spawn player object at specified position
-    private void SpawnPlayer(Vector3 position, Game player, GameObject playerPrefab, GameObject team)
+    private void SpawnPlayer(Vector3 position, Game player, GameObject team, string teamColor)
     {
         GameObject playerObject = Instantiate(playerPrefab, position, Quaternion.Euler(0, player.Orientation, 0), team.transform) as GameObject;
         playerObject.name = player.Player;
         playerObject.tag = "Player";
+        playerObject.GetComponent<Renderer>().material.color = Utils.HexToColor(teamColor);
+        playerObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Spawn ball object at specified position
@@ -395,6 +413,8 @@ public class GameManager : MonoBehaviour
         // Spawn ball object at specified position
         GameObject ballObject = Instantiate(ballPrefab, position, Quaternion.identity, ball.transform) as GameObject;
         ballObject.name = player.Player;
+        ballObject.tag = "Player";
+        ballObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Get the start frame number

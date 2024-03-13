@@ -1340,6 +1340,8 @@ MonoBehaviour:
     type: 3}
   playerAwayPrefab: {fileID: 2424606124740352998, guid: fedeecb4ebc91ac4e94a9a63c11e67d5,
     type: 3}
+  playerPrefab: {fileID: 2994004775974609870, guid: 25cece4231ac05d1998971016c260666,
+    type: 3}
   ballPrefab: {fileID: 1710072334422423055, guid: 414b2b1b7ed735386aa85440895a32fd,
     type: 3}
   homeTeam: {fileID: 1007526013}
@@ -1349,8 +1351,8 @@ MonoBehaviour:
   pauseIcon: {fileID: 2800000, guid: 84776de9806603b3fbdfb7b21cb4e89a, type: 3}
   playPauseButton: {fileID: 1921477510}
   timeSlider: {fileID: 589979291}
-  homeTeamNameShort: {fileID: 1281361646}
-  awayTeamNameShort: {fileID: 965491058}
+  homeTeamNameShort: {fileID: 1859739927}
+  awayTeamNameShort: {fileID: 1337485284}
   gameUI: {fileID: 1840783085}
   startFrame: 0
   endFrame: 2500

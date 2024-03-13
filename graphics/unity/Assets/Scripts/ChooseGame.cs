@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,7 +35,7 @@ public class ChooseGame : MonoBehaviour
 
     public void GetSchedule()
     {
-        schedule = DatabaseManager.query_schedule_db($"SELECT match_id, home_team_name, away_team_name, home_team_name_short, away_team_name_short FROM schedule");
+        schedule = DatabaseManager.query_schedule_db($"SELECT * FROM schedule");
 
         if (schedule == null)
         {
