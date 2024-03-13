@@ -110,7 +110,7 @@ def prepare_data(frames_dfs, include_ball=True, ball_has_to_be_in_motion=False):
 
         # Drop rows where 'team' is ball, if specified
         if not include_ball:
-            frames_df = frames_df[frames_df['team'] == 'ball']
+            frames_df = frames_df[frames_df['team'] != 'ball']
 
         # Drop rows where ball is not in motion, if specified
         if ball_has_to_be_in_motion:
