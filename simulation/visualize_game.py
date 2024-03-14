@@ -12,8 +12,8 @@ from settings import *
 
 # Define variables for plotting
 draw_velocities = False
-draw_orientations = False
-draw_angle_to_ball = True
+draw_orientations = True
+draw_angle_to_ball = False
 draw_shirt_numbers = False
 draw_offsides = False
 draw_prediction_lines = True
@@ -369,12 +369,16 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
 def visualize_training_results(training_results, model_name):
     epochs = range(1, len(training_results['loss']) + 1)
 
+    plt.figure(facecolor='white')
     plt.plot(epochs, training_results['loss'], 'b', color=ajax_red, label='Training loss')
     plt.plot(epochs, training_results['val_loss'], 'r', color=ajax_yellow, label='Validation loss')
     plt.title('Training and validation loss')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
-    plt.xticks(range(1, len(epochs) + 1, 1))  # Set x_ticks to integers
+    if len(epochs) < 10:
+        plt.xticks(np.arange(1, len(epochs) + 1, 1.0))  # Set x_ticks to integers
+    else:
+        plt.xticks(np.arange(2, len(epochs) + 1, len(epochs) / 10))  # Set x_ticks to integers
     plt.xlim(1, len(epochs))  # Set start_x and end_x
     plt.grid(True, alpha=0.3)  # Add grid with less visibility
     plt.legend()
