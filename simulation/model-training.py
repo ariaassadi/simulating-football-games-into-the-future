@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 # # Notebook for training predictive models
 # ### Import packages
 
-# In[ ]:
+# In[16]:
 
 
 from tensorflow.keras.layers import Input, Embedding, Flatten, Dense, Concatenate
@@ -14,11 +14,13 @@ from tensorflow.keras.models import load_model as keras_load_model
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
+from tensorflow.keras import regularizers
 from tensorflow.keras.models import Model
 from sklearn.pipeline import Pipeline
 from keras.models import Sequential
-
 from keras.models import load_model
+from datetime import date
+
 import tensorflow as tf
 import pandas as pd
 import numpy as np
@@ -32,19 +34,18 @@ from settings import *
 
 # ### Global variables
 
-# In[ ]:
+# In[13]:
 
 
 # Define numerical, categorical, and y columns
-# numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball, 'distance_ran', 'minute', 'frame']
-# categorical_cols = ['role', 'team', 'team_direction']
-# y_cols = ['x_future', 'y_future']
-numerical_cols = ['x', 'y', 'v_x', 'v_y']
+# numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball, 'angle_to_ball, 'distance_ran', 'minute', 'frame']
+numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y']
 categorical_cols = ['team_direction', 'role']
 y_cols = ['x_future', 'y_future']
 
 # Define parameters for model training
-epochs = 20
+epochs = 6
+matches = 40
 
 # Define the length of the sequences
 sequence_length = FPS * seconds_into_the_future
@@ -52,7 +53,7 @@ sequence_length = FPS * seconds_into_the_future
 
 # ### Helper functions
 
-# In[ ]:
+# In[4]:
 
 
 # Split the games into train, test, and validtion. This way, each game will be treated seperatly
@@ -90,7 +91,7 @@ def euclidean_distance_loss(y_true, y_pred):
     return tf.sqrt(tf.reduce_sum(tf.square(y_pred - y_true), axis=-1))
 
 
-# In[ ]:
+# In[5]:
 
 
 # Prepare data before training
@@ -174,7 +175,7 @@ def prepare_sequential_data(X_data, y_data, sequence_length):
     return X_seq, y_seq
 
 
-# In[ ]:
+# In[6]:
 
 
 # Add a column for distance wrongly predicted (in metres) for each object
@@ -184,9 +185,8 @@ def add_pred_error(frames_df):
     
 # Add a column for distance wrongly predicted (in metres) for each object. Also return average_pred_error
 def total_error_loss(frames_df, include_ball=False, ball_has_to_be_in_motion=True):
-    # Add 'pred_error' column if empty
-    if 'pred_error' not in frames_df:
-        add_pred_error(frames_df)
+    # Add 'pred_error' column
+    add_pred_error(frames_df)
     
     # Create a new column to store modified pred_error values
     frames_df['pred_error_tmp'] = frames_df['pred_error']
@@ -212,6 +212,22 @@ def predict_and_evaluate(model, X_data, frames_dfs, include_ball=False, ball_has
     # Make predictions using the loaded model
     predictions = model.predict(X_data)
     
+    # For each game
+    for idx, frames_df in enumerate(frames_dfs):
+        # Fill NaN values with zeros for numerical columns
+        frames_df[numerical_cols] = frames_df[numerical_cols].fillna(0)
+
+        # Drop rows with NaN values in the labels (y)
+        frames_df.dropna(subset=y_cols, inplace=True)
+
+        # Drop rows where 'team' is ball, if specified
+        if not include_ball:
+            frames_dfs[idx] = frames_df.loc[frames_df['team'] != 'ball']
+
+        # Drop rows where ball is not in motion, if specified
+        if ball_has_to_be_in_motion:
+            frames_dfs[idx] = frames_dfs[idx].loc[frames_dfs[idx]['ball_in_motion']]
+
     # Concatenate the frames DataFrames into a single large DataFrame
     frames_concatenated_df = pd.concat(frames_dfs, ignore_index=True)
 
@@ -231,7 +247,7 @@ def predict_and_evaluate(model, X_data, frames_dfs, include_ball=False, ball_has
 
 # ### Load frames
 
-# In[ ]:
+# In[7]:
 
 
 # Load the processed/frames
@@ -248,7 +264,7 @@ def load_all_processed_frames():
             match_paths = glob.glob(os.path.join(DATA_FOLDER_PROCESSED, "*.parquet"))
 
             # Extract IDs without the ".parquet" extension
-            match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][0:10]
+            match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][0:matches]
             # match_ids = ['49e6bfdf-abf3-499d-b60e-cf727c6523c1']
 
             # For all matches
@@ -273,56 +289,14 @@ train_ids, test_ids, val_ids = split_match_ids(match_ids=match_ids)
 
 # Select frames data for training, testing, and validation
 train_frames_dfs = [frames_dfs[i] for i in train_ids]
-test_frames_dfs = [frames_dfs[i] for i in test_ids]
+# test_frames_dfs = [frames_dfs[i] for i in test_ids]
 val_frames_dfs = [frames_dfs[i] for i in val_ids]
-
-
-# In[ ]:
-
-
-# Prepare the data for training
-def prepare_all_dfs():
-    X_train, y_train = prepare_data(train_frames_dfs)
-    X_val, y_val = prepare_data(val_frames_dfs)
-    X_test, y_test = prepare_data(test_frames_dfs)
-
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-# Store the prepared data to parquet files
-def store_prepared_data(X_train, y_train, X_val, y_val, X_test, y_test):
-    prepared_data_path = f"{DATA_LOCAL_FOLDER}/data/prepared_data"
-
-    # Store DataFrames in Parquet format
-    X_train.to_parquet(f"{prepared_data_path}/X_train.parquet")
-    y_train.to_parquet(f"{prepared_data_path}/y_train.parquet")
-    X_val.to_parquet(f"{prepared_data_path}/X_val.parquet")
-    y_val.to_parquet(f"{prepared_data_path}/y_val.parquet")
-    X_test.to_parquet(f"{prepared_data_path}/X_test.parquet")
-    y_test.to_parquet(f"{prepared_data_path}/y_test.parquet")
-
-# Read the stored parquet files
-def read_prepared_data():
-    prepared_data_path = f"{DATA_LOCAL_FOLDER}/data/prepared_data"
-
-    X_train = pd.read_parquet(f"{prepared_data_path}/X_train.parquet")
-    y_train = pd.read_parquet(f"{prepared_data_path}/y_train.parquet")
-    X_val   = pd.read_parquet(f"{prepared_data_path}/X_val.parquet")
-    y_val   = pd.read_parquet(f"{prepared_data_path}/y_val.parquet")
-    X_test  = pd.read_parquet(f"{prepared_data_path}/X_test.parquet")
-    y_test  = pd.read_parquet(f"{prepared_data_path}/y_test.parquet")
-
-    return X_train, y_train, X_val, y_val, X_test, y_test
-
-# Prepare, store, and load data
-# X_train, y_train, X_val, y_val, X_test, y_test = prepare_all_dfs()
-# store_prepared_data(X_train, y_train, X_val, y_val, X_test, y_test)
-# X_train, y_train, X_val, y_val, X_test, y_test = read_prepared_data()
 
 
 # ## Predictive model 1
 # ### Dense NN model
 
-# In[ ]:
+# In[8]:
 
 
 def define_NN_model(input_shape):
@@ -362,33 +336,30 @@ def train_NN_model(train_frames_dfs, val_frames_dfs):
 
     # Write the output directly to the txt file
     with open(output_txt_filename, 'w') as f:
-        # Write the current global variables to begging of the output file
+        # Write the some general info at the begging of the file
+        today_date = date.today().strftime("%Y-%m-%d")
+        f.write(f"{today_date}\n")
         f.write(f"epochs={epochs}\n")
+        f.write(f"matches={matches}\n")
         f.write(f"numerical_cols={numerical_cols}\n")
 
-        # Write the output from model.fit
-        f.write(str(history.history) + '\n')
-
-        # Make predictions and evaluate the validation error
-        train_error = predict_and_evaluate(model, X_train, train_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
-        f.write(f"Training error: {train_error}\n")
-
-        # Make predictions and evaluate the validation error
-        val_error = predict_and_evaluate(model, X_val, val_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
-        f.write(f"Validation error: {val_error}\n")
+        # Write the training results
+        f.write("Training results:\n")
+        for key, value in history.history.items():
+            f.write(f"{key}: {value}\n")
 
 
-# In[ ]:
+# In[9]:
 
 
 # Train the NN model
-train_NN_model(train_frames_dfs, val_frames_dfs)
+# train_NN_model(train_frames_dfs, val_frames_dfs)
 
 
 # ## Predictive model 2
 # ### Embedding layers
 
-# In[ ]:
+# In[17]:
 
 
 def adjust_for_embeddings(X_data_df):
@@ -398,7 +369,7 @@ def adjust_for_embeddings(X_data_df):
     
     return X_numerical, X_categorical
 
-def define_NN_model_with_embedding(numerical_input_shape, n_team_directions=3, n_roles=13):
+def define_NN_model_with_embedding(numerical_input_shape, l1=0, n_team_directions=2, n_roles=13):
     # Inputs
     team_direction_input = Input(shape=(1,), name='team_direction_input')
     role_input = Input(shape=(1,), name='role_input')
@@ -415,9 +386,12 @@ def define_NN_model_with_embedding(numerical_input_shape, n_team_directions=3, n
     # Concatenate all features
     concatenated_features = Concatenate()([team_direction_flat, role_flat, numerical_input])
     
+    # Define regularizer
+    regularizer = None if l1 == 0 else regularizers.l1(l1)
+
     # Dense layers
-    dense_layer_1 = Dense(64, activation='relu')(concatenated_features)
-    dense_layer_2 = Dense(32, activation='relu')(dense_layer_1)
+    dense_layer_1 = Dense(64, activation='relu', kernel_regularizer=regularizer)(concatenated_features)
+    dense_layer_2 = Dense(32, activation='relu', kernel_regularizer=regularizer)(dense_layer_1)
     output_layer = Dense(2)(dense_layer_2)  # Assuming 2 units for x_future and y_future
     
     # Model
@@ -425,7 +399,7 @@ def define_NN_model_with_embedding(numerical_input_shape, n_team_directions=3, n
     
     return model
 
-def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs):
+def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1):
     # Prepare data
     X_train, y_train = prepare_data(train_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
     X_val, y_val = prepare_data(val_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
@@ -439,7 +413,7 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs):
     X_val_input = [X_val_categorical['team_direction'].reshape(-1, 1), X_val_categorical['role'].reshape(-1, 1), X_val_numerical]
 
     # Define the model
-    model = define_NN_model_with_embedding(numerical_input_shape=X_train_numerical.shape[1])
+    model = define_NN_model_with_embedding(numerical_input_shape=X_train_numerical.shape[1], l1=l1)
 
     # Compile the model
     model.compile(optimizer='adam', loss=euclidean_distance_loss)
@@ -456,28 +430,29 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs):
 
     # Write the output directly to the txt file
     with open(output_txt_filename, 'w') as f:
-            # Write the current global variables to begging of the output file
+        # Write the some general info at the begging of the file
+        today_date = date.today().strftime("%Y-%m-%d")
+        f.write(f"{today_date}\n")
         f.write(f"epochs={epochs}\n")
+        f.write(f"matches={matches}\n")
         f.write(f"numerical_cols={numerical_cols}\n")
         f.write(f"categorical_cols={categorical_cols}\n")
+        f.write(f"l1={l1}\n")
 
-        # Write the output from model.fit
-        f.write(str(history.history) + '\n')
-
-        # Make predictions and evaluate the training error
-        train_error = predict_and_evaluate(model, X_train_input, train_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
-        f.write(f"Training error: {train_error}\n")
-
-        # Make predictions and evaluate the validation error
-        val_error = predict_and_evaluate(model, X_val_input, val_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
-        f.write(f"Validation error: {val_error}\n")
+        # Write the training results
+        f.write("\nTraining results:\n")
+        for key, value in history.history.items():
+            rounded_values = [round(v, 2) for v in value]
+            f.write(f"{key}: {rounded_values}\n")
 
 
-# In[ ]:
+# In[18]:
 
 
 # Train the NN model with embedding layers
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, 0)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, 0.01)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, 0.02)
 
 
 # ## Predictive model 3
@@ -535,10 +510,10 @@ def train_LSTM(train_frames_dfs, val_frames_dfs):
 
 
 # # Visualize training results
-# model_name = 'NN_model_3'
+# model_name = 'NN_embedding_model_3'
 # training_results = {
-#     'loss': [11.86983871459961, 11.278080940246582, 11.235326766967773, 11.211169242858887, 11.196228981018066],
-#     'val_loss': [11.717867851257324, 11.291694641113281, 11.279356956481934, 11.498793601989746, 11.746583938598633]
+#     'loss': [2.0478146076202393, 2.0088889598846436, 2.0007753372192383, 1.9968146085739136, 1.9937269687652588, 1.9921172857284546, 1.990675687789917, 1.9893001317977905, 1.9881930351257324, 1.9875684976577759, 1.9872304201126099, 1.9865171909332275, 1.9859004020690918, 1.985435128211975, 1.9848004579544067, 1.983401894569397, 1.9824390411376953, 1.9820188283920288, 1.981824517250061, 1.9817743301391602],
+#     'val_loss': [4.535243034362793, 4.51762580871582, 4.469428539276123, 4.436275482177734, 4.456634521484375, 4.815524578094482, 4.3103556632995605, 4.498797416687012, 4.790141582489014, 4.464589595794678, 4.674554347991943, 4.561259746551514, 4.533383369445801, 4.472135066986084, 4.466953754425049, 4.478504180908203, 4.723540782928467, 4.859069347381592, 4.496937274932861, 4.377903461456299]
 # }
 
 # visualize_training_results(training_results, model_name)
