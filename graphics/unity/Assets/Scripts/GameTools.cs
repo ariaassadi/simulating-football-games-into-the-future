@@ -16,12 +16,16 @@ public class GameTools : MonoBehaviour
     private float distance;
 
     private bool distanceSelected;
+
+    private bool playerNamesSelected;
+
     private string toolSelected = "";
 
     private void Start()
     {
         GameObject menumanager = GameObject.Find("UIManager");
         distanceSelected = false;
+        playerNamesSelected = false;
 
         if (menumanager != null)
         {
@@ -37,17 +41,55 @@ public class GameTools : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        // Select the players
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("Mouse clicked");
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.gameObject.tag == "Player" || hit.collider.gameObject.tag == "Ball")
+                {
+                    ChoosePlayer(hit.collider.gameObject);
+                }
+                else
+                    Debug.Log("Not a player");
+            }
+        }
+        if (toolSelected == "distance")
+        {
+            if (players != null)
+            {
+                if (players[0] != null && players[1] != null)
+                {
+                    CalculateDistance();
+                    ShowDistance();
+                    PrintLineBetweenPlayers();
+                }
+            }
+        }
+        // if (toolSelected == "playerNames")
+        // {
+        //     return;
+        // }
+    }
+
     public void DeselectAllTools()
     {
         distanceSelected = false;
+        playerNamesSelected = false;
         toolSelected = "";
         gameToolsUI.GetComponent<GameToolsUI>().EmptyDistance();
-        DistanceDeselect();
-    }
-
-    private void CalculateDistance()
-    {
-        distance = Vector3.Distance(players[0].transform.position, players[1].transform.position);
+        DeselectPlayerNames();
+        DeselectDistance();
+        GameObject[] borders = GetAllBorders();
+        foreach (GameObject border in borders)
+        {
+            border.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+        }
     }
 
     private void ResetPlayers()
@@ -60,99 +102,102 @@ public class GameTools : MonoBehaviour
     {
         for (int i = 0; i < nrPlayers; i++)
         {
-            players[i].transform.GetChild(0).gameObject.SetActive(false);
+            DehighlightPlayer(players[i]);
         }
         players = new GameObject[nrPlayers];
         distance = 0;
     }
 
-
-    private void ShowDistance()
+    private void HighlightPlayer(GameObject player)
     {
-        gameToolsUI.GetComponent<GameToolsUI>().ShowDistance(distance);
+        player.transform.GetChild(0).gameObject.SetActive(true);
+        ShowPlayerName(player);
+        Debug.Log("Player selected: " + player.name);
     }
 
-    public void DistanceSelected(GameObject border)
+    private void DehighlightPlayer(GameObject player)
     {
-        if (distanceSelected)
+        player.transform.GetChild(0).gameObject.SetActive(false);
+        HidePlayerName(player);
+    }
+
+    public void ChoosePlayer(GameObject player)
+    {
+        // Append the player to the list of players
+
+        // Default option = no tool selected
+        if (toolSelected == "")
         {
-            distanceSelected = false;
-            ResetPlayers(2);
-            players = null;
-            LineRenderer lineRenderer = GetComponent<LineRenderer>();
-            if (lineRenderer != null)
+            if (players != null)
             {
-                Destroy(lineRenderer);
+                for (int i = 0; i < players.Length; i++)
+                {
+                    if (players[i] != null)
+                    {
+                        DehighlightPlayer(players[i]);
+                    }
+                }
             }
-            border.GetComponent<Image>().color = HexToRGB("#12326e");
-            toolSelected = "";
-            gameToolsUI.GetComponent<GameToolsUI>().EmptyDistance();
+            players = new GameObject[1];
+            HighlightPlayer(player);
+            players[0] = player;
         }
-        else
+        else if (toolSelected == "distance")
         {
+            ChoosePlayerDistance(player);
+        }
+    }
+
+    private GameObject[] GetAllBorders()
+    {
+        return GameObject.FindGameObjectsWithTag("ToolBorder");
+    }
+
+    //////////////////////////
+    /// DISTANCE TOOL
+    /////////////////////////
+
+    public void SelectDistance(GameObject border)
+    {
+        if (!distanceSelected)
+        {
+            DeselectAllTools();
             selectedToolBorder = border;
             distanceSelected = true;
             toolSelected = "distance";
             border.GetComponent<Image>().color = Color.white;
             players = new GameObject[2];
         }
+        else
+        {
+            DeselectAllTools();
+        }
     }
-    private void DistanceDeselect()
+
+    private void DeselectDistance()
     {
         distanceSelected = false;
-        toolSelected = "";
+        LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer != null)
+        {
+            Destroy(lineRenderer);
+        }
         if (selectedToolBorder != null)
         {
-            selectedToolBorder.GetComponent<Image>().color = HexToRGB("#12326e");
+            selectedToolBorder.GetComponent<Image>().color = Utils.HexToColor("#12326e");
             selectedToolBorder = null;
         }
         gameToolsUI.GetComponent<GameToolsUI>().EmptyDistance();
     }
 
-    private void Update()
+    private void CalculateDistance()
     {
-        if (toolSelected == "distance")
-        {
-            // Select the players
-            if (Input.GetMouseButtonDown(0))
-            {
-                Debug.Log("Mouse clicked");
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.collider.gameObject.tag == "Player")
-                    {
-                        ChoosePlayer(hit.collider.gameObject);
-                    }
-                }
-            }
-            if (players != null)
-            {
-                if (players[0] != null && players[1] != null)
-                {
-                    CalculateDistance();
-                    ShowDistance();
-                    PrintLineBetweenPlayers();
-                }
-            }
-        }
+        distance = Vector3.Distance(players[0].transform.position, players[1].transform.position);
     }
 
-    private static Color HexToRGB(string hex)
+    private void ShowDistance()
     {
-        hex = hex.TrimStart('#');
-        if (hex.Length != 6)
-        {
-            Debug.LogError("Invalid hexadecimal color code.");
-            return Color.white; // Default to white color
-        }
-
-        byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-        byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-        byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-
-        return new Color32(r, g, b, 255);
+        gameToolsUI.GetComponent<GameToolsUI>().ShowDistance(distance);
     }
 
     private void PrintLineBetweenPlayers()
@@ -169,7 +214,7 @@ public class GameTools : MonoBehaviour
             lineRenderer.endWidth = 0.2f;
             lineRenderer.positionCount = 2;
 
-            Color color = HexToRGB("#12326e");
+            Color color = Utils.HexToColor("#12326e");
             Debug.Log("Color: " + color);
             lineRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
             lineRenderer.material.color = color;
@@ -189,29 +234,116 @@ public class GameTools : MonoBehaviour
         }
     }
 
-    public void ChoosePlayer(GameObject player)
+    private void ChoosePlayerDistance(GameObject player)
     {
-        // Append the player to the list of players
         if (players[0] == null)
         {
-            player.transform.GetChild(0).gameObject.SetActive(true);
+            HighlightPlayer(player);
             players[0] = player;
-            Debug.Log("Player 1: " + player.name);
         }
         else if (players[1] == null)
         {
-            player.transform.GetChild(0).gameObject.SetActive(true);
+            HighlightPlayer(player);
             players[1] = player;
-            Debug.Log("Player 2: " + player.name);
         }
         else
         {
             ResetPlayers(2);
+            HighlightPlayer(player);
             players[0] = player;
-            player.transform.GetChild(0).gameObject.SetActive(true);
-            Debug.Log("Player 1: " + player.name);
             RemoveLine();
         }
+    }
+
+    //////////////////////////
+    /// END DISTANCE TOOL
+    //////////////////////////
+
+    //////////////////////////
+    /// SHOW PLAYER NAME/NUMBER
+    //////////////////////////
+
+    public void SelectPlayerNames(GameObject border)
+    {
+        if (!playerNamesSelected)
+        {
+            DeselectAllTools();
+            selectedToolBorder = border;
+            playerNamesSelected = true;
+            toolSelected = "playerNames";
+            border.GetComponent<Image>().color = Color.white;
+            players = GameObject.FindGameObjectsWithTag("Player");
+            ShowPlayerNames();
+        }
+        else
+            DeselectAllTools();
+    }
+
+    private void DeselectPlayerNames()
+    {
+        if (players != null)
+        {
+            HidePlayerNames();
+        }
+        playerNamesSelected = false;
+        toolSelected = "";
+        if (selectedToolBorder != null)
+        {
+            selectedToolBorder.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+            selectedToolBorder = null;
+        }
+    }
+
+    private void ShowPlayerNames()
+    {
+        if (players != null)
+        {
+            for (int i = 0; i < players.Length; i++)
+            {
+                print("Player: " + players[i].name);
+                ShowPlayerName(players[i]);
+                // ShowJerseyNumber(players[i]);
+            }
+        }
+    }
+
+    private void HidePlayerNames()
+    {
+        if (players != null)
+        {
+            foreach (GameObject player in players)
+            {
+                if (player != null)
+                {
+                    if (!isHighlighted(player))
+                    {
+                        HidePlayerName(player);
+                    }
+                }
+            }
+            {
+            }
+        }
+    }
+
+    private bool isHighlighted(GameObject player)
+    {
+        return player.transform.GetChild(0).gameObject.activeSelf;
+    }
+
+    private void ShowPlayerName(GameObject player)
+    {
+        player.transform.Find("Canvas").GetComponent<EggUI>().SetTextPlayerName();
+    }
+
+    private void HidePlayerName(GameObject player)
+    {
+        player.transform.Find("Canvas").GetComponent<EggUI>().SetEmptyText();
+    }
+
+    private void ShowJerseyNumber(GameObject player)
+    {
+        player.transform.Find("Canvas").GetComponent<EggUI>().SetTextJerseyNumber();
     }
 
 }

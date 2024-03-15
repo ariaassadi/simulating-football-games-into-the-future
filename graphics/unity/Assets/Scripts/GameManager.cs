@@ -405,6 +405,10 @@ public class GameManager : MonoBehaviour
         playerObject.tag = "Player";
         playerObject.GetComponent<Renderer>().material.color = Utils.HexToColor(teamColor);
         playerObject.transform.GetChild(0).gameObject.SetActive(false);
+        playerObject.transform.GetChild(1).gameObject.GetComponent<EggUI>().SetJerseyNumber(player.JerseyNumber.ToString());
+        playerObject.transform.GetChild(1).gameObject.GetComponent<EggUI>().SetPlayerName(player.Player);
+        playerObject.transform.GetChild(1).gameObject.GetComponent<EggUI>().SetEmptyText();
+        // playerObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Spawn ball object at specified position
@@ -413,7 +417,7 @@ public class GameManager : MonoBehaviour
         // Spawn ball object at specified position
         GameObject ballObject = Instantiate(ballPrefab, position, Quaternion.identity, ball.transform) as GameObject;
         ballObject.name = player.Player;
-        ballObject.tag = "Player";
+        ballObject.tag = "Ball";
         ballObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
