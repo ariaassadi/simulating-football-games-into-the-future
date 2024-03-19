@@ -11,8 +11,8 @@ import os
 from settings import *
 
 # Define variables for plotting
-draw_velocities = False
-draw_orientations = True
+draw_velocities = True
+draw_orientations = False
 draw_angle_to_ball = False
 draw_shirt_numbers = False
 draw_offsides = False
