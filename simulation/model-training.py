@@ -6,7 +6,7 @@
 # # Notebook for training predictive models
 # ### Import packages
 
-# In[16]:
+# In[2]:
 
 
 from tensorflow.keras.layers import Input, Embedding, Flatten, Dense, Concatenate
@@ -34,7 +34,7 @@ from settings import *
 
 # ### Global variables
 
-# In[13]:
+# In[3]:
 
 
 # Define numerical, categorical, and y columns
@@ -44,8 +44,9 @@ categorical_cols = ['team_direction', 'role']
 y_cols = ['x_future', 'y_future']
 
 # Define parameters for model training
-epochs = 6
-matches = 40
+epochs = 2
+batch_size = 32
+matches = 120
 
 # Define the length of the sequences
 sequence_length = FPS * seconds_into_the_future
@@ -176,7 +177,6 @@ def prepare_sequential_data(X_data, y_data, sequence_length):
 
 
 # In[6]:
-
 
 # Add a column for distance wrongly predicted (in metres) for each object
 def add_pred_error(frames_df):
@@ -325,7 +325,7 @@ def train_NN_model(train_frames_dfs, val_frames_dfs):
     model.compile(optimizer='adam', loss=euclidean_distance_loss)
 
     # Train the model and capture the output
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, batch_size=32, verbose=2)
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, batch_size=batch_size, verbose=2)
 
     # Save the trained model to disk
     model_filename = get_next_model_filename("NN_model")
@@ -359,7 +359,7 @@ def train_NN_model(train_frames_dfs, val_frames_dfs):
 # ## Predictive model 2
 # ### Embedding layers
 
-# In[17]:
+# In[10]:
 
 
 def adjust_for_embeddings(X_data_df):
@@ -369,7 +369,7 @@ def adjust_for_embeddings(X_data_df):
     
     return X_numerical, X_categorical
 
-def define_NN_model_with_embedding(numerical_input_shape, l1=0, n_team_directions=2, n_roles=13):
+def define_NN_model_with_embedding(numerical_input_shape, l1=0, l2=0, n_team_directions=2, n_roles=13):
     # Inputs
     team_direction_input = Input(shape=(1,), name='team_direction_input')
     role_input = Input(shape=(1,), name='role_input')
@@ -386,8 +386,13 @@ def define_NN_model_with_embedding(numerical_input_shape, l1=0, n_team_direction
     # Concatenate all features
     concatenated_features = Concatenate()([team_direction_flat, role_flat, numerical_input])
     
-    # Define regularizer
-    regularizer = None if l1 == 0 else regularizers.l1(l1)
+    # Define regularizer (prioritize l1)
+    if l1 != 0:
+        regularizer = regularizers.l1(l1)
+    elif l2 != 0:
+        regularizer = regularizers.l2(l2)
+    else:
+        regularizer = None
 
     # Dense layers
     dense_layer_1 = Dense(64, activation='relu', kernel_regularizer=regularizer)(concatenated_features)
@@ -399,7 +404,7 @@ def define_NN_model_with_embedding(numerical_input_shape, l1=0, n_team_direction
     
     return model
 
-def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1):
+def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1=0, l2=0):
     # Prepare data
     X_train, y_train = prepare_data(train_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
     X_val, y_val = prepare_data(val_frames_dfs, include_ball=False, ball_has_to_be_in_motion=True)
@@ -413,13 +418,13 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1):
     X_val_input = [X_val_categorical['team_direction'].reshape(-1, 1), X_val_categorical['role'].reshape(-1, 1), X_val_numerical]
 
     # Define the model
-    model = define_NN_model_with_embedding(numerical_input_shape=X_train_numerical.shape[1], l1=l1)
+    model = define_NN_model_with_embedding(numerical_input_shape=X_train_numerical.shape[1], l1=l1, l2=l2)
 
     # Compile the model
     model.compile(optimizer='adam', loss=euclidean_distance_loss)
 
     # Train the model with the corrected input format
-    history = model.fit(X_train_input, y_train, validation_data=(X_val_input, y_val), epochs=epochs, batch_size=32, verbose=2)
+    history = model.fit(X_train_input, y_train, validation_data=(X_val_input, y_val), epochs=epochs, batch_size=batch_size, verbose=2)
 
     # Save the trained model to disk
     model_filename = get_next_model_filename("NN_embedding_model")
@@ -437,7 +442,8 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1):
         f.write(f"matches={matches}\n")
         f.write(f"numerical_cols={numerical_cols}\n")
         f.write(f"categorical_cols={categorical_cols}\n")
-        f.write(f"l1={l1}\n")
+        if l1 != 0: f.write(f"l1={l1}\n")
+        if l2 != 0: f.write(f"l2={l2}\n")
 
         # Write the training results
         f.write("\nTraining results:\n")
@@ -446,13 +452,17 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1):
             f.write(f"{key}: {rounded_values}\n")
 
 
-# In[18]:
+# In[11]:
 
 
 # Train the NN model with embedding layers
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, 0)
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, 0.01)
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, 0.02)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1=0.001)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l1=0.0001)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l2=0.01)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l2=0.001)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l2=0.0001)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, l2=0.00001)
 
 
 # ## Predictive model 3
@@ -482,7 +492,7 @@ def train_LSTM_model(X_train, y_train, X_val, y_val, val_frames_dfs):
     model.compile(optimizer='adam', loss='mse')
 
     # Train the model
-    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, batch_size=32, verbose=0)
+    history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, batch_size=batch_size, verbose=0)
 
     # Save the trained model to disk
     model.save(get_next_model_filename("LSTM_model"))
