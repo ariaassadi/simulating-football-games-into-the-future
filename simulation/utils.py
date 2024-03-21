@@ -2,10 +2,15 @@
     File with utility functions
 """
 
+from sklearn.model_selection import train_test_split
 from io import StringIO
 import tensorflow as tf
 import pandas as pd
 import requests
+import glob
+import os
+
+from settings import *
 
 # Fetches data from a Google Sheets CSV URL and converts it into a DataFrame
 def google_sheet_to_df(url):
@@ -35,10 +40,10 @@ def load_processed_frames(n_matches=None, match_id=None):
             match_paths = glob.glob(os.path.join(DATA_FOLDER_PROCESSED, "*.parquet"))
 
             # Extract the IDs without the ".parquet" extension
-            if match_id >= 0:
+            if match_id:
                 # Only load the match with the given match_id
                 match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][match_id : match_id + 1]
-            elif n_matches > 0:
+            elif n_matches:
                 # Only load the specified number of matches
                 match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][0:n_matches]
             else:
@@ -61,6 +66,7 @@ def load_processed_frames(n_matches=None, match_id=None):
     - split_match_ids()
     - get_next_model_filename()
     - euclidean_distance_loss()
+    - adjust_for_embeddings()
 """
 
 # Split the games into train, test, and validtion. This way, each game will be treated seperatly
@@ -96,3 +102,11 @@ def get_next_model_filename(model_name):
 # Loss function for model training
 def euclidean_distance_loss(y_true, y_pred):
     return tf.sqrt(tf.reduce_sum(tf.square(y_pred - y_true), axis=-1))
+
+# Adjust the X_data for embedding layers
+def adjust_for_embeddings(X_data_df, categorical_cols):
+    # Split the DataFrame into numerical and categorical components
+    X_numerical = X_data_df.drop(columns=categorical_cols)
+    X_categorical = {col: X_data_df[col].values for col in categorical_cols}
+    
+    return X_numerical, X_categorical
