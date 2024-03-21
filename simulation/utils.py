@@ -1,5 +1,9 @@
-# File with utility functions
+"""
+    File with utility functions
+"""
+
 from io import StringIO
+import tensorflow as tf
 import pandas as pd
 import requests
 
@@ -51,3 +55,44 @@ def load_processed_frames(n_matches=None, match_id=None):
                 frames_dfs.append(frames_df)
 
     return frames_dfs
+
+"""
+    Helper functions for model-training and model-evaluation
+    - split_match_ids()
+    - get_next_model_filename()
+    - euclidean_distance_loss()
+"""
+
+# Split the games into train, test, and validtion. This way, each game will be treated seperatly
+def split_match_ids(match_ids, train_size=0.7, test_size=0.1, val_size=0.2, random_state=42):
+    # Calculate the remaining size after the test and validation sizes are removed
+    remaining_size = 1.0 - train_size
+
+    # Check if the sum of sizes is not equal to 1
+    if remaining_size < 0 or abs(train_size + test_size + val_size - 1.0) > 1e-6:
+        raise ValueError("The sum of train_size, test_size, and val_size must be equal to 1.")
+    
+    # Split the match IDs into train, test, and validation sets
+    train_ids, remaining_ids = train_test_split(match_ids, train_size=train_size, random_state=random_state)
+    val_ids, test_ids = train_test_split(remaining_ids, test_size=test_size / remaining_size, random_state=random_state)
+    
+    return train_ids, test_ids, val_ids
+    
+# Get the next model file name based on the number of current models
+def get_next_model_filename(model_name):
+    models_folder = "./models/"
+
+    # Get a list of existing model filenames in the models folder
+    existing_models = [filename for filename in os.listdir(models_folder) if filename.endswith('.h5') and model_name in filename]
+
+    # Determine the number of existing models
+    num_existing_models = len(existing_models)
+
+    # Construct the filename for the next model
+    next_model_filename = f"{model_name}_{num_existing_models + 1}.h5"
+
+    return os.path.join(models_folder, next_model_filename)
+
+# Loss function for model training
+def euclidean_distance_loss(y_true, y_pred):
+    return tf.sqrt(tf.reduce_sum(tf.square(y_pred - y_true), axis=-1))
