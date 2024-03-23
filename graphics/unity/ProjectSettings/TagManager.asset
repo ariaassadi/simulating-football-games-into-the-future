@@ -7,6 +7,8 @@ TagManager:
   - Pitch
   - Ball
   - ToolBorder
+  - Clone
+  - PitchOverlay
   layers:
   - Default
   - TransparentFX

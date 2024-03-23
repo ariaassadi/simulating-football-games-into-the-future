@@ -2,84 +2,87 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EggUI : MonoBehaviour
+namespace Eggs
 {
-    private Camera mainCamera;
-    [SerializeField] private TMP_Text textComponent;
-
-    private string jerseyNumber;
-    private string playerName;
-
-    private void Start()
+    public class EggUI : MonoBehaviour
     {
-        mainCamera = Camera.main;
-        if (mainCamera == null || textComponent == null)
+        private Camera mainCamera;
+        [SerializeField] private TMP_Text textComponent;
+
+        private string jerseyNumber;
+        private string playerName;
+
+        private void Start()
         {
-            Debug.LogError("EggUI not set up correctly. Please assign the target and textComponent in the Inspector.");
-        }
-    }
-
-    private void Update()
-    {
-        if (mainCamera == null || textComponent == null)
-            return;
-
-        // Make the UI face the camera (billboarding)
-        transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
-                         mainCamera.transform.rotation * Vector3.up);
-    }
-
-    private string AddNewLine(string text)
-    {
-        // Split the input text by spaces
-        string[] words = text.Split(' ');
-
-        // Insert a new line after the first word
-        for (int i = 1; i < words.Length; i++)
-        {
-            // If the word contains characters other than whitespace
-            if (!string.IsNullOrWhiteSpace(words[i]))
+            mainCamera = Camera.main;
+            if (mainCamera == null || textComponent == null)
             {
-                words[i] = "\n" + words[i];
-                break;
+                Debug.LogError("EggUI not set up correctly. Please assign the target and textComponent in the Inspector.");
             }
         }
 
-        // Join the words back together
-        string newText = string.Join(" ", words);
+        private void Update()
+        {
+            if (mainCamera == null || textComponent == null)
+                return;
 
-        return newText;
-    }
+            // Make the UI face the camera (billboarding)
+            transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
+                             mainCamera.transform.rotation * Vector3.up);
+        }
 
-    public void SetJerseyNumber(string jerseyNumber)
-    {
-        this.jerseyNumber = jerseyNumber;
-    }
+        private string AddNewLine(string text)
+        {
+            // Split the input text by spaces
+            string[] words = text.Split(' ');
 
-    public void SetPlayerName(string playerName)
-    {
-        // Add a new line to the text
-        string newText = AddNewLine(playerName);
+            // Insert a new line after the first word
+            for (int i = 1; i < words.Length; i++)
+            {
+                // If the word contains characters other than whitespace
+                if (!string.IsNullOrWhiteSpace(words[i]))
+                {
+                    words[i] = "\n" + words[i];
+                    break;
+                }
+            }
 
-        // Set the text
-        this.playerName = newText;
-    }
+            // Join the words back together
+            string newText = string.Join(" ", words);
 
-    public void SetTextPlayerName()
-    {
-        // Set the text
-        textComponent.text = playerName;
-    }
+            return newText;
+        }
 
-    public void SetTextJerseyNumber()
-    {
-        // Set the text
-        textComponent.text = jerseyNumber;
-    }
+        public void SetJerseyNumber(string jerseyNumber)
+        {
+            this.jerseyNumber = jerseyNumber;
+        }
 
-    public void SetEmptyText()
-    {
-        // Set the text
-        textComponent.text = "";
+        public void SetPlayerName(string playerName)
+        {
+            // Add a new line to the text
+            string newText = AddNewLine(playerName);
+
+            // Set the text
+            this.playerName = newText;
+        }
+
+        public void SetTextPlayerName()
+        {
+            // Set the text
+            textComponent.text = playerName;
+        }
+
+        public void SetTextJerseyNumber()
+        {
+            // Set the text
+            textComponent.text = jerseyNumber;
+        }
+
+        public void SetEmptyText()
+        {
+            // Set the text
+            textComponent.text = "";
+        }
     }
 }
