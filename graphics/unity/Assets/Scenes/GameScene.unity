@@ -1541,6 +1541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pitchPrefab: {fileID: 8440720175905942880, guid: 345f4e256df59761093e377265306e0f,
     type: 3}
+  pitchControlData: {fileID: 0}
 --- !u!1 &231415000
 GameObject:
   m_ObjectHideFlags: 0

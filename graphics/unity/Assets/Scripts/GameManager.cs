@@ -60,6 +60,9 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = false;
     private bool changingGame = false; // True when changing the game, maybe unnecessary
 
+    private string homeTeamColor;
+    private string awayTeamColor;
+
     private int[][] framesStartAndEndIndex;
 
 
@@ -101,7 +104,7 @@ public class GameManager : MonoBehaviour
     public async Task<bool> LoadGameAsync(string match_id)
     {
         // SQL query to retrieve player data for a specific match and period
-        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
+        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
 
         string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}' GROUP BY frame";
 
@@ -124,17 +127,22 @@ public class GameManager : MonoBehaviour
         if (playerData != null && frameData != null && frameData.Length > 0)
         {
             // Loop through frames to spawn objects
+            PlayerData[] playerPositions = new PlayerData[frameData[0].ObjectsTracked];
             for (int i = 0; i < frameData[0].ObjectsTracked; i++)
             {
                 SpawnObject(playerData[i]);
+                playerPositions[i] = new PlayerData();
+                playerPositions[i].x = playerData[i].X;
+                playerPositions[i].y = playerData[i].Y;
+                playerPositions[i].team = playerData[i].Team;
+                playerPositions[i].jersey_number = playerData[i].JerseyNumber;
+                // Convert x velocity and y velocity to the combined velocity
+                playerPositions[i].v = Mathf.Sqrt(Mathf.Pow(playerData[i].V_X, 2) + Mathf.Pow(playerData[i].V_Y, 2));
+                playerPositions[i].orientation = Mathf.Deg2Rad * (playerData[i].Orientation + 90);
             }
-            int playersLength = GameObject.FindGameObjectsWithTag("Player").Length;
-            Vector2[] playerPositions = new Vector2[playersLength];
 
-            for (int i = 0; i < playersLength; i++)
-            {
-                playerPositions[i] = new Vector2(GameObject.FindGameObjectsWithTag("Player")[i].transform.position.x, GameObject.FindGameObjectsWithTag("Player")[i].transform.position.z);
-            }
+            homeTeamColor = gameInfo.HomeTeamColor;
+            awayTeamColor = gameInfo.AwayTeamColor;
 
             // Update the pitch control texture
             gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
@@ -382,10 +390,20 @@ public class GameManager : MonoBehaviour
         Vector3 position;
         Transform playerTransform;
 
+        PlayerData[] playerPositions = new PlayerData[currentFrameEndIndex - currentFrameStartIndex];
 
         for (int currentFrameIndex = currentFrameStartIndex; currentFrameIndex < currentFrameEndIndex; currentFrameIndex++)
         {
             string playerName = playerData[currentFrameIndex].Player;
+            int i = currentFrameIndex - currentFrameStartIndex;
+            playerPositions[i] = new PlayerData();
+            playerPositions[i].x = playerData[currentFrameIndex].X;
+            playerPositions[i].y = playerData[currentFrameIndex].Y;
+            playerPositions[i].team = playerData[currentFrameIndex].Team;
+            playerPositions[i].jersey_number = playerData[currentFrameIndex].JerseyNumber;
+            // Convert x velocity and y velocity to the combined velocity
+            playerPositions[i].v = Mathf.Sqrt(Mathf.Pow(playerData[currentFrameIndex].V_X, 2) + Mathf.Pow(playerData[currentFrameIndex].V_Y, 2));
+            playerPositions[i].orientation = Mathf.Deg2Rad * (playerData[currentFrameIndex].Orientation + 90);
             playerTransform = GameObject.Find(playerName)?.transform;
 
             if (playerTransform == null)
@@ -445,6 +463,9 @@ public class GameManager : MonoBehaviour
         // Reset the offside line values
         homeOffsideLine = 0;
         awayOffsideLine = 0;
+
+        // Update the pitch control
+        gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
 
         // Update the time slider
         timeSlider.GetComponent<TimeSlider>().ChangeTime(currentFrameNr);
@@ -547,5 +568,15 @@ public class GameManager : MonoBehaviour
     public int EndFrame()
     {
         return endFrame;
+    }
+
+    public string GetHomeTeamColor()
+    {
+        return homeTeamColor;
+    }
+
+    public string GetAwayTeamColor()
+    {
+        return awayTeamColor;
     }
 }
