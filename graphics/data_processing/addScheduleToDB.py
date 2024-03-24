@@ -18,12 +18,39 @@ df_club_info = pd.read_excel(path + '/data_processing' + '/data' + '/club_info.x
 
 long_to_short_name = {item['Team']: item['Short Name'] for item in df_club_info[["Team", "Short Name"]].to_dict(orient='records')}
 
+home_colors_dict = {item['Team']: item['Home Color Hex'] for item in df_club_info[["Team", "Home Color Hex"]].to_dict(orient='records')}
+away_colors_dict = {item['Team']: item['Away Color Hex'] for item in df_club_info[["Team", "Away Color Hex"]].to_dict(orient='records')}
+
 print(long_to_short_name['BK Häcken'])
 path_to_db = path + '/data_processing' + '/data' + '/2sec.sqlite'
 
 
 schedule_df = pd.DataFrame(columns=['match_id', 'home_team_name', 'away_team_name', 'home_team_name_short', 'away_team_name_short'])
 write_to_db = False
+
+def hex_to_rgb(hex_code):
+    # Convert hexadecimal color code to RGB tuple
+    hex_code = hex_code.lstrip('#')
+    return tuple(int(hex_code[i:i+2], 16) for i in (0, 2, 4))
+
+def color_distance(color1, color2):
+    # Calculate Euclidean distance between two colors in RGB space
+    r1, g1, b1 = color1
+    r2, g2, b2 = color2
+    return ((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2) ** 0.5
+
+def select_away_team_color(home_team_color_hex, color_option1_hex, color_option2_hex, threshold=100):
+    # Convert hexadecimal color codes to RGB tuples
+    home_team_color = hex_to_rgb(home_team_color_hex)
+    color_option1 = hex_to_rgb(color_option1_hex)
+    color_option2 = hex_to_rgb(color_option2_hex)
+    
+    # Check if the home team's color is too similar to color_option1
+    if color_distance(home_team_color, color_option1) < threshold:
+        return color_option2_hex
+    else:
+        return color_option1_hex
+
 
 for i, match_id in enumerate(match_ids):
     file_path_match = f"{data_path}/{match_id}.parquet"
@@ -54,7 +81,19 @@ for i, match_id in enumerate(match_ids):
     home_team_name = home_team_df['team_name'].iloc[0]
     away_team_name = away_team_df['team_name'].iloc[0]
     
-    new_df = pd.DataFrame({'match_id': match_id, 'home_team_name': home_team_name, 'away_team_name': away_team_name, 'home_team_name_short': long_to_short_name[home_team_name], 'away_team_name_short': long_to_short_name[away_team_name]}, index=[i])
+    home_team_color = home_colors_dict[home_team_name]
+    away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
+    
+    
+    
+    new_df = pd.DataFrame({'match_id': match_id,
+                           'home_team_name': home_team_name,
+                           'away_team_name': away_team_name,
+                           'home_team_name_short': long_to_short_name[home_team_name],
+                           'away_team_name_short': long_to_short_name[away_team_name],
+                           'home_team_color': home_team_color,
+                           'away_team_color': away_team_color},
+                          index=[i])
     
     # concat the new_df to the schedule_df
     schedule_df = pd.concat([schedule_df, new_df])
@@ -63,7 +102,7 @@ print(schedule_df)
 
 write_to_db = True
 
-if True:
+if write_to_db:
     print('Writing to DB' + path_to_db)
     # Connect to the SQLite database
     conn = sqlite3.connect(path_to_db)
