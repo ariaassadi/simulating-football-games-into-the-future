@@ -1,0 +1,10 @@
+2024-03-23
+epochs=3
+matches=40
+numerical_cols=['x_future_naive_acc', 'y_future_naive_acc', 'distance_to_ball']
+categorical_cols=[]
+Goalkeepers only
+
+Training results:
+loss: [1.23, 1.13, 1.13]
+val_loss: [1.24, 1.19, 1.39]
