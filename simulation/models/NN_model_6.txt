@@ -1,0 +1,3 @@
+epochs=1
+numerical_cols=['x', 'y', 'v_x', 'v_y']
+{'loss': [2.052727222442627], 'val_loss': [4.6058669090271]}

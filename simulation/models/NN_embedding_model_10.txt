@@ -1,0 +1,10 @@
+2024-03-16
+epochs=2
+matches=120
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y']
+categorical_cols=['team_direction', 'role']
+l1=0.0001
+
+Training results:
+loss: [1.88, 1.86]
+val_loss: [2.17, 2.23]
