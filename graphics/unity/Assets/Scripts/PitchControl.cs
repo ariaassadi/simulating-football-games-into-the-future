@@ -86,7 +86,7 @@ public class PitchControl : MonoBehaviour
         json = GetPitchControlJSON(playerPositions);
 
         // print the json
-        UnityEngine.Debug.Log(json);
+        // UnityEngine.Debug.Log(json);
 
         // Send the JSON to the webserver
         // string response = WebServer.SendJSON(json);

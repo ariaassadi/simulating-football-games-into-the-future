@@ -1509,8 +1509,6 @@ MonoBehaviour:
   homeTeamNameShort: {fileID: 1859739927}
   awayTeamNameShort: {fileID: 1337485284}
   gameUI: {fileID: 1840783085}
-  startFrame: 0
-  endFrame: 5000
   offsideLineHome: {fileID: 858586207}
   offsideLineAway: {fileID: 2021664837}
   offsideBrightness: 0.6
@@ -4053,6 +4051,7 @@ MonoBehaviour:
   timeSlider: {fileID: 795596282}
   startTime: {fileID: 108054632}
   endTime: {fileID: 700630463}
+  scoreBoardTime: {fileID: 1657977969}
   gameUI: {fileID: 1840783085}
 --- !u!224 &599788564 stripped
 RectTransform:

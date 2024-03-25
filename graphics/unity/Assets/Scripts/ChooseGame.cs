@@ -35,7 +35,17 @@ public class ChooseGame : MonoBehaviour
 
     public void GetSchedule()
     {
-        schedule = DatabaseManager.query_schedule_db($"SELECT * FROM schedule");
+
+        if (Application.isEditor)
+        {
+            string pathToDB = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+            schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
+        }
+        else
+        {
+            string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
+            schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
+        }
 
         if (schedule == null)
         {
@@ -47,55 +57,63 @@ public class ChooseGame : MonoBehaviour
         GameObject g;
 
         Debug.Log(schedule.Length);
-        if (schedule.Length % 2 == 0)
+        // if (schedule.Length % 2 == 0)
+        // {
+        for (int i = 0; i < schedule.Length; i++)
         {
-            for (int i = 0; i < schedule.Length; i += 2)
+            // public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent); 
+
+            horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
+            horizontalPanel.name = $"{schedule[i].HomeTeamName} vs {schedule[i].AwayTeamName}";
+
+            for (int j = 1; j < 3; j++)
             {
-                // public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent); 
-
-                horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
-
-                for (int j = i; j < i + 2; j++)
-                {
-                    g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-                    AddGameInfo(schedule[j], g);
-                }
+                g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
+                AddGameInfo(schedule[i], g, j);
             }
+        }
+        // }
+        // else
+        // {
+        //     int lastGame = schedule.Length - 1;
+        //     for (int i = 0; i < lastGame; i++)
+        //     {
+        //         horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
+
+        //         for (int j = i; j < i + 2; j++)
+        //         {
+        //             g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
+        //             AddGameInfo(schedule[j], g, i - j + 1);
+        //         }
+        //     }
+        //     horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
+        //     g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
+        //     AddGameInfo(schedule[lastGame], g);
+        // }
+    }
+
+    private void AddGameInfo(Schedule game, GameObject g, int period)
+    {
+        g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}\nPeriod: {period}";
+        if (period == 1)
+        {
+            g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFirst Half";
         }
         else
         {
-            int lastGame = schedule.Length - 1;
-            for (int i = 0; i < lastGame; i++)
-            {
-                horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
-
-                for (int j = i; j < i + 2; j++)
-                {
-                    g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-                    AddGameInfo(schedule[j], g);
-                }
-            }
-            horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
-            g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-            AddGameInfo(schedule[lastGame], g);
+            g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nSecond Half";
         }
-    }
-
-    private void AddGameInfo(Schedule game, GameObject g)
-    {
-        g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}";
-        g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}";
         // g.GetComponent<Button>().onClick.AddListener(() => uiManager.GetComponent<MenuManager>().ShowLoadingScreen());
-        g.GetComponent<Button>().onClick.AddListener(() => LoadGame(game));
+        g.GetComponent<Button>().onClick.AddListener(() => LoadGame(game, period));
     }
 
-    private async void LoadGame(Schedule game)
+    private async void LoadGame(Schedule game, int period)
     {
         // Show loading screen
         uiManager.GetComponent<MenuManager>().ShowLoadingScreen();
 
         // Load the game asynchronously
-        bool success = await LoadGameAsync(game);
+        bool success = await LoadGameAsync(game, period);
 
         // Check if loading was successful
         if (success)
@@ -112,10 +130,10 @@ public class ChooseGame : MonoBehaviour
         }
     }
 
-    private async Task<bool> LoadGameAsync(Schedule game)
+    private async Task<bool> LoadGameAsync(Schedule game, int period)
     {
         // Perform the loading asynchronously
-        bool success = await gameManager.GetComponent<GameManager>().LoadGameAsync(game);
+        bool success = await gameManager.GetComponent<GameManager>().LoadGameAsync(game, period);
 
         // Return the result
         return success;

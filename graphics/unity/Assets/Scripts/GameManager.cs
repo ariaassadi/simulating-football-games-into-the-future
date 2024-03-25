@@ -36,8 +36,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject gameUI;
     private GameObject uiManager;
 
-    [SerializeField] private int startFrame = 0;
-    [SerializeField] private int endFrame = 67500;
+    private int startFrame;
+    private int endFrame;
+    private int period;
 
     private int currentFrameStartIndex;
     private int currentFrameEndIndex;
@@ -101,28 +102,73 @@ public class GameManager : MonoBehaviour
     }
 
     // Asynchronously load game data from the database using match ID
-    public async Task<bool> LoadGameAsync(string match_id)
+    public async Task<bool> LoadGameAsync(string match_id, int period)
     {
-        // SQL query to retrieve player data for a specific match and period
-        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}'";
+        this.period = period;
+        if (Application.isEditor)
+        {
+            string pathToDB = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+            // SQL query to retrieve player data for a specific match and period
+            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
+            // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period={period} AND match_id='{match_id}'";
 
-        string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period=1 AND match_id='{match_id}' GROUP BY frame";
+            string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
+            // string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period={period} AND match_id='{match_id}' GROUP BY frame";
 
 
-        Debug.Log($"Select: {query_tracking} END");
+            // Retrieve players data asynchronously
+            Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));
+            playerData = await playerDataTask;
+            Debug.Log($"Select: {query_tracking} END");
 
-        // Retrieve players data asynchronously
-        Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(query_tracking));
-        playerData = await playerDataTask;
+            // Retrieve frames data asynchronously
+            Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_frames));
+            frameData = await frameDataTask;
+            Debug.Log($"Select: {query_frames} END");
+        }
+        else
+        {
+            string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
+            // SQL query to retrieve player data for a specific match and period
+            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
 
-        // Retrieve frames data asynchronously
-        Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(query_frames));
-        frameData = await frameDataTask;
+            string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
+
+
+            Debug.Log($"Select: {query_tracking} END");
+            Debug.Log($"Select: {query_frames} END");
+
+            // Retrieve players data asynchronously
+            Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));
+            playerData = await playerDataTask;
+
+            // Retrieve frames data asynchronously
+            Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_frames));
+            frameData = await frameDataTask;
+        }
 
         Debug.Log("Number of rows: " + playerData.Length);
         Debug.Log("Number of frames: " + frameData.Length);
 
+        if (playerData == null || playerData.Length == 0)
+        {
+            Debug.Log("No players found");
+            // error
+            return false; // Loading failed
+        }
+        if (frameData == null || frameData.Length == 0)
+        {
+            Debug.Log("No frames found");
+            // error
+            return false; // Loading failed
+        }
         CalculateFramesStartAndEndIndex();
+        startFrame = frameData[0].Frame;
+        endFrame = frameData[frameData.Length - 1].Frame;
+        Debug.Log("Start frame: " + startFrame);
+        Debug.Log("End frame: " + endFrame);
+        // Update timeslider
+        timeSlider.GetComponent<TimeSlider>().UpdateTimeSlider(startFrame, endFrame, period);
 
         if (playerData != null && frameData != null && frameData.Length > 0)
         {
@@ -148,7 +194,7 @@ public class GameManager : MonoBehaviour
             gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
 
 
-            currentFrameNr = 0;
+            currentFrameNr = startFrame;
             currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
             currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
 
@@ -162,22 +208,22 @@ public class GameManager : MonoBehaviour
     }
 
     // Overloaded method to load game using Schedule object
-    public async Task<bool> LoadGameAsync(Schedule schedule)
+    public async Task<bool> LoadGameAsync(Schedule schedule, int period)
     {
         // Inistialize loading screen
-        Debug.Log("Loading game: " + schedule.MatchId);
+        Debug.Log("Loading game: " + schedule.MatchId + " period: " + period);
         gameInfo = schedule;
         // Remove all objects from the scene
         changingGame = true;
         RemoveObjects();
         changingGame = false;
-        gameUI.GetComponent<TimeOverlay>().Timer(0);
+        // gameUI.GetComponent<TimeOverlay>().Timer(0);
         homeTeamNameShort.GetComponentInChildren<TMP_Text>().text = schedule.HomeTeamNameShort;
         homeTeamNameShort.GetComponentInChildren<Image>().color = Utils.HexToColor(schedule.HomeTeamColor);
         awayTeamNameShort.GetComponentInChildren<TMP_Text>().text = schedule.AwayTeamNameShort;
         awayTeamNameShort.GetComponentInChildren<Image>().color = Utils.HexToColor(schedule.AwayTeamColor);
 
-        return await LoadGameAsync(schedule.MatchId);
+        return await LoadGameAsync(schedule.MatchId, period);
     }
 
     private void RemoveObjects()
@@ -231,20 +277,20 @@ public class GameManager : MonoBehaviour
     // Get the start index of a frame
     public int GetFrameStartIndex(int frameNr)
     {
-        return framesStartAndEndIndex[frameNr][0];
+        return framesStartAndEndIndex[NormalizeFrameNr(frameNr)][0];
     }
 
     // Get the end index of a frame
     public int GetFrameEndIndex(int frameNr)
     {
-        return framesStartAndEndIndex[frameNr][1];
+        return framesStartAndEndIndex[NormalizeFrameNr(frameNr)][1];
     }
 
 
     private void Play()
     {
         // Play the game by moving objects according to frame data
-        if (currentFrameNr < frameData.Length)
+        if (NormalizeFrameNr(currentFrameNr) < frameData.Length)
         {
             timer += Time.deltaTime;
 
@@ -254,9 +300,12 @@ public class GameManager : MonoBehaviour
 
                 MoveObjects();
 
-                currentFrameNr++;
-                currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
-                currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+                if (NormalizeFrameNr(currentFrameNr) + 1 < frameData.Length)
+                {
+                    currentFrameNr++;
+                    currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
+                    currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+                }
             }
         }
         else
@@ -292,7 +341,7 @@ public class GameManager : MonoBehaviour
     {
         SetPlayFalse();
         Debug.Log("FastForward");
-        if (currentFrameNr + 25 < frameData.Length)
+        if (NormalizeFrameNr(currentFrameNr) + 25 < frameData.Length)
             currentFrameNr += 25;
         else
             currentFrameNr = frameData.Length - 1;
@@ -307,7 +356,7 @@ public class GameManager : MonoBehaviour
     {
         SetPlayFalse();
         Debug.Log("FastBackward");
-        if ((currentFrameNr - 25) > 0)
+        if ((NormalizeFrameNr(currentFrameNr) - 25) > 0)
         {
             Debug.Log("Current frame first if: " + currentFrameNr);
             currentFrameNr -= 25;
@@ -330,10 +379,10 @@ public class GameManager : MonoBehaviour
     {
         SetPlayFalse();
         Debug.Log("StepForward");
-        if (currentFrameNr + 1 < frameData.Length)
+        if (NormalizeFrameNr(currentFrameNr) + 1 < frameData.Length)
         {
             currentFrameNr++;
-            currentFrameEndIndex += frameData[currentFrameNr].ObjectsTracked;
+            currentFrameEndIndex += frameData[NormalizeFrameNr(currentFrameNr)].ObjectsTracked;
         }
         else
         {
@@ -349,14 +398,14 @@ public class GameManager : MonoBehaviour
         SetPlayFalse();
         Debug.Log("StepBackward");
         currentFrameNr--;
-        if (currentFrameNr < frameData.Length && currentFrameNr > 0)
+        if (NormalizeFrameNr(currentFrameNr) < frameData.Length && NormalizeFrameNr(currentFrameNr) > 0)
         {
             currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
             currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
         }
         else
         {
-            currentFrameNr = 0;
+            currentFrameNr = startFrame;
             currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
             currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
         }
@@ -369,7 +418,8 @@ public class GameManager : MonoBehaviour
         SetPlayFalse();
         Debug.Log("MoveTo");
         currentFrameNr = frameNr;
-        if (currentFrameNr < frameData.Length)
+        Debug.Log("Current frame (MoveTo): " + currentFrameNr);
+        if (NormalizeFrameNr(currentFrameNr) < frameData.Length)
         {
             Debug.Log("Frame found");
             currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
@@ -378,8 +428,8 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("Frame not found");
-            currentFrameStartIndex = GetFrameStartIndex(frameData.Length - 1);
-            currentFrameEndIndex = GetFrameEndIndex(frameData.Length - 1);
+            currentFrameStartIndex = GetFrameStartIndex(endFrame);
+            currentFrameEndIndex = GetFrameEndIndex(endFrame);
         }
         MoveObjects();
     }
@@ -389,9 +439,9 @@ public class GameManager : MonoBehaviour
     {
         Vector3 position;
         Transform playerTransform;
-
         PlayerData[] playerPositions = new PlayerData[currentFrameEndIndex - currentFrameStartIndex];
 
+        Debug.Log("Current frame :" + currentFrameNr);
         for (int currentFrameIndex = currentFrameStartIndex; currentFrameIndex < currentFrameEndIndex; currentFrameIndex++)
         {
             string playerName = playerData[currentFrameIndex].Player;
@@ -469,7 +519,7 @@ public class GameManager : MonoBehaviour
 
         // Update the time slider
         timeSlider.GetComponent<TimeSlider>().ChangeTime(currentFrameNr);
-        gameUI.GetComponent<TimeOverlay>().Timer(currentFrameNr);
+        // gameUI.GetComponent<TimeOverlay>().Timer(currentFrameNr);
     }
 
     // Spawn player or ball object
@@ -558,6 +608,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private int NormalizeFrameNr(int frameNr)
+    {
+        return frameNr - startFrame;
+    }
+
     // Get the start frame number
     public int StartFrame()
     {
@@ -568,6 +623,11 @@ public class GameManager : MonoBehaviour
     public int EndFrame()
     {
         return endFrame;
+    }
+
+    public int Period()
+    {
+        return period;
     }
 
     public string GetHomeTeamColor()
