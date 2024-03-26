@@ -1,0 +1,13 @@
+2024-03-23
+epochs=10
+matches=120
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
+categorical_cols=[]
+Goalkeepers only
+
+Training results:
+loss: [1.06, 1.0, 0.99, 0.99, 0.98, 0.98, 0.98, 0.97, 0.97, 0.97]
+val_loss: [1.08, 1.14, 1.13, 1.02, 1.09, 1.13, 1.11, 1.15, 1.17, 1.08]
+
+Testing results:
+test_loss: 1.02

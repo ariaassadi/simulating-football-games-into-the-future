@@ -95,7 +95,7 @@ def get_next_model_filename(model_name):
     num_existing_models = len(existing_models)
 
     # Construct the filename for the next model
-    next_model_filename = f"{model_name}_{num_existing_models + 1}.h5"
+    next_model_filename = f"{model_name}_v{num_existing_models + 1}.h5"
 
     return os.path.join(models_folder, next_model_filename)
 

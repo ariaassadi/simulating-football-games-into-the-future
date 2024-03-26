@@ -1,0 +1,10 @@
+2024-03-23
+epochs=3
+matches=40
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y']
+categorical_cols=[]
+Goalkeepers only
+
+Training results:
+loss: [1.15, 1.03, 1.02]
+val_loss: [1.21, 1.26, 1.16]
