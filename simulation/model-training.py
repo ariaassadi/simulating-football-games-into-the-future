@@ -44,10 +44,9 @@ y_cols = ['x_future', 'y_future']
 # Define parameters for model training
 n_epochs = 1
 batch_size = 32
-n_matches = 40
-
-# Define the length of the sequences
-sequence_length = FPS * seconds_into_the_future
+n_matches = 10
+downsampling_factor = 5     # Keep every n:th frame
+sequence_length = 5    # Sequence length for LSTM model
 
 
 # In[ ]:
@@ -70,6 +69,8 @@ denominators = {
     'angle_to_ball': 360,
     'orientation': 360,
     'tiredness': 10,
+    'minute': 45,
+    'period': 2,
 }
 
 
@@ -98,8 +99,7 @@ def prepare_df(frames_df, positions=None, include_ball=True, ball_has_to_be_in_m
     # frames_df = frames_df[frames_df['objects_tracked'] == 23]
 
     # Only keep ever n:th frame
-    n = 5
-    frames_df = frames_df[frames_df['frame'] % n == 0]
+    frames_df = frames_df[frames_df['frame'] % downsampling_factor == 0]
 
     # Only keep goalkeeper frames
     if positions:
@@ -108,7 +108,7 @@ def prepare_df(frames_df, positions=None, include_ball=True, ball_has_to_be_in_m
     return frames_df
 
 # Prepare data before training
-def prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, positions=None, include_ball=True, ball_has_to_be_in_motion=False):
+def prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, unchanged_cols=[], positions=None, include_ball=True, ball_has_to_be_in_motion=False):
     # Initialize lists to store features and labels
     X_data = []
     y_data = []
@@ -119,7 +119,7 @@ def prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=cat
         frames_df = prepare_df(frames_df, positions=positions, include_ball=True, ball_has_to_be_in_motion=False)
 
         # Extract features and labels from group
-        X = frames_df[numerical_cols + categorical_cols]
+        X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
         y = frames_df[y_cols]
 
         # Append the data
@@ -145,22 +145,22 @@ def prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=cat
 
     return X_data_df, y_data_df
 
-# # TODO: Test this function. It's straight from the goat
-# def prepare_sequential_data(X_data, y_data, sequence_length):
-#     # Convert pandas DataFrames to NumPy arrays
-#     X_data_np = X_data.to_numpy()
-#     y_data_np = y_data.to_numpy()
+# TODO: Prepare sequential data for the LSTM model. Remeber to group by ['team', 'jersey_number', 'match_id']
+def prepare_sequential_data(X_data_df, y_data_df, sequence_length):
+    # Convert pandas DataFrames to NumPy arrays
+    X_data_np = X_data.to_numpy()
+    y_data_np = y_data.to_numpy()
 
-#     data_length = len(X_data)
+    data_length = len(X_data)
 
-#     # Create an array of indices to extract sequences
-#     indices = np.arange(data_length - sequence_length + 1)[:, None] + np.arange(sequence_length)
+    # Create an array of indices to extract sequences
+    indices = np.arange(data_length - sequence_length + 1)[:, None] + np.arange(sequence_length)
 
-#     # Use advanced indexing to extract sequences directly
-#     X_seq = X_data_np[indices]
-#     y_seq = y_data_np[sequence_length - 1:]
+    # Use advanced indexing to extract sequences directly
+    X_seq = X_data_np[indices]
+    y_seq = y_data_np[sequence_length - 1:]
 
-#     return X_seq, y_seq
+    return X_seq, y_seq
 
 
 # In[ ]:
@@ -249,7 +249,8 @@ val_frames_dfs = [frames_dfs[i] for i in val_ids]
 
 
 # ## Predictive model 1
-# ### Embedding layers
+# ### NN with Embedding layers
+# Player-based model
 
 # In[ ]:
 
@@ -258,7 +259,8 @@ val_frames_dfs = [frames_dfs[i] for i in val_ids]
 embedding_config = {
     'team_direction': {'n_categories': 2, 'output_dim': 2},
     'role': {'n_categories': 13, 'output_dim': 6},
-    'position': {'n_categories': 10, 'output_dim': 5}
+    'position': {'n_categories': 10, 'output_dim': 5},
+    'nationality': {'n_categories': 20, 'output_dim': 7}
 }
 
 # Create an embedding layer for a specific categorical feature.
@@ -399,50 +401,41 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=No
 # In[ ]:
 
 
-# Train the NN model with embedding layers
-n_epochs = 1
-categorical_cols = ["position"]
-positions = ["Attacking Midfielder", "Central Midfielder", "Centre-Back", "Defensive Midfielder", "Forward", "Full-Back", "Goalkeeper", "Wide Midfielder", "Winger"]
-# positions = ["Goalkeeper"]
+# # Train the NN model with embedding layers
+# n_epochs = 5
+# categorical_cols = ['position']
+# positions = ["Attacking Midfielder", "Central Midfielder", "Centre-Back", "Defensive Midfielder", "Forward", "Full-Back", "Goalkeeper", "Wide Midfielder", "Winger"]
+# # positions = ["Goalkeeper"]
 
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness']
+# numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
 # train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
 
 
 # In[ ]:
 
 
+# # Training session tonight
+# # n_matches = 120
 n_epochs = 5
-categorical_cols = []
+categorical_cols = ['position']
 positions = ["Attacking Midfielder", "Central Midfielder", "Centre-Back", "Defensive Midfielder", "Forward", "Full-Back", "Goalkeeper", "Wide Midfielder", "Winger"]
 
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
-
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
-
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'pac', 'acc']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
-
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height', 'weight', 'pac', 'acc']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
-
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
-
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'weight']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
-
-numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height', 'weight']
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height']
 train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
 
 numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions, l2=0.00001)
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions, l2=0.0001)
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions, l2=0.001)
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions, l2=0.01)
-train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions, l2=0.1)
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
+
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height']
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions, l2=1e-05)
+
+categorical_cols = ['position', 'nationality']
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height']
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
+
+categorical_cols = ['role']
+positions = ["Attacking Midfielder", "Central Midfielder", "Centre-Back", "Defensive Midfielder", "Forward", "Full-Back", "Goalkeeper", "Wide Midfielder", "Winger"]
+train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, positions=positions)
 
 
 # In[ ]:
@@ -521,7 +514,7 @@ def evaluate_model(model_name):
     frames_concatenated_df['y_future_pred'] = frames_concatenated_df['y_future_pred'].clip(lower=0, upper=pitch_width)
 
     # Smooth the predicted coordinates
-    # smooth_predictions_xy(frames_df, alpha=0.95)
+    # smooth_predictions_xy(frames_df, alpha=0.98)
 
     error = total_error_loss(frames_concatenated_df)
 
@@ -532,15 +525,10 @@ def evaluate_model(model_name):
 #     error = evaluate_model(model_name)
 #     print(f"{model_name}: {error}")
 
-# Generate the corresponding txt filename
-output_txt_filename = "models/26-03-24-model-testing.txt"
-
-# Write the output directly to the txt file
-with open(output_txt_filename, 'w') as f:
-    for model_name in range(2, 12):
-        model_name = f"NN_model_v{1}"
-        error = evaluate_model(model_name)
-        f.write(f"{model_name}: {error}\n")
+# for i in range(2, 12):
+#     model_name = f"NN_model_v{i}"
+#     error = evaluate_model(model_name)
+#     print(f"{model_name}: {error}\n")
 
 
 # ### Test for different alpha values
@@ -580,10 +568,10 @@ def run_model(model_name):
 
     return frames_concatenated_df
 
-# frames_df = run_model("NN_model_v2")
+# frames_df = run_model("NN_best_v1")
     
 # alpha = 1.0
-# for i in range(15):
+# for i in range(10):
 #     frames_df = frames_df.copy()
 #     smooth_predictions_xy(frames_df, alpha=alpha)
 #     error = total_error_loss(frames_df)
@@ -612,9 +600,9 @@ def find_column_variance(frames_df, column_to_analyze):
     return column_variance_df
 
 # alpha = 1
-# frames_df = run_model("NN_model_v2")
+# # frames_df = run_model("best")
 # total_error_loss(frames_df)
-# column_to_analyze = 'position'
+# column_to_analyze = 'nationality'
 
 # # Call the function
 # column_variance_df = find_column_variance(frames_df, column_to_analyze)
@@ -626,6 +614,7 @@ def find_column_variance(frames_df, column_to_analyze):
 
 # ## Predictive model 2
 # ### LSTM model
+# Player-based model
 
 # In[ ]:
 
@@ -671,6 +660,232 @@ def train_LSTM(train_frames_dfs, val_frames_dfs):
 
     # Train the model
     train_model(X_train, y_train, X_val, y_val, val_frames_dfs)
+
+
+# In[ ]:
+
+
+# Embedding configuration for each categorical column
+embedding_config = {
+    'team_direction': {'n_categories': 2, 'output_dim': 2},
+    'role': {'n_categories': 13, 'output_dim': 6},
+    'position': {'n_categories': 10, 'output_dim': 5},
+    'nationality': {'n_categories': 20, 'output_dim': 7}
+}
+
+# Create an embedding layer for a specific categorical feature.
+def create_embedding_layer(name, n_categories, output_dim):
+    input_layer = Input(shape=(1,), name=f"{name}_input")  # Input for feature
+    embedding = Embedding(input_dim=n_categories, output_dim=output_dim, name=f"{name}_embedding")(input_layer)  # Embedding
+    flat_layer = Flatten()(embedding)  # Flatten the output for dense layer
+    return input_layer, flat_layer
+
+# Generate embedding layers for all categorical features specified.
+def create_embeddings(categorical_cols):
+    input_layers = []  # Stores input layers
+    flat_layers = []  # Stores flattened outputs
+    
+    # Process each categorical column
+    for col in categorical_cols:
+        config = embedding_config.get(col)  # Get config
+        if config:
+            n_categories = config['n_categories']
+            output_dim = config['output_dim']
+            input_layer, flat_layer = create_embedding_layer(col, n_categories, output_dim)
+            input_layers.append(input_layer)
+            flat_layers.append(flat_layer)
+    
+    return input_layers, flat_layers
+
+# Choose the appropriate regularizer based on l1 and l2 values.
+def define_regularizers(l1=0, l2=0):
+    if l1 != 0:
+        return regularizers.l1(l1)
+    elif l2 != 0:
+        return regularizers.l2(l2)
+    return None
+
+
+# Adjust the X_data for embedding layers
+def adjust_for_embeddings(X_data_df, categorical_cols):
+    # Split the DataFrame into numerical and categorical components
+    X_numerical = X_data_df.drop(columns=categorical_cols)
+    
+    # Extract and convert categorical columns to a list of arrays if categorical_cols is not empty
+    X_categorical = [X_data_df[col].values.reshape(-1, 1) for col in categorical_cols] if categorical_cols else []
+    
+    return X_numerical, X_categorical
+
+def prepare_model_inputs(X_numerical, X_categorical):
+    # Convert list of categorical arrays into a single 2D numpy array if X_categorical is not empty
+    X_categorical_concatenated = np.concatenate(X_categorical, axis=1) if X_categorical else None
+    
+    # Combine numerical and categorical arrays
+    X_input = [X_categorical_concatenated, X_numerical] if X_categorical else [X_numerical]
+    
+    return X_input
+
+# Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
+def add_can_be_sequentialized(frames_df, sequence_length):
+    # Calculate the expected sequence start frame
+    frames_df['expected_sequence_start_frame'] = frames_df['frame'] - sequence_length * FPS // downsampling_factor
+    
+    # Group by each unique player
+    grouped = frames_df.groupby(['team', 'jersey_number'])
+    
+    # For each player, shift the 'frame' column to identify potential sequences
+    frames_df['shifted_frame'] = grouped['frame'].shift(sequence_length)
+    
+    # Check if the shifted frame matches 'expected_sequence_start_frame'
+    # and set 'can_be_sequentialized' to True if it does
+    frames_df['can_be_sequentialized'] = frames_df['expected_sequence_start_frame'] == frames_df['shifted_frame']
+    
+    # Drop temporary columns
+    frames_df.drop(['expected_sequence_start_frame', 'shifted_frame'], axis=1, inplace=True)
+
+# Sequentialize the numerical_columns
+def sequentialize_numerical_cols(X_df, numerical_cols, sequence_length):
+    # Initialize an empty DataFrame to store the sequentialized data
+    sequentialized_data = []
+    
+    # Group by each unique player
+    grouped = X_df.groupby(['team', 'jersey_number', 'match_id'])
+    
+    # Iterate through each group and create sequences
+    for _, group in grouped:
+        # Create shifted versions of the DataFrame for each step in the sequence
+        shifted_dfs = [group[numerical_cols].shift(i) for i in range(sequence_length)]
+
+        # Concatenate the shifted DataFrames along the columns axis to form sequences
+        sequences_df = pd.concat(shifted_dfs, axis=1)
+
+        # Only consider groups that can be sequentialized
+        sequences_df = sequences_df[group['can_be_sequentialized']]
+
+        X_df['']
+
+    #     # Add to the list of sequentialized data
+    #     sequentialized_data.append(sequences_df)
+    
+    # # Combine all the sequentialized data
+    # X_sequentialized_df = pd.concat(sequentialized_data)
+    
+    return X_sequentialized_df
+
+def prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=positions):
+    # Definie columns temporarely give to prepare_data()
+    unchanged_cols=['player', 'frame', 'team', 'jersey_number', 'match_id']
+
+    # Prepare data
+    X_df, y_df = prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, unchanged_cols=unchanged_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
+
+    # Add the vector that determines if the vector can be sequentialized
+    add_can_be_sequentialized(X_df, sequence_length=sequence_length)
+    
+    # Trim y_df based on 'can_be_sequentialized'
+    y_df = y_df[X_df['can_be_sequentialized']]
+
+    # Sequentialize the numerical_cols
+    X_sequentialized_df = sequentialize_numerical_cols(X_df, numerical_cols, sequence_length)
+
+    # No need to do anything more if 'categorical_cols' is empty
+    if categorical_cols == []:
+        return X_sequentialized_df, y_df
+
+    # Adjust for embeddings
+    _, X_categorical = adjust_for_embeddings(X_df, categorical_cols)
+
+    # Prepare inputs
+    X_input = prepare_model_inputs(X_numerical, X_categorical)
+
+    return X_input, y_df
+
+
+# In[ ]:
+
+
+# Define the NN model with LSTM layer
+def define_LSTM_model(numerical_input_shape, l1=0, l2=0):
+    if categorical_cols:
+        categorical_inputs, categorical_flats = create_embeddings(categorical_cols)  # Create embeddings
+        numerical_input = Input(shape=(numerical_input_shape,), name='numerical_input')  # Numerical input
+        concatenated_features = Concatenate()([*categorical_flats, numerical_input])  # Combine all features
+        model_inputs = [*categorical_inputs, numerical_input]  # Model inputs
+    else:
+        numerical_input = Input(shape=(numerical_input_shape,), name='numerical_input')  # Numerical input
+        concatenated_features = numerical_input  # Use only numerical input
+        model_inputs = numerical_input  # Model inputs
+    
+    # Dense layers
+    regularizer = define_regularizers(l1, l2)  # Set regularizer
+    dense_layer_1 = Dense(64, activation='relu', kernel_regularizer=regularizer)(concatenated_features)
+    dense_layer_2 = Dense(32, activation='relu', kernel_regularizer=regularizer)(dense_layer_1)
+
+    output_layer = Dense(2)(dense_layer_2)  # Output layer for x_future and y_future
+    model = Model(inputs=model_inputs, outputs=output_layer)  # Build model
+
+    return model
+
+def train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=None, l1=0, l2=0, special_text=None):
+    # Prepare inputs
+    X_train_input, y_train = prepare_LSTM_input_data(train_frames_dfs, numerical_cols, categorical_cols, sequence_length. positions=positions)
+    X_val_input, y_val = prepare_LSTM_input_data(val_frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=positions)
+
+    # Define the model
+    model = define_LSTM_model(numerical_input_shape=len(numerical_cols), l1=l1, l2=l2)
+
+    # Compile the model
+    model.compile(optimizer='adam', loss=euclidean_distance_loss)
+
+    # Train the model with the corrected input format
+    history = model.fit(X_train_input, y_train, validation_data=(X_val_input, y_val), epochs=n_epochs, batch_size=batch_size, verbose=2)
+
+    # Save the trained model to disk
+    model_filename = get_next_model_filename("LSTM_model")
+    model.save(model_filename)
+
+    # Generate the corresponding txt filename
+    output_txt_filename = os.path.splitext(model_filename)[0] + ".txt"
+
+    # Write the output directly to the txt file
+    with open(output_txt_filename, 'w') as f:
+        # Write the some general info at the begging of the file
+        today_date = date.today().strftime("%Y-%m-%d")
+        f.write(f"{today_date}\n")
+        f.write(f"epochs={n_epochs}\n")
+        f.write(f"matches={n_matches}\n")
+        f.write(f"sequence_length={sequence_length}\n")
+        f.write(f"numerical_cols={numerical_cols}\n")
+        f.write(f"categorical_cols={categorical_cols}\n")
+        f.write(f"positions={positions}\n")
+        if l1 != 0: f.write(f"l1={l1}\n")
+        if l2 != 0: f.write(f"l2={l2}\n")
+        if special_text: f.write(f"{special_text}\n")
+
+        # Write the training results
+        f.write("\nTraining results:\n")
+        for key, value in history.history.items():
+            rounded_values = [round(v, 2) for v in value]
+            f.write(f"{key}: {rounded_values}\n")
+
+
+# In[ ]:
+
+
+# n_epochs = 1
+# categorical_cols = []
+# positions = ["Goalkeeper"]
+# sequence_length = 3
+
+# numerical_cols=['x', 'y']
+# X, y = prepare_LSTM_input_data(test_frames_dfs, numerical_cols, categorical_cols, sequence_length, positions)
+# # train_LSTM_model(train_frames_dfs, val_frames_dfs, positions=positions)
+
+
+# In[ ]:
+
+
+# X['x']
 
 
 # ### Visualize training results
