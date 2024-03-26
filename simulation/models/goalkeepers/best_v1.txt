@@ -1,0 +1,15 @@
+2024-03-26
+epochs=5
+matches=40
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
+categorical_cols=['position']
+positions=['Goalkeeper']
+
+Training results:
+loss: [1.4, 1.01, 1.0, 1.0, 1.0]
+val_loss: [1.0, 0.96, 0.97, 0.96, 0.95]
+
+Testing results:
+test_loss: 1.069
+
+Optimal alpha = 1.0 -> 1.069
