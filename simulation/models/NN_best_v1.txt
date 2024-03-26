@@ -1,0 +1,15 @@
+2024-03-25/NN_model_v6
+epochs=5
+matches=40
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height']
+categorical_cols=[]
+positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
+
+Training results:
+loss: [1.83, 1.76, 1.75, 1.75, 1.74]
+val_loss: [1.62, 1.68, 1.62, 1.61, 1.6]
+
+Testing results:
+test_loss: 1.815
+
+Optimal alpha = 0.99 -> 1.814
