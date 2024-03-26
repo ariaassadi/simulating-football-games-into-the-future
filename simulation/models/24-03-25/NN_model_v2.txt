@@ -1,0 +1,15 @@
+2024-03-25
+epochs=5
+matches=40
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
+categorical_cols=[]
+positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
+
+Training results:
+loss: [1.83, 1.76, 1.74, 1.74, 1.73]
+val_loss: [1.67, 1.61, 1.61, 1.6, 1.61]
+
+Testing results:
+test_loss: 1.825
+
+Optimal alpha = 0.97 -> 1.824
