@@ -84,6 +84,7 @@ public class TimeSlider : MonoBehaviour
     {
         timeSlider.GetComponent<UnityEngine.UI.Slider>().value = frame;
         startTime.text = FrameToTime(frame, period).ToString();
+        scoreBoardTime.text = FrameToTime(frame, period).ToString();
     }
 
     public void OnValueChanged()

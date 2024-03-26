@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour
@@ -37,7 +39,61 @@ public class TimeManager : MonoBehaviour
                 gameManager.GetComponent<GameManager>().StepBackward();
             }
         }
-
-
     }
+
+    private void ManipulateTime(Action manipulationAction)
+    {
+        timer += Time.deltaTime;
+
+        if (timer >= timeManipulationSpeed)
+        {
+            timer = 0f;
+            manipulationAction.Invoke();
+        }
+    }
+
+    public void FastBackward()
+    {
+        // timer += Time.deltaTime;
+
+        // if (timer >= timeManipulationSpeed)
+        // {
+        //     timer = 0f;
+        while (Input.GetMouseButton(0))
+        {
+            gameManager.GetComponent<GameManager>().FastBackward();
+        }
+
+        Debug.Log("Button is not held");
+        // }
+    }
+    // public void FastBackward()
+    // {
+    //     ManipulateTime(() => gameManager.GetComponent<GameManager>().FastBackward());
+    // }
+
+    public void FastForward()
+    {
+        // if pointer is down
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            ManipulateTime(() => gameManager.GetComponent<GameManager>().FastForward());
+        }
+    }
+
+    public void StepBackward()
+    {
+        ManipulateTime(() => gameManager.GetComponent<GameManager>().StepBackward());
+    }
+
+    public void StepForward()
+    {
+        ManipulateTime(() => gameManager.GetComponent<GameManager>().StepForward());
+    }
+
+    public void PlayPause()
+    {
+        gameManager.GetComponent<GameManager>().PlayPause();
+    }
+
 }

@@ -13,14 +13,15 @@ public static class PythonScript
 
         // Path to file
         string path = Application.temporaryCachePath + "/output.json";
-        // Path to your virtual environment activate script
-        string activateScript = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/venv/bin/activate"; // Replace with actual path
 
         // Path to your Python script relative to the virtual environment directory
-        string pythonScript = Application.dataPath + "/hello_world.py"; // Replace with actual path
-        string pythonVersion = "python3"; // Python version to use
+        string pythonScript = Application.dataPath + "/Python/hello_world.py"; // Replace with actual path
+        string pythonVersion;
 
-        // Start stopwatch for Python script execution time
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+            pythonVersion = "python";
+        else
+            pythonVersion = "python3";
 
         // Arguments for the Python script (if any)
         string arguments = path; // Example arguments
@@ -29,12 +30,13 @@ public static class PythonScript
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
             FileName = "bash", // Use bash to activate virtual environment
-            Arguments = $"-c \"source {activateScript} && {pythonVersion} {pythonScript} {arguments}\"",
+            Arguments = $"{pythonVersion} {pythonScript} {arguments}",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             CreateNoWindow = true
         };
+
         Stopwatch pythonStopwatch = new Stopwatch();
 
         using (Process process = Process.Start(startInfo))
@@ -44,6 +46,7 @@ public static class PythonScript
 
             // Read any output from the Python script
             string output = process.StandardOutput.ReadToEnd();
+
             if (!string.IsNullOrEmpty(output))
             {
                 UnityEngine.Debug.Log(output);

@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class ChooseGame : MonoBehaviour
 {
     private Schedule[] schedule;
+
+    private bool scheduleIsCreated = false;
     [SerializeField] private GameObject gameOptionPrefab;
 
     [SerializeField] private GameObject HorizontalPanelPrefab;
@@ -16,6 +18,8 @@ public class ChooseGame : MonoBehaviour
     private GameObject uiManager;
 
     private GameObject gameManager;
+
+
 
     private void Start()
     {
@@ -35,16 +39,18 @@ public class ChooseGame : MonoBehaviour
 
     public void GetSchedule()
     {
-
-        if (Application.isEditor)
+        if (schedule == null)
         {
-            string pathToDB = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-            schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
-        }
-        else
-        {
-            string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
-            schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
+            if (Application.isEditor)
+            {
+                string pathToDB = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
+                schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
+            }
+            else
+            {
+                string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
+                schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
+            }
         }
 
         if (schedule == null)
@@ -57,39 +63,23 @@ public class ChooseGame : MonoBehaviour
         GameObject g;
 
         Debug.Log(schedule.Length);
-        // if (schedule.Length % 2 == 0)
-        // {
-        for (int i = 0; i < schedule.Length; i++)
+        if (!scheduleIsCreated)
         {
-            // public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent); 
-
-            horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
-            horizontalPanel.name = $"{schedule[i].HomeTeamName} vs {schedule[i].AwayTeamName}";
-
-            for (int j = 1; j < 3; j++)
+            for (int i = 0; i < schedule.Length; i++)
             {
-                g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-                AddGameInfo(schedule[i], g, j);
-            }
-        }
-        // }
-        // else
-        // {
-        //     int lastGame = schedule.Length - 1;
-        //     for (int i = 0; i < lastGame; i++)
-        //     {
-        //         horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
+                // public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent); 
 
-        //         for (int j = i; j < i + 2; j++)
-        //         {
-        //             g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-        //             AddGameInfo(schedule[j], g, i - j + 1);
-        //         }
-        //     }
-        //     horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
-        //     g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-        //     AddGameInfo(schedule[lastGame], g);
-        // }
+                horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
+                horizontalPanel.name = $"{schedule[i].HomeTeamName} vs {schedule[i].AwayTeamName}";
+
+                for (int j = 1; j < 3; j++)
+                {
+                    g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
+                    AddGameInfo(schedule[i], g, j);
+                }
+            }
+            scheduleIsCreated = true;
+        }
     }
 
     private void AddGameInfo(Schedule game, GameObject g, int period)
