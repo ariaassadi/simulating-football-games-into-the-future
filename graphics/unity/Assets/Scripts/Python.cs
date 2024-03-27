@@ -1,10 +1,13 @@
 using System.Diagnostics;
-using UnityEditor;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public static class PythonScript
+
+public class PythonScript : MonoBehaviour
 {
     // [MenuItem("Tools/Run Python Script")]
+
+
     public static void TestPythonScript(string json, string path)
     {
         // Start stopwatch for overall execution time
@@ -15,16 +18,29 @@ public static class PythonScript
         // string activateScript = Application.dataPath + "/Python/venv/bin/activate";
 
         // Path to your Python script relative to the virtual environment directory
-        string pythonScript = Application.streamingAssetsPath + "/Python/pitch_control_main.py"; // Replace with actual path
+        string pythonScript;
+#if UNITY_ANDROID && !UNITY_EDITOR
+        pythonScript = Application.persistentDataPath + "/pitch_control_main.py";
+#else
+        pythonScript = Application.streamingAssetsPath + "/Python/pitch_control_main.py"; // Replace with actual path
+#endif
+
         string pythonVersion;
 
-        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            json = json.Replace("\"", "\\\"");
             pythonVersion = "python";
+        }
         else
             pythonVersion = "python3";
 
+        // Make sure JSON string is properly formatted with double quotes
+
+        UnityEngine.Debug.Log("JSON: " + json);
         // Arguments for the Python script (if any)
-        string arguments = $"'{json}' {path}"; // Example arguments
+        string arguments = $"{json} {path}"; // Example arguments
+        UnityEngine.Debug.Log("Arguments: " + $"{pythonScript} {arguments}");
 
         // Start the Python process within the virtual environment
         ProcessStartInfo startInfo = new ProcessStartInfo

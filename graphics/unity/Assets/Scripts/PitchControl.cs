@@ -1,5 +1,8 @@
 using UnityEngine;
-using System.Diagnostics;
+using System.Collections;
+using System.IO;
+using UnityEngine.Networking;
+
 
 public class PitchControl : MonoBehaviour
 {
@@ -21,6 +24,37 @@ public class PitchControl : MonoBehaviour
 
     private string json;
 
+    private void Start()
+    {
+        // CreateDatabase();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            string sourcePath = Application.streamingAssetsPath + "/Python/pitch_control_main.py";
+            string destinationPath = Application.persistentDataPath + "/pitch_control_main.py";
+            if (!File.Exists(destinationPath))
+                StartCoroutine(CopyScript(sourcePath, destinationPath));
+#endif
+
+    }
+
+    IEnumerator CopyScript(string sourcePath, string destinationPath)
+    {
+        // Use a UnityWebRequest to copy the file from StreamingAssets to persistentDataPath
+        using (UnityWebRequest www = UnityWebRequest.Get(sourcePath))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                // Write the downloaded data to persistentDataPath
+                File.WriteAllBytes(destinationPath, www.downloadHandler.data);
+                // Now that the database has been copied, query it
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("Failed to copy python scrits at: " + sourcePath + www.error);
+            }
+        }
+    }
     public void AddPlaneAndTexture()
     {
         // Create a new plane and apply a texture to it

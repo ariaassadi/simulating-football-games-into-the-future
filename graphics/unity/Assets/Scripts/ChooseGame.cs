@@ -47,7 +47,8 @@ public class ChooseGame : MonoBehaviour
 
 #if UNITY_ANDROID && !UNITY_EDITOR
         pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo.sqlite");
-        StartCoroutine(CopyDatabase(pathToDB));
+        if (!File.Exists(pathToDB))
+            StartCoroutine(CopyDatabase(pathToDB));
 #else
             pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
             schedule = DatabaseManager.query_schedule_db(pathToDB, "SELECT * FROM schedule");

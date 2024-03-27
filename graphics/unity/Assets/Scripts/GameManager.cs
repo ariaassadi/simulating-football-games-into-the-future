@@ -106,8 +106,17 @@ public class GameManager : MonoBehaviour
     public async Task<bool> LoadGameAsync(string match_id, int period)
     {
         this.period = period;
-
-        string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
+        string pathToDB;
+        // Path to the database
+        // if platform is Android, use persistent data path, otherwise use streaming assets path
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            pathToDB = Application.persistentDataPath + "/2sec_demo.sqlite";
+        }
+        else
+        {
+            pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
+        }
         // SQL query to retrieve player data for a specific match and period
         string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
 
