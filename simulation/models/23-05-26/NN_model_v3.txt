@@ -1,0 +1,10 @@
+2024-03-26
+epochs=5
+matches=120
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
+categorical_cols=['position']
+positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
+
+Training results:
+loss: [1.74, 1.69, 1.68, 1.68, 1.68]
+val_loss: [1.68, 1.67, 1.69, 1.66, 1.66]
