@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
+using UnityEngine.Networking;
 
 public class ChooseGame : MonoBehaviour
 {
@@ -41,16 +43,15 @@ public class ChooseGame : MonoBehaviour
     {
         if (schedule == null)
         {
-            if (Application.isEditor)
-            {
-                string pathToDB = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-                schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
-            }
-            else
-            {
-                string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
-                schedule = DatabaseManager.query_schedule_db(pathToDB, $"SELECT * FROM schedule");
-            }
+            string pathToDB = "";
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo.sqlite");
+        StartCoroutine(CopyDatabase(pathToDB));
+#else
+            pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
+            schedule = DatabaseManager.query_schedule_db(pathToDB, "SELECT * FROM schedule");
+#endif
         }
 
         if (schedule == null)
@@ -67,8 +68,6 @@ public class ChooseGame : MonoBehaviour
         {
             for (int i = 0; i < schedule.Length; i++)
             {
-                // public static Object Instantiate(Object original, Vector3 position, Quaternion rotation, Transform parent); 
-
                 horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
                 horizontalPanel.name = $"{schedule[i].HomeTeamName} vs {schedule[i].AwayTeamName}";
 
@@ -81,6 +80,30 @@ public class ChooseGame : MonoBehaviour
             scheduleIsCreated = true;
         }
     }
+
+    IEnumerator CopyDatabase(string destinationPath)
+    {
+        string sourcePath = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
+
+        // Use a UnityWebRequest to copy the file from StreamingAssets to persistentDataPath
+        using (UnityWebRequest www = UnityWebRequest.Get(sourcePath))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                // Write the downloaded data to persistentDataPath
+                File.WriteAllBytes(destinationPath, www.downloadHandler.data);
+                // Now that the database has been copied, query it
+                schedule = DatabaseManager.query_schedule_db(destinationPath, "SELECT * FROM schedule");
+            }
+            else
+            {
+                Debug.LogError("Failed to copy database: " + www.error);
+            }
+        }
+    }
+
 
     private void AddGameInfo(Schedule game, GameObject g, int period)
     {

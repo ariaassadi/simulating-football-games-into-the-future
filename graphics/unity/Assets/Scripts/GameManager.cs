@@ -106,47 +106,25 @@ public class GameManager : MonoBehaviour
     public async Task<bool> LoadGameAsync(string match_id, int period)
     {
         this.period = period;
-        if (Application.isEditor)
-        {
-            string pathToDB = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-            // SQL query to retrieve player data for a specific match and period
-            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
-            // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period={period} AND match_id='{match_id}'";
 
-            string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
-            // string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>={startFrame} AND frame<{endFrame} AND period={period} AND match_id='{match_id}' GROUP BY frame";
+        string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
+        // SQL query to retrieve player data for a specific match and period
+        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
+
+        string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
 
 
-            // Retrieve players data asynchronously
-            Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));
-            playerData = await playerDataTask;
-            Debug.Log($"Select: {query_tracking} END");
+        Debug.Log($"Select: {query_tracking} END");
+        Debug.Log($"Select: {query_frames} END");
 
-            // Retrieve frames data asynchronously
-            Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_frames));
-            frameData = await frameDataTask;
-            Debug.Log($"Select: {query_frames} END");
-        }
-        else
-        {
-            string pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
-            // SQL query to retrieve player data for a specific match and period
-            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
+        // Retrieve players data asynchronously
+        Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));
+        playerData = await playerDataTask;
 
-            string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
+        // Retrieve frames data asynchronously
+        Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_frames));
+        frameData = await frameDataTask;
 
-
-            Debug.Log($"Select: {query_tracking} END");
-            Debug.Log($"Select: {query_frames} END");
-
-            // Retrieve players data asynchronously
-            Task<Game[]> playerDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));
-            playerData = await playerDataTask;
-
-            // Retrieve frames data asynchronously
-            Task<Game[]> frameDataTask = Task.Run(() => DatabaseManager.query_db(pathToDB, query_frames));
-            frameData = await frameDataTask;
-        }
 
         Debug.Log("Number of rows: " + playerData.Length);
         Debug.Log("Number of frames: " + frameData.Length);

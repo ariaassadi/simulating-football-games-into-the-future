@@ -3,6 +3,7 @@ Library/
 Temp/
 obj/
 Builds/
+Logs/*
 *.csproj.user
 *.suo
 *.sln.user
@@ -14,8 +15,8 @@ Builds/
 Assets/Static/Coordinates*
 
 # Logs
-*.log
-*.txt
+Assets/*.log
+Assets/*.txt
 
 # Builds
 2sec*

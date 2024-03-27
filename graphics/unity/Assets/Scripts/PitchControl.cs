@@ -102,7 +102,7 @@ public class PitchControl : MonoBehaviour
         }
 
         // Get the JSON to send to the webserver
-        string jsonPP = GetPitchControlJSON(playerPositions);
+        string jsonPP = GetPitchControlJSON(players);
 
         // Path to store the JSON file
         string path = Application.temporaryCachePath + "/pitch_control.json";
