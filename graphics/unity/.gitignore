@@ -9,7 +9,7 @@ Builds/
 *.pidb
 
 # Data
-*.sqlite
+# *.sqlite
 *.csv
 Assets/Static/Coordinates*
 
