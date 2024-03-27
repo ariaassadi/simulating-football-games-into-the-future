@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
 
     private Schedule gameInfo;
 
+    private PlayerData[] playerPositions;
     // Line renderers for the offside lines
     [SerializeField] private LineRenderer offsideLineHome;
     [SerializeField] private LineRenderer offsideLineAway;
@@ -173,7 +174,7 @@ public class GameManager : MonoBehaviour
         if (playerData != null && frameData != null && frameData.Length > 0)
         {
             // Loop through frames to spawn objects
-            PlayerData[] playerPositions = new PlayerData[frameData[0].ObjectsTracked];
+            playerPositions = new PlayerData[frameData[0].ObjectsTracked];
             for (int i = 0; i < frameData[0].ObjectsTracked; i++)
             {
                 SpawnObject(playerData[i]);
@@ -191,7 +192,8 @@ public class GameManager : MonoBehaviour
             awayTeamColor = gameInfo.AwayTeamColor;
 
             // Update the pitch control texture
-            gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
+            if (GameObject.FindGameObjectsWithTag("PitchOverlay").Length != 0)
+                gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
 
 
             currentFrameNr = startFrame;
@@ -439,7 +441,7 @@ public class GameManager : MonoBehaviour
     {
         Vector3 position;
         Transform playerTransform;
-        PlayerData[] playerPositions = new PlayerData[currentFrameEndIndex - currentFrameStartIndex];
+        playerPositions = new PlayerData[currentFrameEndIndex - currentFrameStartIndex];
 
         Debug.Log("Current frame :" + currentFrameNr);
         for (int currentFrameIndex = currentFrameStartIndex; currentFrameIndex < currentFrameEndIndex; currentFrameIndex++)
@@ -515,7 +517,8 @@ public class GameManager : MonoBehaviour
         awayOffsideLine = 0;
 
         // Update the pitch control
-        gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
+        if (GameObject.FindGameObjectsWithTag("PitchOverlay").Length != 0)
+            gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
 
         // Update the time slider
         timeSlider.GetComponent<TimeSlider>().ChangeTime(currentFrameNr);
@@ -638,5 +641,10 @@ public class GameManager : MonoBehaviour
     public string GetAwayTeamColor()
     {
         return awayTeamColor;
+    }
+
+    public PlayerData[] GetPlayerData()
+    {
+        return playerPositions;
     }
 }

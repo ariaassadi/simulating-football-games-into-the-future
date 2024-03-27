@@ -5,17 +5,17 @@ using UnityEngine;
 public static class PythonScript
 {
     // [MenuItem("Tools/Run Python Script")]
-    public static void TestPythonScript()
+    public static void TestPythonScript(string json, string path)
     {
         // Start stopwatch for overall execution time
         Stopwatch overallStopwatch = new Stopwatch();
         overallStopwatch.Start();
 
-        // Path to file
-        string path = Application.temporaryCachePath + "/output.json";
+        // Path to virtual environment
+        // string activateScript = Application.dataPath + "/Python/venv/bin/activate";
 
         // Path to your Python script relative to the virtual environment directory
-        string pythonScript = Application.dataPath + "/Python/hello_world.py"; // Replace with actual path
+        string pythonScript = Application.streamingAssetsPath + "/Python/pitch_control_main.py"; // Replace with actual path
         string pythonVersion;
 
         if (Application.platform == RuntimePlatform.WindowsPlayer)
@@ -24,13 +24,13 @@ public static class PythonScript
             pythonVersion = "python3";
 
         // Arguments for the Python script (if any)
-        string arguments = path; // Example arguments
+        string arguments = $"'{json}' {path}"; // Example arguments
 
         // Start the Python process within the virtual environment
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
-            FileName = "bash", // Use bash to activate virtual environment
-            Arguments = $"{pythonVersion} {pythonScript} {arguments}",
+            FileName = $"{pythonVersion}", // Use bash to activate virtual environment
+            Arguments = $"{pythonScript} {arguments}",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -78,7 +78,6 @@ public static class PythonScript
         // Path to file
         string path = Application.temporaryCachePath + "/output.json";
         // Path to your virtual environment activate script
-        string activateScript = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/venv/bin/activate"; // Replace with actual path
 
         // Path to your Python script relative to the virtual environment directory
         string pythonScript = Application.dataPath + "/hello_world.py"; // Replace with actual path
@@ -89,16 +88,25 @@ public static class PythonScript
         // Arguments for the Python script (if any)
         string arguments = path; // Example arguments
 
-        // Start the Python process within the virtual environment
         ProcessStartInfo startInfo = new ProcessStartInfo
         {
-            FileName = "bash", // Use bash to activate virtual environment
-            Arguments = $"-c \"source {activateScript} && {pythonVersion} {pythonScript} {arguments}\"",
+            FileName = $"{pythonVersion}", // Use bash to activate virtual environment
+            Arguments = $"{pythonScript} {arguments}",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             CreateNoWindow = true
         };
+        // Start the Python process within the virtual environment
+        // ProcessStartInfo startInfo = new ProcessStartInfo
+        // {
+        //     FileName = "bash", // Use bash to activate virtual environment
+        //     Arguments = $"-c \"source {activateScript} && {pythonVersion} {pythonScript} {arguments}\"",
+        //     UseShellExecute = false,
+        //     RedirectStandardOutput = true,
+        //     RedirectStandardError = true,
+        //     CreateNoWindow = true
+        // };
         Stopwatch pythonStopwatch = new Stopwatch();
 
         using (Process process = Process.Start(startInfo))

@@ -28,13 +28,13 @@ public class PitchControl : MonoBehaviour
         // squareMaterial.SetFloat("_Surface", 1); // 1 represents transparent
         Vector3 position = new Vector3(52.5f, 0.01f, 34f);
         pitch = Instantiate(pitchPrefab, position, Quaternion.identity);
-        Texture2D texture = GenerateTexture();
-        texture = FlipTextureHorizontally(texture);
-        ApplyTexture(texture);
+        pitch.tag = "PitchOverlay";
 
         // Get the GameManager script
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
+        // Get playerdata from the GameManager script
+        PlayerData[] playerData = gameManager.GetComponent<GameManager>().GetPlayerData();
+        UpdatePitchControlTexture(playerData);
     }
 
     // Flip texture horizontally
@@ -80,29 +80,51 @@ public class PitchControl : MonoBehaviour
         // ApplyTexture(texture);
     }
 
+    private PlayerData MoveOrigin(PlayerData player)
+    {
+        PlayerData playerCopy = new PlayerData();
+        playerCopy.jersey_number = player.jersey_number;
+        playerCopy.y = player.y - 34f;
+        playerCopy.x = player.x - 52.5f;
+        playerCopy.v = player.v;
+        playerCopy.orientation = player.orientation;
+        playerCopy.team = player.team;
+        return playerCopy;
+    }
     public void UpdatePitchControlTexture(PlayerData[] playerPositions)
     {
+
+        // move origin to 52.5, 34
+        PlayerData[] players = new PlayerData[playerPositions.Length];
+        for (int i = 0; i < playerPositions.Length; i++)
+        {
+            players[i] = MoveOrigin(playerPositions[i]);
+        }
+
         // Get the JSON to send to the webserver
-        json = GetPitchControlJSON(playerPositions);
+        string jsonPP = GetPitchControlJSON(playerPositions);
 
-        // print the json
-        // UnityEngine.Debug.Log(json);
+        // Path to store the JSON file
+        string path = Application.temporaryCachePath + "/pitch_control.json";
 
-        // Send the JSON to the webserver
-        // string response = WebServer.SendJSON(json);
+        // string path = Application.dataPath + "/Python/pitch_control.json";
+        // Send the JSON to the python script
+        PythonScript.TestPythonScript(jsonPP, path);
 
-        // Convert the response to a float array
-        // float[,] pitchControlData = JsonParser.JsonToPitchControlData(response);
 
-        // Update the pitch data
-        // colorBrighness = GetColors(playerPositions);
 
+        // Get the JSON and convert it to a float array
+        string jsonPC = System.IO.File.ReadAllText(path);
+
+        float[,] pitchControlData = JsonParser.ParsePitchJSON(jsonPC);
 
         // // Generate a new texture
-        // Texture2D texture = GenerateTexture(colorBrighness);
+        Texture2D texture = GenerateTexture(pitchControlData);
+
+        texture = FlipTextureHorizontally(texture);
 
         // // Apply the new texture
-        // ApplyTexture(texture);
+        ApplyTexture(texture);
     }
 
     public void RemovePlaneAndTexture()
@@ -111,68 +133,68 @@ public class PitchControl : MonoBehaviour
         Destroy(pitch);
     }
 
-    Texture2D GenerateTexture()
-    {
-        Texture2D texture = new Texture2D(cols, rows);
+    // Texture2D GenerateTexture()
+    // {
+    //     Texture2D texture = new Texture2D(cols, rows);
 
-        string path = Application.temporaryCachePath + "/output.json";
+    //     string path = Application.temporaryCachePath + "/output.json";
 
-        UnityEngine.Debug.Log(path);
+    //     UnityEngine.Debug.Log(path);
 
-        // read the json file from path
+    //     // read the json file from path
 
-        // Time this function
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
+    //     // Time this function
+    //     Stopwatch stopwatch = new Stopwatch();
+    //     stopwatch.Start();
 
-        PythonScript.TestPythonScript();
+    //     PythonScript.TestPythonScript();
 
-        stopwatch.Stop();
-        UnityEngine.Debug.Log("Time taken to load write JSON: " + stopwatch.ElapsedMilliseconds + "ms");
+    //     stopwatch.Stop();
+    //     UnityEngine.Debug.Log("Time taken to load write JSON: " + stopwatch.ElapsedMilliseconds + "ms");
 
-        stopwatch = new Stopwatch();
-        stopwatch.Start();
+    //     stopwatch = new Stopwatch();
+    //     stopwatch.Start();
 
-        // TextAsset jsonFile = Resources.Load<TextAsset>("output");
-        string json = System.IO.File.ReadAllText(path);
+    //     // TextAsset jsonFile = Resources.Load<TextAsset>("output");
+    //     string json = System.IO.File.ReadAllText(path);
 
-        stopwatch.Stop();
-        UnityEngine.Debug.Log("Time taken to read the JSON: " + stopwatch.ElapsedMilliseconds + "ms");
+    //     stopwatch.Stop();
+    //     UnityEngine.Debug.Log("Time taken to read the JSON: " + stopwatch.ElapsedMilliseconds + "ms");
 
-        if (json == null)
-        {
-            UnityEngine.Debug.Log("hohohohohohoh not found");
-            return null;
-        }
+    //     if (json == null)
+    //     {
+    //         UnityEngine.Debug.Log("hohohohohohoh not found");
+    //         return null;
+    //     }
 
-        // Retrieve color brightness data from JsonParser
-        stopwatch = new Stopwatch();
-        stopwatch.Start();
-        PitchData pitchData = JsonUtility.FromJson<PitchData>(json);
-        stopwatch.Stop();
-        UnityEngine.Debug.Log("Time taken to parse JSON: " + stopwatch.ElapsedMilliseconds + "ms");
+    //     // Retrieve color brightness data from JsonParser
+    //     stopwatch = new Stopwatch();
+    //     stopwatch.Start();
+    //     PitchData pitchData = JsonUtility.FromJson<PitchData>(json);
+    //     stopwatch.Stop();
+    //     UnityEngine.Debug.Log("Time taken to parse JSON: " + stopwatch.ElapsedMilliseconds + "ms");
 
-        float[] hmmmm = pitchData.pitch;
-        foreach (float value in hmmmm)
-        {
-            UnityEngine.Debug.Log(value);
-        }
-        texture.filterMode = FilterMode.Point;
+    //     float[] hmmmm = pitchData.pitch;
+    //     foreach (float value in hmmmm)
+    //     {
+    //         UnityEngine.Debug.Log(value);
+    //     }
+    //     texture.filterMode = FilterMode.Point;
 
-        // Generate colors for each pixel
-        for (int x = 0; x < rows; x++)
-        {
-            for (int y = 0; y < cols; y++)
-            {
-                Color color = GenerateRandomColor(); // Or any method to generate colors based on data
-                texture.SetPixel(y, x, color);
-            }
-        }
+    //     // Generate colors for each pixel
+    //     for (int x = 0; x < rows; x++)
+    //     {
+    //         for (int y = 0; y < cols; y++)
+    //         {
+    //             Color color = GenerateRandomColor(); // Or any method to generate colors based on data
+    //             texture.SetPixel(y, x, color);
+    //         }
+    //     }
 
-        texture.Apply(); // Apply changes to the texture
+    //     texture.Apply(); // Apply changes to the texture
 
-        return texture;
-    }
+    //     return texture;
+    // }
     // Texture2D GenerateTexture()
     // {
     //     Texture2D texture = new Texture2D(cols, rows);
@@ -227,12 +249,12 @@ public class PitchControl : MonoBehaviour
         texture.filterMode = FilterMode.Point;
 
         // Generate colors for each pixel based on the data
-        for (int y = 0; y < rows; y++)
+        for (int x = 0; x < rows; x++)
         {
-            for (int x = 0; x < cols; x++)
+            for (int y = 0; y < cols; y++)
             {
-                Color color = GenerateColor(data[y, x]); // Or any method to generate colors based on data
-                texture.SetPixel(x, y, color);
+                Color color = GenerateColor(data[x, y]); // Or any method to generate colors based on data
+                texture.SetPixel(y, x, color);
             }
         }
 
