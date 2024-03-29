@@ -27,12 +27,14 @@ public class PitchControl : MonoBehaviour
     private void Start()
     {
         // CreateDatabase();
-#if UNITY_ANDROID && !UNITY_EDITOR
+        if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
+        {
             string sourcePath = Application.streamingAssetsPath + "/Python/pitch_control_main.py";
             string destinationPath = Application.persistentDataPath + "/pitch_control_main.py";
             if (!File.Exists(destinationPath))
                 StartCoroutine(CopyScript(sourcePath, destinationPath));
-#endif
+        }
+
 
     }
 

@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         string pathToDB;
         // Path to the database
         // if platform is Android, use persistent data path, otherwise use streaming assets path
-        if (Application.platform == RuntimePlatform.Android)
+        if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
         {
             pathToDB = Application.persistentDataPath + "/2sec_demo.sqlite";
         }

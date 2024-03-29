@@ -19,17 +19,16 @@ public class PythonScript : MonoBehaviour
 
         // Path to your Python script relative to the virtual environment directory
         string pythonScript;
-#if UNITY_ANDROID && !UNITY_EDITOR
-        pythonScript = Application.persistentDataPath + "/pitch_control_main.py";
-#else
-        pythonScript = Application.streamingAssetsPath + "/Python/pitch_control_main.py"; // Replace with actual path
-#endif
+        if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
+            pythonScript = Application.persistentDataPath + "/pitch_control_main.py";
+        else
+            pythonScript = Application.streamingAssetsPath + "/Python/pitch_control_main.py"; // Replace with actual path
 
         string pythonVersion;
 
+        json = json.Replace("\"", "\\\"");
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            json = json.Replace("\"", "\\\"");
             pythonVersion = "python";
         }
         else

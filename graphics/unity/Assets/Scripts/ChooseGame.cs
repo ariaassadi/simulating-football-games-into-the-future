@@ -41,18 +41,24 @@ public class ChooseGame : MonoBehaviour
 
     public void GetSchedule()
     {
+        string pathToDB = "";
+
         if (schedule == null)
         {
-            string pathToDB = "";
+            if (schedule == null)
+            {
+                if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
+                {
+                    pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo.sqlite");
+                    if (!File.Exists(pathToDB) || new FileInfo(pathToDB).Length == 0)
+                        StartCoroutine(CopyDatabase(pathToDB));
+                }
+                else
+                    pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo.sqlite");
-        if (!File.Exists(pathToDB))
-            StartCoroutine(CopyDatabase(pathToDB));
-#else
-            pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
-            schedule = DatabaseManager.query_schedule_db(pathToDB, "SELECT * FROM schedule");
-#endif
+                schedule = DatabaseManager.query_schedule_db(pathToDB, "SELECT * FROM schedule");
+            }
+
         }
 
         if (schedule == null)
@@ -96,7 +102,6 @@ public class ChooseGame : MonoBehaviour
                 // Write the downloaded data to persistentDataPath
                 File.WriteAllBytes(destinationPath, www.downloadHandler.data);
                 // Now that the database has been copied, query it
-                schedule = DatabaseManager.query_schedule_db(destinationPath, "SELECT * FROM schedule");
             }
             else
             {
