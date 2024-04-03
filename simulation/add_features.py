@@ -1,0 +1,302 @@
+"""
+    File with functions for adding features to frames_df
+"""
+
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.compose import ColumnTransformer
+from scipy.signal import savgol_filter
+from sklearn.pipeline import Pipeline
+
+from pathlib import Path
+import pandas as pd
+import numpy as np
+import random
+import glob
+import os
+
+from visualize_game import visualize_game_animation, visualize_prediction_animation
+from utils import google_sheet_to_df, load_processed_frames
+from settings import *
+
+"""
+    Functions for adding features:
+    - add_xy_future()
+    - add_velocity_xy()
+    - add_acceleration_xy()
+    - add_orientation()
+    - add_ball_in_motion()
+    - add_distance_to_ball()
+    - add_angle_to_ball()
+    - add_FM_data()
+    - add_tiredness()
+    - add_offside()
+"""
+
+# Helper functions
+
+# Add a vector with the 'x' coordinate of the ball
+def add_x_ball(frames_df):
+    # Create an 'x_ball' column with dtype float
+    x_ball = pd.Series(dtype=float, index=frames_df['frame'])
+
+    # Fill the values in 'x_ball' with the 'x' of the ball
+    ball_positions = frames_df.loc[frames_df['team'] == 'ball', ['frame', 'x']].set_index('frame')['x']
+    x_ball.update(ball_positions)
+
+    # Add the 'x_ball' column to the DataFrame
+    frames_df["x_ball"] = x_ball.values
+
+# Add a vector with the shifted 'x' coordinate of the ball
+def add_x_ball_prev(frames_df, frames_to_shift=1):
+    # Create an 'x_ball_prev' column with dtype float
+    x_ball = pd.Series(dtype=float, index=frames_df['frame'])
+    
+    # Shift the coordinates one frame
+    ball_positions = frames_df.loc[frames_df['team'] == 'ball', ['frame', 'x']].set_index('frame')['x'].shift(frames_to_shift)
+    x_ball.update(ball_positions)
+
+    # Add the 'x_ball_prev' column to the DataFrame
+    frames_df["x_ball_prev"] = x_ball.values
+
+# Add a vector with the 'y' coordinate of the ball
+def add_y_ball(frames_df):
+    # Create a 'y_ball' column with dtype float
+    y_ball = pd.Series(dtype=float, index=frames_df['frame'])
+
+    # Fill the values in 'y_ball' with the 'y' of the ball
+    ball_positions = frames_df.loc[frames_df['team'] == 'ball', ['frame', 'y']].set_index('frame')['y']
+    y_ball.update(ball_positions)
+
+    # Add the 'y_ball' column to the DataFrame
+    frames_df["y_ball"] = y_ball.values
+
+# Add a vector with the shifted 'y' coordinate of the ball
+def add_y_ball_prev(frames_df, frames_to_shift=1):
+    # Create a 'y_ball_prev' column with dtype float
+    y_ball = pd.Series(dtype=float, index=frames_df['frame'])
+    
+    # Shift the coordinates one frame
+    ball_positions = frames_df.loc[frames_df['team'] == 'ball', ['frame', 'y']].set_index('frame')['y'].shift(frames_to_shift)
+    y_ball.update(ball_positions)
+
+    # Add the 'y_ball_prev' column to the DataFrame
+    frames_df["y_ball_prev"] = y_ball.values
+
+# Here we go!
+
+# Add the features x_future and y_future (the x and y coordinate of each player n frames into the future)
+def add_xy_future(frames_df, n=50):
+    # Shift the DataFrame by n frames for each player
+    future_df = frames_df.groupby(['team', 'jersey_number']).shift(-n)
+
+    # Merge the original DataFrame with the shifted DataFrame to get future coordinates
+    frames_df[['x_future', 'y_future']] = future_df[['x', 'y']]
+
+# Add the features v_x and v_y (current velocity (m/s) in the x and y axis respectivly). delta_frames determines the time stamp
+def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
+    # Create a copy of the DataFrame and shift it by delta_frames
+    past_df = frames_df.copy()
+    past_df['frame'] += delta_frames
+
+    # Merge the original DataFrame with the shifted DataFrame to get past coordinates
+    past_coordinates_df = frames_df.merge(past_df, on=['frame', 'team', 'jersey_number'], suffixes=('', '_past'), how='outer')
+
+    # Use the past coordinates to calculate the current velocity
+    v_x = (frames_df['x'] - past_coordinates_df['x_past']) * FPS / delta_frames
+    v_y = (frames_df['y'] - past_coordinates_df['y_past']) * FPS / delta_frames
+    
+    # The player can't surely run faster than Usian Bolt's max speed 
+    usain_bolt_max_speed = 13
+    frames_df['v_x'] = round(v_x.clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed), 2)
+    frames_df['v_y'] = round(v_y.clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed), 2)
+
+    # Smooth the velocities, if specified
+    if smooth:
+        # Apply Exponential Moving Average smoothing on the velocity columns
+        def smooth_velocity_xy_ema(frames_df, alpha=0.93):
+            # Group by unique combinations of 'team' and 'jersey_number'
+            grouped = frames_df.groupby(['team', 'jersey_number'])
+            
+            # Apply the Exponential Moving Average filter to smooth the velocity
+            def apply_ema(x):
+                return x.ewm(alpha=alpha, adjust=False).mean()
+
+            frames_df['v_x'] = grouped['v_x'].transform(apply_ema)
+            frames_df['v_y'] = grouped['v_y'].transform(apply_ema)
+            
+        smooth_velocity_xy_ema(frames_df, alpha=0.93)
+
+# Add the features a_x and a_y (current velocity (m/s²) in the x and y axis respectivly). delta_frames determines the time stamp
+def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
+    # Create a copy of the DataFrame and shift it by delta_frames twice
+    past_df = frames_df.copy()
+    past_df['frame'] += delta_frames
+    more_past_df = frames_df.copy()
+    more_past_df['frame'] += 2 * delta_frames
+
+    # Merge the original DataFrame with the shifted DataFrames to get past coordinates
+    past_coordinates_df = frames_df.merge(past_df, on=['frame', 'team', 'jersey_number'], suffixes=('', '_past'), how='outer')
+    more_past_coordinates_df = frames_df.merge(more_past_df, on=['frame', 'team', 'jersey_number'], suffixes=('', '_more_past'), how='outer')
+
+    # Use past and future coordinates to calculate current acceleration
+    a_x = ((frames_df['x'] - 2 * past_coordinates_df['x_past'] + more_past_coordinates_df['x_more_past']) * FPS / (delta_frames ** 2)).fillna(0)
+    a_y = ((frames_df['y'] - 2 * past_coordinates_df['y_past'] + more_past_coordinates_df['y_more_past']) * FPS / (delta_frames ** 2)).fillna(0)
+
+    # Clip acceleration values to reasonable limits
+    max_acceleration = 10  # This is a very high acceleration
+    frames_df['a_x'] = round(a_x.clip(lower=-max_acceleration, upper=max_acceleration), 2)
+    frames_df['a_y'] = round(a_y.clip(lower=-max_acceleration, upper=max_acceleration), 2)
+
+    # Smooth the accelerations, if specified
+    if smooth:
+        # Apply Exponential Moving Average smoothing on the acceleration columns
+        def smooth_acceleration_xy_ema(frames_df, alpha=0.2):
+            # Group by unique combinations of 'team' and 'jersey_number'
+            grouped = frames_df.groupby(['team', 'jersey_number'])
+            
+            # Apply the Exponential Moving Average filter to smooth the acceleration
+            def apply_ema(x):
+                return x.ewm(alpha=alpha, adjust=False).mean()
+
+            frames_df['a_x'] = grouped['a_x'].transform(apply_ema)
+            frames_df['a_y'] = grouped['a_y'].transform(apply_ema)
+            
+        smooth_acceleration_xy_ema(frames_df, alpha=0.2)
+
+# Add the feature 'oreientation', using the veolicties to return the objects orientation (from 0 to 360 degrees)
+# Oreintation 0 indicates that the object faces the goal to the right
+# Orientation 180 indicates that the object faces the goal to the left
+def add_orientation(frames_df):
+    # Calculate orientation using arctan2 function
+    frames_df['orientation'] = np.arctan2(frames_df['v_y'], frames_df['v_x']) * (180 / np.pi)
+    
+    # Convert orientation values to be in the range [0, 360)
+    frames_df['orientation'] = (frames_df['orientation'] + 360) % 360
+
+# Add a vector indicating if the ball is in motion
+def add_ball_in_motion(frames_df):
+    # Initialize the 'ball_in_motion' column with False for all rows
+    frames_df['ball_in_motion'] = False
+    
+    # Add 'x_ball' and 'y_ball' columns
+    add_x_ball(frames_df)
+    add_y_ball(frames_df)
+
+    # Add 'x_ball_prev' and 'y_ball_prev' columns
+    add_x_ball_prev(frames_df)
+    add_y_ball_prev(frames_df)
+
+    # Update the 'ball_in_motion' column to True if 'x_ball' or 'y_ball' exists, and any of the coordinates have changed
+    frames_df.loc[(frames_df['x_ball'].notna()) & (frames_df['x_ball'] != frames_df['x_ball_prev']), 'ball_in_motion'] = True
+    frames_df.loc[(frames_df['y_ball'].notna()) & (frames_df['y_ball'] != frames_df['y_ball_prev']), 'ball_in_motion'] = True
+
+    # Drop unnecessary columns
+    frames_df.drop(columns=["x_ball", "x_ball_prev", "y_ball", "y_ball_prev"], inplace=True)
+
+# Add a vector with the distance to the ball
+def add_distance_to_ball(frames_df):
+    # Add 'x_ball' and 'y_ball' columns
+    add_x_ball(frames_df)
+    add_y_ball(frames_df)
+
+    # Calculate the Euclidean distance from 'x' to 'x_ball' and 'y' to 'y_ball'
+    frames_df['distance_to_ball'] = round(np.sqrt((frames_df['x'] - frames_df['x_ball'])**2 + (frames_df['y'] - frames_df['y_ball'])**2), 2)
+
+    # Drop unnecessary columns
+    frames_df.drop(columns=["x_ball", "y_ball"], inplace=True)
+
+# Add a vector with the angle to the ball
+def add_angle_to_ball(frames_df):
+    # Add 'x_ball' and 'y_ball' columns
+    add_x_ball(frames_df)
+    add_y_ball(frames_df)
+
+    # Calculate angle to the ball using arctan2 function
+    frames_df['angle_to_ball'] = np.arctan2(frames_df['y_ball'] - frames_df['y'], frames_df['x_ball'] - frames_df['x']) * (180 / np.pi)
+    
+    # Convert angle to the ball values to be in the range [0, 360)
+    frames_df['angle_to_ball'] = (frames_df['angle_to_ball'] + 360) % 360
+
+    # Drop unnecessary columns
+    frames_df.drop(columns=["x_ball", "y_ball"], inplace=True)
+
+# Add a vector with the 'x' position of the second to last defender, for both team directions
+def add_second_to_last_defender(frames_df):
+    # Sort the DataFrame based on 'team', 'frame', 'x'
+    sorted_frames_df = frames_df.sort_values(by=['team', 'frame', 'x']).copy()
+
+    # Find the x coordinates of players attacking left and right for each frame
+    x_players_attacking_left = sorted_frames_df[sorted_frames_df["team_direction"] == 'left'].groupby("frame")["x"].apply(list)
+    x_players_attacking_right = sorted_frames_df[sorted_frames_df["team_direction"] == 'right'].groupby("frame")["x"].apply(list)
+
+    # Find the x of the second to last defender
+    x_second_to_last_player_left = x_players_attacking_left.apply(lambda x: x[-2] if len(x) >= 2 else pitch_length / 2)
+    x_second_to_last_player_right = x_players_attacking_right.apply(lambda x: x[1] if len(x) >= 2 else pitch_length / 2)
+
+    # Add 'x_second_to_last_player_left' and 'x_second_to_last_player_right' columns
+    frames_df["x_second_to_last_player_left"] = x_second_to_last_player_left.reindex(frames_df['frame']).values
+    frames_df["x_second_to_last_player_right"] = x_second_to_last_player_right.reindex(frames_df['frame']).values
+
+# Add a vector with the 'offside_line'
+def add_offside_line(frames_df):
+    # Create a vector for the values of the half way line
+    frames_df["half_way_line"] = pitch_length / 2
+
+    # Add 'x_ball' column and fill None values with the half way line
+    add_x_ball(frames_df)
+    frames_df['x_ball'].fillna(pitch_length / 2, inplace=True)
+
+    # Add 'x_second_to_last_player_left' and 'x_second_to_last_player_right' columns
+    add_second_to_last_defender(frames_df)
+
+    # Update "offside_line" column based on team direction
+    frames_df["offside_line"] = np.where(
+        frames_df["team_direction"] == 'right',
+        # If team_direction is 'right', the offside line will be the max value of the second to last defender, ball, and half way line
+        np.maximum.reduce([frames_df["x_second_to_last_player_left"], frames_df["x_ball"], frames_df["half_way_line"]]),
+        # If team_direction is 'left', the offside line will be the min value of the second to last defender, ball, and half way line
+        np.minimum.reduce([frames_df["x_second_to_last_player_right"], frames_df["x_ball"], frames_df["half_way_line"]])
+    )
+
+    # Set offside line to half way line if the 'team' is ball
+    frames_df.loc[frames_df['team'] == 'ball', 'offside_line'] = pitch_length / 2
+
+    # Drop unnecessary columns
+    frames_df.drop(columns=["half_way_line", "x_ball", "x_second_to_last_player_left", "x_second_to_last_player_right"], inplace=True)
+
+# Add a vector the sets the value to 'offside_line' if a player is standing in an offside position
+def add_offside(frames_df):
+    # Add 'offside_line' column
+    add_offside_line(frames_df)
+    
+    # Create the empty column
+    frames_df["offside"] = None
+    
+    # Fill the 'offside' column based on conditions
+    frames_df.loc[(frames_df['team_direction'] == 'right') & (frames_df['x'] > frames_df['offside_line']), 'offside'] = frames_df['offside_line']
+    frames_df.loc[(frames_df['team_direction'] == 'left') & (frames_df['x'] < frames_df['offside_line']), 'offside'] = frames_df['offside_line']
+
+    # Drop the 'offside_line' column
+    frames_df.drop(columns=["offside_line"], inplace=True)
+
+# Load Football Manager data
+def load_FM_data():
+    # Load the data from the Google Sheets URL
+    fm_players_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0KwlS1KWQWSNHwpDAyOK5O-0tGC0H6nNapPHNEXGTdmPTBHgDnYm9HyMrdZ79dbLKe1KYDnzOvrno/pub?gid=303039767&single=true&output=csv"
+    fm_players_df = google_sheet_to_df(fm_players_url)
+
+    return fm_players_df
+
+# Add data from the Football Manager
+def add_FM_data(frames_df, fm_players_df, fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Position']):
+    # Merge Football Manager data with frames_df
+    merged_df = frames_df.merge(fm_players_df[['Player', 'Team'] + fm_features],
+                                left_on=['player', 'team_name'],
+                                right_on=['Player', 'Team'],
+                                how='left')
+
+    # Add each feature as a vector in frames_df
+    for feature in fm_features:
+        # Keep column names consistent with lowercase in frames_df
+        frames_df[feature.lower()] = merged_df[feature]
