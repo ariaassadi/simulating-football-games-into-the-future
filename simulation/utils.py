@@ -13,11 +13,44 @@ from sklearn.pipeline import Pipeline
 from io import StringIO
 import tensorflow as tf
 import pandas as pd
+import numpy as np
 import requests
 import glob
 import os
 
 from settings import *
+
+# Define global variables
+y_cols = ['x_future', 'y_future']
+
+# Define denominators for normalization
+denominators = {
+    'x': pitch_length,
+    'y': pitch_width,
+    'v_y': 13,
+    'v_y': 13,
+    'a_y': 10,
+    'a_y': 10,
+    'acc': 20,
+    'pac': 20,
+    'sta': 20,
+    'height': 2.10,
+    'weight': 110,
+    'distance_to_ball': round(np.sqrt((pitch_length**2 + pitch_width**2)), 2),
+    'angle_to_ball': 360,
+    'orientation': 360,
+    'tiredness': 10,
+    'minute': 45,
+    'period': 2,
+}
+
+# Embedding configuration for each categorical column
+embedding_config = {
+    'team_direction': {'n_categories': 2, 'output_dim': 2},
+    'role': {'n_categories': 13, 'output_dim': 6},
+    'position': {'n_categories': 10, 'output_dim': 5},
+    'nationality': {'n_categories': 20, 'output_dim': 7}
+}
 
 """
     Functions for loading data:
@@ -137,10 +170,11 @@ def total_error_loss(frames_df, include_ball=False, ball_has_to_be_in_motion=Tru
     - define_regularizers()
     - prepare_EL_input_data()
     - create_embeddings()
+    - prepare_LSTM_input_data()
 """
 
 # Prepare the DataFrame before training
-def prepare_df(frames_df, positions=[], include_ball=True, ball_has_to_be_in_motion=False):
+def prepare_df(frames_df, numerical_cols, categorical_cols, positions=[], include_ball=True, ball_has_to_be_in_motion=False):
     # Fill NaN values with zeros for numerical columns
     frames_df[numerical_cols] = frames_df[numerical_cols].fillna(0)
 
@@ -168,7 +202,7 @@ def prepare_df(frames_df, positions=[], include_ball=True, ball_has_to_be_in_mot
     return frames_df
 
 # Prepare data before training
-def prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, unchanged_cols=[], positions=[], include_ball=True, ball_has_to_be_in_motion=False):
+def prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols=[], positions=[], include_ball=True, ball_has_to_be_in_motion=False):
     # Initialize lists to store features and labels
     X_data = []
     y_data = []
@@ -176,7 +210,7 @@ def prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=cat
     # For each game
     for frames_df in frames_dfs:
         # Prepare the DataFrame
-        frames_df = prepare_df(frames_df, positions=positions, include_ball=True, ball_has_to_be_in_motion=False)
+        frames_df = prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, include_ball=True, ball_has_to_be_in_motion=False)
 
         # Extract features and labels from group
         X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
@@ -254,7 +288,7 @@ def prepare_model_inputs(X_numerical, X_categorical):
 # Prepare input data for embedding layers
 def prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions=[]):
     # Prepare data
-    X, y = prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
+    X, y = prepare_data(frames_dfs, numerical_cols, categorical_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
 
     # No need to do anything more if 'categorical_cols' is empty
     if categorical_cols == []:
@@ -267,14 +301,6 @@ def prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, position
     X_input = prepare_model_inputs(X_numerical, X_categorical)
 
     return X_input, y
-
-# Embedding configuration for each categorical column
-embedding_config = {
-    'team_direction': {'n_categories': 2, 'output_dim': 2},
-    'role': {'n_categories': 13, 'output_dim': 6},
-    'position': {'n_categories': 10, 'output_dim': 5},
-    'nationality': {'n_categories': 20, 'output_dim': 7}
-}
 
 # Create an embedding layer for a specific categorical feature.
 def create_embedding_layer(name, n_categories, output_dim):
@@ -300,11 +326,114 @@ def create_embeddings(categorical_cols):
     
     return input_layers, flat_layers
 
+# Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
+def add_can_be_sequentialized(frames_df, sequence_length):
+    # Calculate the expected sequence start frame
+    frames_df['expected_sequence_start_frame'] = frames_df['frame'] - sequence_length * FPS // downsampling_factor
+    
+    # Group by each unique player
+    grouped = frames_df.groupby(['team', 'jersey_number'])
+    
+    # For each player, shift the 'frame' column to identify potential sequences
+    frames_df['shifted_frame'] = grouped['frame'].shift(sequence_length)
+    
+    # Check if the shifted frame matches 'expected_sequence_start_frame' and set 'can_be_sequentialized' to True if it does
+    frames_df['can_be_sequentialized'] = frames_df['expected_sequence_start_frame'] == frames_df['shifted_frame']
+    
+    # Drop temporary columns
+    frames_df.drop(['expected_sequence_start_frame', 'shifted_frame'], axis=1, inplace=True)
+
+# Sequentialize the numerical and categorical columns
+def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length):
+    # Initialize empty lists with sequentialized data
+    X_seq_num_data = []
+    X_seq_cat_data = []
+    y_seq_data = []
+    
+    # Combined the values in y_df with X_df
+    X_df['future_xy'] = y_df.values.tolist()
+
+    # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
+    X_df = X_df.sort_values(by=['team', 'match_id', 'player'])
+
+    # Add vector 'can_be_sequentialized'
+    add_can_be_sequentialized(X_df, sequence_length=sequence_length)
+
+    # Create a vector containg a list of all values in the numerical columns
+    X_df['numerical_data_list'] = X_df[numerical_cols].values.tolist()
+    
+    # Create a similar list for the categorical columns, if any
+    if categorical_cols:
+        # X_df['categorical_data_list'] = X_df[categorical_cols].values.tolist()
+        X_df['categorical_data_list'] = X_df[categorical_cols].apply(lambda x: x.tolist(), axis=1)
+
+    # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
+    X_df_sorted = X_df.sort_values(by=['team', 'match_id', 'player'])
+
+    # Group by each unique player
+    grouped = X_df_sorted.groupby(['team', 'jersey_number', 'match_id'])
+
+    # Iterate through each player and create sequences
+    for _, group in grouped:
+        # Create temporary columns with shifted version of 'numerical_cols' and 'categorical_cols'
+        for i in range(sequence_length):
+            group['numerical_data_list_' + str(i)] = group["numerical_data_list"].shift(i)
+
+        # Concatenate the termporary columns to create the column 'sequential_numerical_data'
+        columns_to_sequentialize = ['numerical_data_list_' + str(i) for i in range(sequence_length)][::-1]
+        group['sequential_numerical_data'] = group[columns_to_sequentialize].values.tolist()
+
+        # Only consider rows that can be sequentialized
+        group = group[group['can_be_sequentialized']]
+
+        # Add the X data to the sequentialized lists
+        X_seq_num_data.append(group['sequential_numerical_data'])
+        
+        if categorical_cols:
+            X_seq_cat_data.append(group['categorical_data_list'])
+
+        # Add the y data to the sequentialized lists
+        y_seq_data.append(group['future_xy'])
+
+    # Combine all the sequentialized data to create Series
+    X_seq_num = pd.concat(X_seq_num_data)
+    y_seq = pd.concat(y_seq_data)
+
+    # Convert the Pandas Series of lists to a NumPy array
+    X_seq_num_np = np.array(X_seq_num.tolist()).astype('float32')
+    y_seq_np = np.array(y_seq.tolist()).astype('float32')
+    
+    # Add the data from categorical columns to X_seq_np
+    if categorical_cols:
+        X_seq_cat = pd.concat(X_seq_cat_data)
+        X_seq_cat_np = np.array(X_seq_cat.tolist()).astype('float32')
+        X_seq_np = [X_seq_cat_np, X_seq_num_np]
+
+        return X_seq_np, y_seq_np
+    
+    # Return the resuls without adding categorical data
+    else:
+        return X_seq_num_np, y_seq_np
+
+# Preapre the LSTM input data
+def prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[]):
+    # Definie columns to temporarely give to prepare_data()
+    unchanged_cols=['player', 'frame', 'team', 'jersey_number', 'match_id']
+
+    # Prepare data
+    X_df, y_df = prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, unchanged_cols=unchanged_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
+
+    # Sequentialize the data
+    X_seq, y_seq = sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length)
+
+    return X_seq, y_seq
+
 """
     Functions for loading, running, and evaluating models:
     - smooth_predictions_xy()
     - run_model()
     - evaluate_model()
+    - print_column_variance()
 """
 
 # Smooth the vectors 'x_future_pred' and 'y_future_pred'
@@ -343,6 +472,7 @@ def extract_variables(model_name):
     numerical_cols = []
     categorical_cols = []
     positions = []
+    sequence_length = 0
 
     # Read the file line by line
     with open(file_path, 'r') as file:
@@ -372,23 +502,29 @@ def run_model(frames_dfs, model_name):
     model = load_tf_model(f"models/{model_name}.h5", euclidean_distance_loss=True)
 
     # Prepared the DataFrames and concatenate into a single large DataFrame
-    prepared_frames_dfs = [prepare_df(frames_df, positions=positions) for frames_df in frames_dfs]
+    prepared_frames_dfs = [prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions) for frames_df in frames_dfs]
     frames_concat_df = pd.concat(prepared_frames_dfs, ignore_index=True)
+
+    # Save the original index before sorting
+    original_index = frames_concat_df.index
 
     # Prepare the input data for LSTM model
     if "LSTM" in model_name:
-        X_test_input, y_test = prepare_LSTM_input_data(test_frames_dfs, numerical_cols, categorical_cols, sequence_length, positions)
+        X_test_input, y_test = prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions)
 
         # Only keep rows that can be sequentialized
         add_can_be_sequentialized(frames_concat_df, sequence_length)
+
         frames_concat_df = frames_concat_df[frames_concat_df["can_be_sequentialized"]]
+        print(len(X_test_input))
+        print(len(frames_concat_df))
 
         # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
         frames_concat_df = frames_concat_df.sort_values(by=['team', 'match_id', 'player'])
 
     # Prepare the input data for non-LSTM model
     else:
-        X_test_input, y_test = prepare_EL_input_data(test_frames_dfs, numerical_cols, categorical_cols, positions)
+        X_test_input, y_test = prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions)
 
     # Make predictions using the loaded tf model
     predictions = model.predict(X_test_input)
@@ -408,8 +544,8 @@ def run_model(frames_dfs, model_name):
     # Smooth the predicted coordinates
     # smooth_predictions_xy(frames_df, alpha=0.98)
 
-    # Sort the DataFrame by 'frame'
-    frames_concat_df = frames_concat_df.sort_values(by='frame')
+    # "Unsort" the DataFrame to get it back to its original order
+    frames_concat_df = frames_concat_df.reindex(original_index)
 
     return frames_concat_df
 
@@ -422,3 +558,26 @@ def evaluate_model(frames_dfs, model_name):
     error = total_error_loss(frames_concat_df)
 
     return error
+
+# Disaplys how the average 'pred_error' varies with each value in 'column_to_analyze'
+def print_column_variance(frames_dfs, model_name, column_to_analyze):
+    # Run model and calculated error
+    frames_concat_df = run_model(frames_dfs, model_name)
+    error = total_error_loss(frames_concat_df)
+
+    # Convert 'pred_error' to numeric, coercing non-numeric values to NaN
+    frames_concat_df['pred_error'] = pd.to_numeric(frames_concat_df['pred_error'], errors='coerce')
+
+    # Group by 'column_to_analyze' and calculate the average 'pred_error'
+    column_variance_df = frames_concat_df.groupby(column_to_analyze)['pred_error'].mean().reset_index()
+
+    # Round to 2 decimal places
+    column_variance_df['pred_error'] = round(column_variance_df['pred_error'], 2)
+
+    # Sort by 'column_to_analyze' in ascending order
+    column_variance_df = column_variance_df.sort_values(by=column_to_analyze, ascending=True)
+
+    # Print the DataFrame with results
+    print(f"Average error: {error}")
+    print(f"Average pred error per {column_to_analyze}:")
+    print(column_variance_df)
