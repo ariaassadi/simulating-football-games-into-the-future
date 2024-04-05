@@ -28,9 +28,9 @@ from settings import *
     - add_ball_in_motion()
     - add_distance_to_ball()
     - add_angle_to_ball()
-    - add_FM_data()
-    - add_tiredness()
     - add_offside()
+    - add_tiredness()
+    - add_FM_data()
 """
 
 # Helper functions
@@ -95,21 +95,22 @@ def add_xy_future(frames_df, n=50):
 
 # Add the features v_x and v_y (current velocity (m/s) in the x and y axis respectivly). delta_frames determines the time stamp
 def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
-    # Create a copy of the DataFrame and shift it by delta_frames
-    past_df = frames_df.copy()
-    past_df['frame'] += delta_frames
+    # Initialzie empty columns
+    frames_df['v_x'] = pd.Series(dtype='float64')
+    frames_df['v_y'] = pd.Series(dtype='float64')
 
-    # Merge the original DataFrame with the shifted DataFrame to get past coordinates
-    past_coordinates_df = frames_df.merge(past_df, on=['frame', 'team', 'jersey_number'], suffixes=('', '_past'), how='outer')
+    # Create past_df by shifting frames_df by delta_frames for each player
+    past_df = frames_df.groupby(['team', 'jersey_number']).shift(delta_frames)
 
     # Use the past coordinates to calculate the current velocity
-    v_x = (frames_df['x'] - past_coordinates_df['x_past']) * FPS / delta_frames
-    v_y = (frames_df['y'] - past_coordinates_df['y_past']) * FPS / delta_frames
-    
-    # The player can't surely run faster than Usian Bolt's max speed 
+    consecutive_frames = frames_df['frame'] == past_df['frame'] + delta_frames
+    frames_df.loc[consecutive_frames, 'v_x'] = (frames_df['x'] - past_df['x']) * FPS / delta_frames
+    frames_df.loc[consecutive_frames, 'v_y'] = (frames_df['y'] - past_df['y']) * FPS / delta_frames
+
+    # Clip velocity to Usain Bolt's max speed
     usain_bolt_max_speed = 13
-    frames_df['v_x'] = round(v_x.clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed), 2)
-    frames_df['v_y'] = round(v_y.clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed), 2)
+    frames_df['v_x'] = frames_df['v_x'].clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed)
+    frames_df['v_y'] = frames_df['v_y'].clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed)
 
     # Smooth the velocities, if specified
     if smooth:
@@ -126,6 +127,10 @@ def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
             frames_df['v_y'] = grouped['v_y'].transform(apply_ema)
             
         smooth_velocity_xy_ema(frames_df, alpha=0.93)
+
+    # Round the results to two decimals
+    frames_df['v_x'] = frames_df['v_x'].round(2)
+    frames_df['v_y'] = frames_df['v_y'].round(2)
 
 # Add the features a_x and a_y (current velocity (m/s²) in the x and y axis respectivly). delta_frames determines the time stamp
 def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
@@ -280,6 +285,11 @@ def add_offside(frames_df):
     # Drop the 'offside_line' column
     frames_df.drop(columns=["offside_line"], inplace=True)
 
+# Add a vector indicating how tired the player is
+def add_tiredness(frames_df):
+    # Calculate tiredness using the formula above
+    frames_df["tiredness"] = ((frames_df["distance_ran"] / 1000) + (frames_df["minute"] / 20) + frames_df["period"] - 1) * (1 - (frames_df["sta"] / 20))
+
 # Load Football Manager data
 def load_FM_data():
     # Load the data from the Google Sheets URL
@@ -299,4 +309,5 @@ def add_FM_data(frames_df, fm_players_df, fm_features = ['Nationality', 'Height'
     # Add each feature as a vector in frames_df
     for feature in fm_features:
         # Keep column names consistent with lowercase in frames_df
+
         frames_df[feature.lower()] = merged_df[feature]
