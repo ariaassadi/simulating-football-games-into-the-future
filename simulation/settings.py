@@ -5,6 +5,7 @@ competitions = ['Allsvenskan']
 reload_data = True
 seconds_into_the_future = 2
 FPS = 25
+downsampling_factor = 5     # Keep every n:th frame
 pitch_length = 105
 pitch_width = 68
 
