@@ -29,8 +29,8 @@ from settings import *
     - add_distance_to_ball()
     - add_angle_to_ball()
     - add_offside()
-    - add_tiredness()
     - add_FM_data()
+    - add_tiredness()
 """
 
 # Helper functions
@@ -288,11 +288,6 @@ def add_offside(frames_df):
     # Drop the 'offside_line' column
     frames_df.drop(columns=["offside_line"], inplace=True)
 
-# Add a vector indicating how tired the player is
-def add_tiredness(frames_df):
-    # Calculate tiredness using the formula above
-    frames_df["tiredness"] = ((frames_df["distance_ran"] / 1000) + (frames_df["minute"] / 20) + frames_df["period"] - 1) * (1 - (frames_df["sta"] / 20))
-
 # Load Football Manager data
 def load_FM_data():
     # Load the data from the Google Sheets URL
@@ -314,3 +309,8 @@ def add_FM_data(frames_df, fm_players_df, fm_features = ['Nationality', 'Height'
         # Keep column names consistent with lowercase in frames_df
 
         frames_df[feature.lower()] = merged_df[feature]
+
+# Add a vector indicating how tired the player is
+def add_tiredness(frames_df):
+    # Calculate tiredness using the formula above
+    frames_df["tiredness"] = ((frames_df["distance_ran"] / 1000) + (frames_df["minute"] / 20) + frames_df["period"] - 1) * (1 - (frames_df["sta"] / 20))
