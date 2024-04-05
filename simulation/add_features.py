@@ -134,24 +134,23 @@ def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
 
 # Add the features a_x and a_y (current velocity (m/s²) in the x and y axis respectivly). delta_frames determines the time stamp
 def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
-    # Create a copy of the DataFrame and shift it by delta_frames twice
-    past_df = frames_df.copy()
-    past_df['frame'] += delta_frames
-    more_past_df = frames_df.copy()
-    more_past_df['frame'] += 2 * delta_frames
+    # Initialzie empty columns
+    frames_df['a_x'] = pd.Series(dtype='float64')
+    frames_df['a_y'] = pd.Series(dtype='float64')
 
-    # Merge the original DataFrame with the shifted DataFrames to get past coordinates
-    past_coordinates_df = frames_df.merge(past_df, on=['frame', 'team', 'jersey_number'], suffixes=('', '_past'), how='outer')
-    more_past_coordinates_df = frames_df.merge(more_past_df, on=['frame', 'team', 'jersey_number'], suffixes=('', '_more_past'), how='outer')
+    # Create past_df by shifting frames_df by delta_frames for each player
+    past_df = frames_df.groupby(['team', 'jersey_number']).shift(delta_frames)
+    more_past_df = frames_df.groupby(['team', 'jersey_number']).shift(2 * delta_frames)
 
-    # Use past and future coordinates to calculate current acceleration
-    a_x = ((frames_df['x'] - 2 * past_coordinates_df['x_past'] + more_past_coordinates_df['x_more_past']) * FPS / (delta_frames ** 2)).fillna(0)
-    a_y = ((frames_df['y'] - 2 * past_coordinates_df['y_past'] + more_past_coordinates_df['y_more_past']) * FPS / (delta_frames ** 2)).fillna(0)
+    # Use the past coordinates to calculate the current acceleration
+    consecutive_frames = frames_df['frame'] == more_past_df['frame'] + 2 * delta_frames
+    frames_df.loc[consecutive_frames, 'a_x'] = (frames_df['x'] - 2 * past_df['x'] + more_past_df['x']) * FPS / (delta_frames ** 2)
+    frames_df.loc[consecutive_frames, 'a_y'] = (frames_df['y'] - 2 * past_df['y'] + more_past_df['y']) * FPS / (delta_frames ** 2)
 
     # Clip acceleration values to reasonable limits
     max_acceleration = 10  # This is a very high acceleration
-    frames_df['a_x'] = round(a_x.clip(lower=-max_acceleration, upper=max_acceleration), 2)
-    frames_df['a_y'] = round(a_y.clip(lower=-max_acceleration, upper=max_acceleration), 2)
+    frames_df['a_x'] = frames_df['a_x'].clip(lower=-max_acceleration, upper=max_acceleration)
+    frames_df['a_y'] = frames_df['a_y'].clip(lower=-max_acceleration, upper=max_acceleration)
 
     # Smooth the accelerations, if specified
     if smooth:
@@ -168,6 +167,10 @@ def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
             frames_df['a_y'] = grouped['a_y'].transform(apply_ema)
             
         smooth_acceleration_xy_ema(frames_df, alpha=0.2)
+
+    # Round the results to two decimals
+    frames_df['a_x'] = frames_df['a_x'].round(2)
+    frames_df['a_y'] = frames_df['a_y'].round(2)
 
 # Add the feature 'oreientation', using the veolicties to return the objects orientation (from 0 to 360 degrees)
 # Oreintation 0 indicates that the object faces the goal to the right
