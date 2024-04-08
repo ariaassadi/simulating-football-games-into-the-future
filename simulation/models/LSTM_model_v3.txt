@@ -1,11 +1,12 @@
-2024-04-03
-epochs=5
+2024-04-05
+epochs=4
 matches=10
 sequence_length=10
 numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
-categorical_cols=[]
-positions=['Goalkeeper']
+categorical_cols=['position']
+positions=['Goalkeeper', 'Winger']
+l2=0.0001
 
 Training results:
-loss: [2.08, 1.18, 1.13, 1.1, 1.07]
-val_loss: [1.16, 1.14, 1.04, 1.05, 1.03]
+loss: [2.04, 1.5, 1.45, 1.42]
+val_loss: [1.81, 1.44, 1.58, 1.5]

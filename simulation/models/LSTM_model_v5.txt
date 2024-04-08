@@ -1,11 +1,12 @@
-2024-04-03
-epochs=4
-matches=40
+2024-04-08
+epochs=5
+matches=10
 sequence_length=10
-numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
-categorical_cols=[]
-positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness']
+categorical_cols=['position']
+positions=['Goalkeeper', 'Winger']
+l2=1e-06
 
 Training results:
-loss: [1.71, 1.62, 1.6, 1.59]
-val_loss: [1.51, 1.47, 1.47, 1.47]
+loss: [2.06, 1.54, 1.48, 1.45, 1.42]
+val_loss: [1.57, 1.45, 1.43, 1.4, 1.37]
