@@ -4,7 +4,7 @@
 
 from tensorflow.keras.layers import Input, Embedding, Flatten, Concatenate, Dense, BatchNormalization, Dropout, Reshape, LSTM
 from tensorflow.keras.models import Model, load_model
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from tensorflow.keras import regularizers 
@@ -174,7 +174,7 @@ def total_error_loss(frames_df, include_ball=False, ball_has_to_be_in_motion=Tru
 """
 
 # Prepare the DataFrame before training
-def prepare_df(frames_df, numerical_cols, categorical_cols, positions=[], include_ball=True, ball_has_to_be_in_motion=False):
+def prepare_df(frames_df, numerical_cols, categorical_cols, positions=[], downsampling_factor=downsampling_factor, include_ball=True, ball_has_to_be_in_motion=False):
     # Fill NaN values with zeros for numerical columns
     frames_df[numerical_cols] = frames_df[numerical_cols].fillna(0)
 
@@ -210,7 +210,7 @@ def prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols=[]
     # For each game
     for frames_df in frames_dfs:
         # Prepare the DataFrame
-        frames_df = prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, include_ball=True, ball_has_to_be_in_motion=False)
+        frames_df = prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor, include_ball=True, ball_has_to_be_in_motion=False)
 
         # Extract features and labels from group
         X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
@@ -237,7 +237,7 @@ def prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols=[]
     # Convert categorical columns to int
     X_data_df[categorical_cols] = X_data_df[categorical_cols].astype('int8')
 
-    # Convert numerical columns to int
+    # Convert numerical columns to float
     X_data_df[numerical_cols] = X_data_df[numerical_cols].astype('float32')
 
     return X_data_df, y_data_df
@@ -328,20 +328,31 @@ def create_embeddings(categorical_cols):
 
 # Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
 def add_can_be_sequentialized(frames_df, sequence_length):
-    # Calculate the expected sequence start frame
-    frames_df['expected_sequence_start_frame'] = frames_df['frame'] - sequence_length * FPS // downsampling_factor
-    
+    # Create temporary vectors with the expexted frame for each sequence step
+    for i in range(sequence_length):
+        frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * FPS // downsampling_factor
+
     # Group by each unique player
-    grouped = frames_df.groupby(['team', 'jersey_number'])
-    
-    # For each player, shift the 'frame' column to identify potential sequences
-    frames_df['shifted_frame'] = grouped['frame'].shift(sequence_length)
-    
-    # Check if the shifted frame matches 'expected_sequence_start_frame' and set 'can_be_sequentialized' to True if it does
-    frames_df['can_be_sequentialized'] = frames_df['expected_sequence_start_frame'] == frames_df['shifted_frame']
+    grouped = frames_df.groupby(['team', 'jersey_number', 'match_id'])
+
+    # Iterate through each player and find it we can create sequences
+    for _, group in grouped:
+        # Convert the frame column to a set for efficient lookups
+        frame_set = set(group['frame'])
+
+        # Create temporary columns indicating if each step in the sequences exists
+        for i in range(sequence_length):
+            group[f'sequence_step_exists_{i}'] = group[f'sequence_step_{i}'].isin(frame_set)
+
+        # Aggregate 'sequence_step_exists_' checks to set 'can_be_sequentialized'
+        sequence_steps_exist_cols = [f'sequence_step_exists_{i}' for i in range(sequence_length)]
+        group['can_be_sequentialized'] = group[sequence_steps_exist_cols].all(axis=1)
+
+        # Update the main DataFrame
+        frames_df.loc[group.index, 'can_be_sequentialized'] = group['can_be_sequentialized']
     
     # Drop temporary columns
-    frames_df.drop(['expected_sequence_start_frame', 'shifted_frame'], axis=1, inplace=True)
+    frames_df.drop(columns=[f'sequence_step_{i}' for i in range(sequence_length)], inplace=True)
 
 # Sequentialize the numerical and categorical columns
 def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length):
@@ -502,7 +513,7 @@ def run_model(frames_dfs, model_name):
     model = load_tf_model(f"models/{model_name}.h5", euclidean_distance_loss=True)
 
     # Prepared the DataFrames and concatenate into a single large DataFrame
-    prepared_frames_dfs = [prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions) for frames_df in frames_dfs]
+    prepared_frames_dfs = [prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor) for frames_df in frames_dfs]
     frames_concat_df = pd.concat(prepared_frames_dfs, ignore_index=True)
 
     # Save the original index before sorting
