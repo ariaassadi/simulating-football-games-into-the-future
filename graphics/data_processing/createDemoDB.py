@@ -54,14 +54,14 @@ print(file_path_match)
 frames_df = pd.read_parquet(file_path_match)
 frames_df.drop(columns=['minute', 'second', 'ball_in_motion', 'a_x', 'a_y', 'role', 'distance_ran', 'events'], inplace=True)
 
-# if write_to_db:
-#     # Connect to the SQLite database
-#     conn = sqlite3.connect(path_to_db)
+if write_to_db:
+    # Connect to the SQLite database
+    conn = sqlite3.connect(path_to_db)
 
-#     table_name = f'games'
-#     frames_df.to_sql(table_name, conn, if_exists='replace')
-#     # Close the connection
-#     conn.close()
+    table_name = f'games'
+    frames_df.to_sql(table_name, conn, if_exists='replace')
+    # Close the connection
+    conn.close()
     
 frames_df['team_name'] = frames_df['team_name'].astype(str)    
 
