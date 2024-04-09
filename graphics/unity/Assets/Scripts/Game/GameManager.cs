@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         // If playing and not currently changing the game, execute Play method
         if (isPlaying && !changingGame)

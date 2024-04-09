@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
 
     KeyCode lastKeyPressed;
 
-    void Start()
+    private void Start()
     {
         moveSpeed = 10f;
         rotationSpeed = 100f;
@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
         SideView();
     }
 
-    void Update()
+    private void Update()
     {
 
         if (Input.GetKeyDown(KeyCode.B))
@@ -45,7 +45,7 @@ public class CameraController : MonoBehaviour
             MoveCamera();
     }
 
-    void MoveCamera()
+    private void MoveCamera()
     {
 
         bool rotateButtonPressed = Input.GetKey(KeyCode.Mouse1);
@@ -108,7 +108,10 @@ public class CameraController : MonoBehaviour
         transform.position += verticalMovement * verticalSpeed * Time.deltaTime;
     }
 
-    void BirdsEyeView()
+    /// <summary>
+    /// Move the camera to a birds eye view, which is orthographic
+    /// </summary>
+    private void BirdsEyeView()
     {
         // Move the camera to a birds eye view
         transform.position = new Vector3(57.5f, 100f, 34f);
@@ -118,7 +121,10 @@ public class CameraController : MonoBehaviour
         mainCamera.orthographicSize = 34f;
     }
 
-    void SideView()
+    /// <summary>
+    /// Move the camera to a side view, which is the neutral/initial position
+    /// </summary>
+    private void SideView()
     {
         mainCamera.orthographic = false;
         mainCamera.fieldOfView = 80f;
@@ -128,36 +134,59 @@ public class CameraController : MonoBehaviour
 
     // Add options to change moveSpeed, rotationSpeed, and verticalSpeed
 
-    public void IncrementMoveSpeed()
+    /// <summary>
+    /// Increase the specified setting by 1
+    /// </summary>
+    /// <param name="setting">
+    /// The setting to increase
+    /// </param>
+    public void IncreaseSetting(string setting)
     {
-        moveSpeed += 1f;
+        switch (setting)
+        {
+            case "HorizontalSpeed":
+                moveSpeed += 1f;
+                break;
+            case "RotationSpeed":
+                rotationSpeed += 1f;
+                break;
+            case "VerticalSpeed":
+                verticalSpeed += 1f;
+                break;
+        }
     }
 
-    public void DecrementMoveSpeed()
+    /// <summary>
+    /// Decrease the specified setting by 1
+    /// </summary>
+    /// <param name="setting">
+    /// The setting to decrease
+    /// </param>
+    public void DecreaseSetting(string setting)
     {
-        moveSpeed -= 1f;
+        switch (setting)
+        {
+            case "HorizontalSpeed":
+                moveSpeed -= 1f;
+                break;
+            case "RotationSpeed":
+                rotationSpeed -= 1f;
+                break;
+            case "VerticalSpeed":
+                verticalSpeed -= 1f;
+                break;
+        }
     }
 
-    public void IncrementRotationSpeed()
-    {
-        rotationSpeed += 10f;
-    }
-
-    public void DecrementRotationSpeed()
-    {
-        rotationSpeed -= 10f;
-    }
-
-    public void IncrementVerticalSpeed()
-    {
-        verticalSpeed += 1f;
-    }
-
-    public void DecrementVerticalSpeed()
-    {
-        verticalSpeed -= 1f;
-    }
-
+    /// <summary>
+    /// Get the value of the specified setting
+    /// </summary>
+    /// <param name="setting">
+    /// The setting to retrieve
+    /// </param>
+    /// <returns>
+    /// The value of the specified setting
+    /// </returns>
     public float GetSetting(string setting)
     {
         switch (setting)
@@ -173,11 +202,20 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set the value of the specified setting
+    /// </summary>
+    /// <param name="setting">
+    /// The setting to change
+    /// </param>
+    /// <param name="value">
+    /// The new value for the setting
+    /// </param>
     public void SetSetting(string setting, float value)
     {
         switch (setting)
         {
-            case "MoveSpeed":
+            case "HorizontalSpeed":
                 moveSpeed = value;
                 break;
             case "RotationSpeed":
@@ -189,16 +227,25 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void ResetSpeeds()
+    /// <summary>
+    /// Reset the specified setting to its default value
+    /// </summary>
+    /// <param name="setting">
+    /// The setting to reset
+    /// </param>
+    public void ResetSetting(string setting)
     {
-        moveSpeed = 10f;
-        rotationSpeed = 100f;
-        verticalSpeed = 10f;
+        switch (setting)
+        {
+            case "MorizontalSpeed":
+                moveSpeed = 10f;
+                break;
+            case "RotationSpeed":
+                rotationSpeed = 100f;
+                break;
+            case "VerticalSpeed":
+                verticalSpeed = 10f;
+                break;
+        }
     }
-
-    public float GetCameraSpeed()
-    {
-        return moveSpeed;
-    }
-
 }
