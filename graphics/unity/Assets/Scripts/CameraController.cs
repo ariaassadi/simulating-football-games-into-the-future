@@ -3,18 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 1f;
-    public float verticalSpeed = 3f;
+    private float moveSpeed;
+    private float rotationSpeed;
+    private float verticalSpeed;
     private Camera mainCamera;
 
     KeyCode lastKeyPressed;
 
     void Start()
     {
+        moveSpeed = 10f;
+        rotationSpeed = 100f;
+        verticalSpeed = 10f;
         mainCamera = GetComponent<Camera>();
 
         // Set the initial camera position and rotation
@@ -121,4 +125,80 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(52.2f, 20f, 78f);
         transform.rotation = Quaternion.Euler(35, 180, 0);
     }
+
+    // Add options to change moveSpeed, rotationSpeed, and verticalSpeed
+
+    public void IncrementMoveSpeed()
+    {
+        moveSpeed += 1f;
+    }
+
+    public void DecrementMoveSpeed()
+    {
+        moveSpeed -= 1f;
+    }
+
+    public void IncrementRotationSpeed()
+    {
+        rotationSpeed += 10f;
+    }
+
+    public void DecrementRotationSpeed()
+    {
+        rotationSpeed -= 10f;
+    }
+
+    public void IncrementVerticalSpeed()
+    {
+        verticalSpeed += 1f;
+    }
+
+    public void DecrementVerticalSpeed()
+    {
+        verticalSpeed -= 1f;
+    }
+
+    public float GetSetting(string setting)
+    {
+        switch (setting)
+        {
+            case "HorizontalSpeed":
+                return moveSpeed;
+            case "RotationSpeed":
+                return rotationSpeed;
+            case "VerticalSpeed":
+                return verticalSpeed;
+            default:
+                return 0f;
+        }
+    }
+
+    public void SetSetting(string setting, float value)
+    {
+        switch (setting)
+        {
+            case "MoveSpeed":
+                moveSpeed = value;
+                break;
+            case "RotationSpeed":
+                rotationSpeed = value;
+                break;
+            case "VerticalSpeed":
+                verticalSpeed = value;
+                break;
+        }
+    }
+
+    public void ResetSpeeds()
+    {
+        moveSpeed = 10f;
+        rotationSpeed = 100f;
+        verticalSpeed = 10f;
+    }
+
+    public float GetCameraSpeed()
+    {
+        return moveSpeed;
+    }
+
 }

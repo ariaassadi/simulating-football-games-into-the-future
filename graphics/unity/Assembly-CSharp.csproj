@@ -59,7 +59,7 @@
     <UnityVersion>2022.3.19f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="/home/oskarrick/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.0.0/Analyzers/Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="/home/oskarrick/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.0.1/Analyzers/Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="/home/oskarrick/Unity/Hub/Editor/2022.3.19f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/home/oskarrick/Unity/Hub/Editor/2022.3.19f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
@@ -85,6 +85,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark02.cs" />
     <Compile Include="Assets/Scripts/PitchColor.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/CameraController.cs" />
+    <Compile Include="Assets/Scripts/SetSetting.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark03.cs" />
     <Compile Include="Assets/Scripts/Egg.cs" />
     <Compile Include="Assets/Scripts/GameTools.cs" />

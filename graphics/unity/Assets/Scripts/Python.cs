@@ -5,17 +5,12 @@ using UnityEngine;
 
 public class PythonScript : MonoBehaviour
 {
-    // [MenuItem("Tools/Run Python Script")]
-
 
     public static void TestPythonScript(string json, string path)
     {
         // Start stopwatch for overall execution time
         Stopwatch overallStopwatch = new Stopwatch();
         overallStopwatch.Start();
-
-        // Path to virtual environment
-        // string activateScript = Application.dataPath + "/Python/venv/bin/activate";
 
         // Path to your Python script relative to the virtual environment directory
         string pythonScript;
