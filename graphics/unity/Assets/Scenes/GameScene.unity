@@ -1290,7 +1290,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 230551637}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 135e26505f2a22940893164af4a53cf5, type: 3}
   m_Name: 
@@ -2726,12 +2726,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 230551643}
+      objectReference: {fileID: 2129807703}
     - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SelectMovePlayer
+      value: SelectTool
       objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ToolManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1839055732}
     - target: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_Name
@@ -2845,7 +2855,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1839055734}
   m_SourcePrefab: {fileID: 100100000, guid: 496a582982833fa7cab587d344fc6ada, type: 3}
 --- !u!224 &464070176 stripped
 RectTransform:
@@ -6387,12 +6401,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 230551643}
+      objectReference: {fileID: 2129807703}
     - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SelectPlayerNames
+      value: SelectTool
       objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ToolManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1755174759}
     - target: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_Name
@@ -6506,7 +6530,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1755174761}
   m_SourcePrefab: {fileID: 100100000, guid: 496a582982833fa7cab587d344fc6ada, type: 3}
 --- !u!224 &1104703565 stripped
 RectTransform:
@@ -7463,6 +7491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 743905b8aa69be781a4cc81f3e613eb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uniqueTool: 0
 --- !u!1 &1337485284
 GameObject:
   m_ObjectHideFlags: 0
@@ -9265,6 +9294,25 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -462981019419857548, guid: dc6cffc852fdb238ea5457096fc45fba, type: 3}
+--- !u!1 &1755174759 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+    type: 3}
+  m_PrefabInstance: {fileID: 1104703564}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1755174761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755174759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e431646e33df7efedaaaf1d95f70e40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueTool: 0
 --- !u!1 &1773658438
 GameObject:
   m_ObjectHideFlags: 0
@@ -9404,6 +9452,25 @@ Transform:
   - {fileID: 2021664836}
   m_Father: {fileID: 230551639}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1839055732 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+    type: 3}
+  m_PrefabInstance: {fileID: 464070175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1839055734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839055732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b616493caca6995b467252650c99d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueTool: 0
 --- !u!1 &1840783085
 GameObject:
   m_ObjectHideFlags: 0
@@ -11461,7 +11528,7 @@ GameObject:
   - component: {fileID: 2129807700}
   - component: {fileID: 2129807703}
   m_Layer: 5
-  m_Name: Tools
+  m_Name: ToolManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
