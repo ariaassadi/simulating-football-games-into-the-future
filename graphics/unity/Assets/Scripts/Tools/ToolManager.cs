@@ -14,7 +14,24 @@ public class ToolManager : MonoBehaviour
         {
             foreach (Tool tool in activeTools)
             {
-                tool.UpdateTool();
+                if (!tool.IsSynchronized)
+                {
+                    tool.UpdateTool();
+                }
+            }
+        }
+    }
+
+    public void UpdateSynchronized()
+    {
+        if (activeTools != null)
+        {
+            foreach (Tool tool in activeTools)
+            {
+                if (tool.IsSynchronized)
+                {
+                    tool.UpdateTool();
+                }
             }
         }
     }
@@ -24,7 +41,7 @@ public class ToolManager : MonoBehaviour
         Tool tool = toolObject.GetComponent<Tool>();
         if (tool != null)
         {
-            if (tool.uniqueTool)
+            if (tool.IsUniqueTool)
             {
                 if (ToolInActiveTools(tool))
                 {
@@ -93,7 +110,7 @@ public class ToolManager : MonoBehaviour
         {
             foreach (Tool activeTool in activeTools)
             {
-                if (activeTool.uniqueTool)
+                if (activeTool.IsUniqueTool)
                 {
                     DeselectTool(activeTool);
                 }
@@ -135,10 +152,4 @@ public class ToolManager : MonoBehaviour
             activeTools = null;
         }
     }
-
-    public void SetPlayers(GameObject[] players)
-    {
-        this.players = players;
-    }
-
 }

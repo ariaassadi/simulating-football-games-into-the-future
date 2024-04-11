@@ -11,7 +11,8 @@ public abstract class Tool : MonoBehaviour
     protected Image border;
     protected ToolManager toolManager;
 
-    public bool uniqueTool = false;
+    protected bool uniqueTool = false;
+    protected bool synchronized = false;
 
     protected virtual void Start()
     {
@@ -35,6 +36,25 @@ public abstract class Tool : MonoBehaviour
         {
             Debug.Log("ToolManager found for " + this.name);
         }
+    }
+    public virtual void Select()
+    {
+        border.color = Color.white;
+    }
+
+    public virtual void Deselect()
+    {
+        border.color = Utils.HexToColor("#12326e");
+    }
+
+    public bool IsSynchronized
+    {
+        get { return synchronized; }
+    }
+
+    public bool IsUniqueTool
+    {
+        get { return uniqueTool; }
     }
 
     protected GameObject SelectPlayer()
@@ -100,15 +120,6 @@ public abstract class Tool : MonoBehaviour
         player.transform.Find("Canvas").GetComponent<EggUI>().SetEmptyText();
     }
 
-    public virtual void Select()
-    {
-        border.color = Color.white;
-    }
-
-    public virtual void Deselect()
-    {
-        border.color = Utils.HexToColor("#12326e");
-    }
 
     public abstract void UpdateTool();
 }

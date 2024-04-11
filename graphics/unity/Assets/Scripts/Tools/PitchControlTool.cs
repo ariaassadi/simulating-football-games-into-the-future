@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine.Networking;
 
 
-public class PitchControl : MonoBehaviour
+public class PitchControl : Tool
 {
     private Material squareMaterial; // Material to apply to squares
 
@@ -18,14 +18,12 @@ public class PitchControl : MonoBehaviour
     private int rows = 68; // Number of rows in the grid
     private int cols = 105; // Number of columns in the grid
 
-    // private Color color = Color.blue; // Color to apply to the texture
-
-    [SerializeField] private TextAsset pitchControlData; // JSON data to generate the texture
-
     private string json;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+        synchronized = true;
         // CreateDatabase();
         if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
         {
@@ -34,8 +32,27 @@ public class PitchControl : MonoBehaviour
             if (!File.Exists(destinationPath))
                 StartCoroutine(CopyScript(sourcePath, destinationPath));
         }
+    }
 
+    public override void Select()
+    {
+        base.Select();
+        AddPlaneAndTexture();
+    }
 
+    public override void Deselect()
+    {
+        base.Deselect();
+        RemovePlaneAndTexture();
+    }
+
+    public override void UpdateTool()
+    {
+        // Get the GameManager script
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        // Get playerdata from the GameManager script
+        PlayerData[] playerData = gameManager.GetComponent<GameManager>().GetPlayerData();
+        UpdatePitchControlTexture(playerData);
     }
 
     IEnumerator CopyScript(string sourcePath, string destinationPath)
@@ -106,16 +123,6 @@ public class PitchControl : MonoBehaviour
         flippedTexture.Apply();
         return flippedTexture;
     }
-
-    public void UpdatePitchControlTexture()
-    {
-        // Generate a new texture
-        // Texture2D texture = GenerateTexture();
-
-        // // Apply the new texture
-        // ApplyTexture(texture);
-    }
-
     private PlayerData MoveOrigin(PlayerData player)
     {
         PlayerData playerCopy = new PlayerData();
@@ -168,116 +175,6 @@ public class PitchControl : MonoBehaviour
         // Remove the plane and texture
         Destroy(pitch);
     }
-
-    // Texture2D GenerateTexture()
-    // {
-    //     Texture2D texture = new Texture2D(cols, rows);
-
-    //     string path = Application.temporaryCachePath + "/output.json";
-
-    //     UnityEngine.Debug.Log(path);
-
-    //     // read the json file from path
-
-    //     // Time this function
-    //     Stopwatch stopwatch = new Stopwatch();
-    //     stopwatch.Start();
-
-    //     PythonScript.TestPythonScript();
-
-    //     stopwatch.Stop();
-    //     UnityEngine.Debug.Log("Time taken to load write JSON: " + stopwatch.ElapsedMilliseconds + "ms");
-
-    //     stopwatch = new Stopwatch();
-    //     stopwatch.Start();
-
-    //     // TextAsset jsonFile = Resources.Load<TextAsset>("output");
-    //     string json = System.IO.File.ReadAllText(path);
-
-    //     stopwatch.Stop();
-    //     UnityEngine.Debug.Log("Time taken to read the JSON: " + stopwatch.ElapsedMilliseconds + "ms");
-
-    //     if (json == null)
-    //     {
-    //         UnityEngine.Debug.Log("hohohohohohoh not found");
-    //         return null;
-    //     }
-
-    //     // Retrieve color brightness data from JsonParser
-    //     stopwatch = new Stopwatch();
-    //     stopwatch.Start();
-    //     PitchData pitchData = JsonUtility.FromJson<PitchData>(json);
-    //     stopwatch.Stop();
-    //     UnityEngine.Debug.Log("Time taken to parse JSON: " + stopwatch.ElapsedMilliseconds + "ms");
-
-    //     float[] hmmmm = pitchData.pitch;
-    //     foreach (float value in hmmmm)
-    //     {
-    //         UnityEngine.Debug.Log(value);
-    //     }
-    //     texture.filterMode = FilterMode.Point;
-
-    //     // Generate colors for each pixel
-    //     for (int x = 0; x < rows; x++)
-    //     {
-    //         for (int y = 0; y < cols; y++)
-    //         {
-    //             Color color = GenerateRandomColor(); // Or any method to generate colors based on data
-    //             texture.SetPixel(y, x, color);
-    //         }
-    //     }
-
-    //     texture.Apply(); // Apply changes to the texture
-
-    //     return texture;
-    // }
-    // Texture2D GenerateTexture()
-    // {
-    //     Texture2D texture = new Texture2D(cols, rows);
-
-    //     // Time this function
-    //     Stopwatch stopwatch = new Stopwatch();
-    //     stopwatch.Start();
-
-    //     TextAsset jsonFile = Resources.Load<TextAsset>("pitch_control");
-
-    //     // end time
-    //     stopwatch.Stop();
-    //     UnityEngine.Debug.Log("Time taken to load JSON into text asset: " + stopwatch.ElapsedMilliseconds + "ms");
-
-    //     if (jsonFile == null)
-    //     {
-    //         UnityEngine.Debug.Log("File not found");
-    //         return null;
-    //     }
-
-    //     // Retrieve color brightness data from JsonParser
-    //     stopwatch = new Stopwatch();
-    //     stopwatch.Start();
-    //     colorBrighness = JsonParser.ParsePitchJSON(jsonFile.text);
-    //     stopwatch.Stop();
-    //     UnityEngine.Debug.Log("Time taken to parse JSON: " + stopwatch.ElapsedMilliseconds + "ms");
-
-    //     texture.filterMode = FilterMode.Point;
-
-    //     // get rows and cols from the data
-    //     rows = colorBrighness.GetLength(0);
-    //     cols = colorBrighness.GetLength(1);
-    //     UnityEngine.Debug.Log("Rows: " + rows + " Cols: " + cols);
-    //     // Generate colors for each pixel
-    //     for (int x = 0; x < rows; x++)
-    //     {
-    //         for (int y = 0; y < cols; y++)
-    //         {
-    //             Color color = GenerateColor(colorBrighness[x, y]); // Or any method to generate colors based on data
-    //             texture.SetPixel(y, x, color);
-    //         }
-    //     }
-
-    //     texture.Apply(); // Apply changes to the texture
-
-    //     return texture;
-    // }
 
     Texture2D GenerateTexture(float[,] data)
     {

@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     // Scripts
     [SerializeField] private GameObject gameUI;
     private GameObject uiManager;
+    private ToolManager toolManager;
 
     private int startFrame;
     private int endFrame;
@@ -75,6 +76,12 @@ public class GameManager : MonoBehaviour
         if (uiManager == null)
         {
             Debug.LogError("UIManager is not assigned.");
+            return;
+        }
+        toolManager = GameObject.Find("ToolManager").GetComponent<ToolManager>();
+        if (toolManager == null)
+        {
+            Debug.LogError("ToolManager is not assigned.");
             return;
         }
 
@@ -118,9 +125,12 @@ public class GameManager : MonoBehaviour
             pathToDB = Application.streamingAssetsPath + "/2sec_demo.sqlite";
         }
         // SQL query to retrieve player data for a specific match and period
-        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
 
-        string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
+        // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
+        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE frame>=0 AND frame<=5000 AND period={period} AND match_id='{match_id}'";
+
+        // string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
+        string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>=0 AND frame<=5000 AND period={period} AND match_id='{match_id}' GROUP BY frame";
 
 
         Debug.Log($"Select: {query_tracking} END");
@@ -179,8 +189,7 @@ public class GameManager : MonoBehaviour
             awayTeamColor = gameInfo.AwayTeamColor;
 
             // Update the pitch control texture
-            if (GameObject.FindGameObjectsWithTag("PitchOverlay").Length != 0)
-                gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
+            toolManager.UpdateSynchronized();
 
 
             currentFrameNr = startFrame;
@@ -274,7 +283,6 @@ public class GameManager : MonoBehaviour
     {
         return framesStartAndEndIndex[NormalizeFrameNr(frameNr)][1];
     }
-
 
     private void Play()
     {
@@ -504,8 +512,7 @@ public class GameManager : MonoBehaviour
         awayOffsideLine = 0;
 
         // Update the pitch control
-        if (GameObject.FindGameObjectsWithTag("PitchOverlay").Length != 0)
-            gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture(playerPositions);
+        toolManager.UpdateSynchronized();
 
         // Update the time slider
         timeSlider.GetComponent<TimeSlider>().ChangeTime(currentFrameNr);

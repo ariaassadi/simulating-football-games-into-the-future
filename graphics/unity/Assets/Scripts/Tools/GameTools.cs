@@ -72,10 +72,10 @@ public class GameTools : MonoBehaviour
         {
             Debug.Log("No tool selected");
         }
-        if (showPitchControl)
-        {
-            gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture();
-        }
+        // if (showPitchControl)
+        // {
+        //     gameObject.GetComponent<PitchControl>().UpdatePitchControlTexture();
+        // }
     }
 
     public void DeselectAllTools()
@@ -577,29 +577,29 @@ public class GameTools : MonoBehaviour
     /// PITCH CONTROL
     //////////////////////////
 
-    public void SelectPitchControl(GameObject border)
-    {
-        if (!showPitchControl)
-        {
-            showPitchControl = true;
-            border.GetComponent<Image>().color = Color.white;
-            gameObject.GetComponent<PitchControl>().AddPlaneAndTexture();
-        }
-        else
-        {
-            DeselectPitchControl(border);
-            gameObject.GetComponent<PitchControl>().RemovePlaneAndTexture();
-        }
-    }
+    // public void SelectPitchControl(GameObject border)
+    // {
+    //     if (!showPitchControl)
+    //     {
+    //         showPitchControl = true;
+    //         border.GetComponent<Image>().color = Color.white;
+    //         gameObject.GetComponent<PitchControl>().AddPlaneAndTexture();
+    //     }
+    //     else
+    //     {
+    //         DeselectPitchControl(border);
+    //         gameObject.GetComponent<PitchControl>().RemovePlaneAndTexture();
+    //     }
+    // }
 
-    private void DeselectPitchControl(GameObject border)
-    {
-        showPitchControl = false;
-        if (border != null)
-        {
-            border.GetComponent<Image>().color = Utils.HexToColor("#12326e");
-        }
-    }
+    // private void DeselectPitchControl(GameObject border)
+    // {
+    //     showPitchControl = false;
+    //     if (border != null)
+    //     {
+    //         border.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+    //     }
+    // }
 
     //////////////////////////
     /// END PITCH CONTROL
