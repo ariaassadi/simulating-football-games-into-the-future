@@ -22,8 +22,6 @@ public class GameTools : MonoBehaviour
     private bool movePlayerSelected;
     private bool moveClone = false;
 
-    private bool showPitchControl = false;
-
     private bool isDragging;
 
     private string toolSelected = "";

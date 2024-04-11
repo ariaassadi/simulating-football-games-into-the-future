@@ -548,6 +548,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78014468}
   m_CullTransparentMesh: 1
+--- !u!1 &107511807 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+    type: 3}
+  m_PrefabInstance: {fileID: 931191096}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &108054630
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,6 +688,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 108054630}
   m_CullTransparentMesh: 1
+--- !u!1 &115311831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+    type: 3}
+  m_PrefabInstance: {fileID: 1597648065}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &124761727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,14 +1315,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 230551637}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8e4f6396c45ac8ed9796326bc2d1a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pitchPrefab: {fileID: 8440720175905942880, guid: 345f4e256df59761093e377265306e0f,
     type: 3}
-  pitchControlData: {fileID: 0}
 --- !u!1 &231415000
 GameObject:
   m_ObjectHideFlags: 0
@@ -5727,12 +5738,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 230551643}
+      objectReference: {fileID: 2129807703}
     - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SelectPitchControl
+      value: SelectTool
       objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ToolManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 107511807}
     - target: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_Name
@@ -5846,7 +5867,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 931191099}
   m_SourcePrefab: {fileID: 100100000, guid: 496a582982833fa7cab587d344fc6ada, type: 3}
 --- !u!224 &931191097 stripped
 RectTransform:
@@ -5854,6 +5879,20 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 931191096}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &931191099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107511807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e4f6396c45ac8ed9796326bc2d1a8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pitchPrefab: {fileID: 8440720175905942880, guid: 345f4e256df59761093e377265306e0f,
+    type: 3}
 --- !u!1 &965491056
 GameObject:
   m_ObjectHideFlags: 0
@@ -7491,7 +7530,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 743905b8aa69be781a4cc81f3e613eb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueTool: 0
 --- !u!1 &1337485284
 GameObject:
   m_ObjectHideFlags: 0
@@ -9004,12 +9042,22 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 230551637}
+      objectReference: {fileID: 2129807703}
     - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: SelectTool
       objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ToolManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7434690775771957066, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 115311831}
     - target: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_Name
@@ -9118,7 +9166,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1597648068}
   m_SourcePrefab: {fileID: 100100000, guid: 496a582982833fa7cab587d344fc6ada, type: 3}
 --- !u!224 &1597648066 stripped
 RectTransform:
@@ -9126,6 +9178,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1597648065}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1597648068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115311831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc468c2fb6249cfdad5a11a8c0730cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1623800947 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
@@ -9312,7 +9376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e431646e33df7efedaaaf1d95f70e40e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueTool: 0
 --- !u!1 &1773658438
 GameObject:
   m_ObjectHideFlags: 0
@@ -9470,7 +9533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48b616493caca6995b467252650c99d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueTool: 0
 --- !u!1 &1840783085
 GameObject:
   m_ObjectHideFlags: 0

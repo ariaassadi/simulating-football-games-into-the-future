@@ -12,38 +12,65 @@ public class PitchControl : Tool
 
     private Component gameManager; // GameManager script
 
-    private float[,] colorBrighness; // Data to generate the texture
-
     private GameObject pitch;
     private int rows = 68; // Number of rows in the grid
     private int cols = 105; // Number of columns in the grid
 
-    private string json;
+    private string sourcePath;
 
     protected override void Start()
     {
         base.Start();
         synchronized = true;
         // CreateDatabase();
+        sourcePath = Application.streamingAssetsPath + "/Python/pitch_control_socket.py";
         if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
         {
-            string sourcePath = Application.streamingAssetsPath + "/Python/pitch_control_main.py";
             string destinationPath = Application.persistentDataPath + "/pitch_control_main.py";
             if (!File.Exists(destinationPath))
+            {
                 StartCoroutine(CopyScript(sourcePath, destinationPath));
+            }
+            sourcePath = destinationPath;
         }
     }
 
     public override void Select()
     {
         base.Select();
+        OpenScript();
         AddPlaneAndTexture();
     }
 
     public override void Deselect()
     {
         base.Deselect();
+        CloseScript();
         RemovePlaneAndTexture();
+    }
+
+    private void OpenScript()
+    {
+        if (!PythonScript.StartPitchControlScript(sourcePath))
+        {
+            Debug.LogError("Failed to start pitch control script");
+        }
+        if (!PythonScript.ConnectToPitchControlScript())
+        {
+            Debug.LogError("Failed to connect to pitch control script");
+        }
+    }
+
+    private void CloseScript()
+    {
+        if (!PythonScript.CloseConnectionToPitchControlScript())
+        {
+            Debug.LogError("Failed to close pitch control script");
+        }
+        if (!PythonScript.StopPitchControlScript())
+        {
+            Debug.LogError("Failed to stop pitch control script");
+        }
     }
 
     public override void UpdateTool()
@@ -53,6 +80,7 @@ public class PitchControl : Tool
         // Get playerdata from the GameManager script
         PlayerData[] playerData = gameManager.GetComponent<GameManager>().GetPlayerData();
         UpdatePitchControlTexture(playerData);
+        Debug.Log("Updating pitch control texture");
     }
 
     IEnumerator CopyScript(string sourcePath, string destinationPath)
@@ -136,28 +164,48 @@ public class PitchControl : Tool
     }
     public void UpdatePitchControlTexture(PlayerData[] playerPositions)
     {
-
         // move origin to 52.5, 34
+        Debug.Log("Players in playerPositions before moving: " + playerPositions.Length);
         PlayerData[] players = new PlayerData[playerPositions.Length];
         for (int i = 0; i < playerPositions.Length; i++)
         {
             players[i] = MoveOrigin(playerPositions[i]);
         }
 
+        if (!BallInPlay(players))
+        {
+            return;
+        }
+
+        // BUG: Too many players, the pitch control script can only handle 23 players
+
+        if (players.Length > 23)
+        {
+            Debug.Log("Players in playerPositions: " + playerPositions.Length);
+            Debug.LogError("Too many players " + players.Length);
+            return;
+        }
         // Get the JSON to send to the webserver
         string jsonPP = GetPitchControlJSON(players);
 
-        // Path to store the JSON file
-        string path = Application.temporaryCachePath + "/pitch_control.json";
+        // // Path to store the JSON file
+        // string path = Application.temporaryCachePath + "/pitch_control.json";
 
-        // string path = Application.dataPath + "/Python/pitch_control.json";
-        // Send the JSON to the python script
-        PythonScript.TestPythonScript(jsonPP, path);
+        // // string path = Application.dataPath + "/Python/pitch_control.json";
+        // // Send the JSON to the python script
+        // PythonScript.TestPythonScript(jsonPP, path);
 
+        // // Get the JSON and convert it to a float array
+        // string jsonPC = System.IO.File.ReadAllText(path);
+        // validate jsonPP before sending to python
 
+        if (!JsonParser.ValidatePlayerDataJson(jsonPP))
+        {
+            Debug.LogError("Invalid player data json");
+            return;
+        }
 
-        // Get the JSON and convert it to a float array
-        string jsonPC = System.IO.File.ReadAllText(path);
+        string jsonPC = PythonScript.SendDataToPitchControlScript(jsonPP);
 
         float[,] pitchControlData = JsonParser.ParsePitchJSON(jsonPC);
 
@@ -168,6 +216,18 @@ public class PitchControl : Tool
 
         // // Apply the new texture
         ApplyTexture(texture);
+    }
+
+    private bool BallInPlay(PlayerData[] players)
+    {
+        foreach (PlayerData player in players)
+        {
+            if (player.team == "ball")
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void RemovePlaneAndTexture()

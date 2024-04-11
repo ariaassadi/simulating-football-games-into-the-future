@@ -8,6 +8,8 @@ public class ToolManager : MonoBehaviour
     private Tool[] activeTools;
     private GameObject[] players;
 
+    private PlayerData[] playerData;
+
     public void Update()
     {
         if (activeTools != null)

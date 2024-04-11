@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
         // SQL query to retrieve player data for a specific match and period
 
         // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
-        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE frame>=0 AND frame<=5000 AND period={period} AND match_id='{match_id}'";
+        string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE frame>=0 AND frame<=5000 AND period={period} AND match_id='{match_id}'";
 
         // string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
         string query_frames = $"SELECT frame, objects_tracked FROM games WHERE frame>=0 AND frame<=5000 AND period={period} AND match_id='{match_id}' GROUP BY frame";
@@ -178,8 +178,11 @@ public class GameManager : MonoBehaviour
                 playerPositions[i] = new PlayerData();
                 playerPositions[i].x = playerData[i].X;
                 playerPositions[i].y = playerData[i].Y;
+                playerPositions[i].x_future = playerData[i].X_Future;
+                playerPositions[i].y_future = playerData[i].Y_Future;
                 playerPositions[i].team = playerData[i].Team;
                 playerPositions[i].jersey_number = playerData[i].JerseyNumber;
+                playerPositions[i].player_name = playerData[i].Player;
                 // Convert x velocity and y velocity to the combined velocity
                 playerPositions[i].v = Mathf.Sqrt(Mathf.Pow(playerData[i].V_X, 2) + Mathf.Pow(playerData[i].V_Y, 2));
                 playerPositions[i].orientation = Mathf.Deg2Rad * (playerData[i].Orientation + 90);
@@ -188,7 +191,6 @@ public class GameManager : MonoBehaviour
             homeTeamColor = gameInfo.HomeTeamColor;
             awayTeamColor = gameInfo.AwayTeamColor;
 
-            // Update the pitch control texture
             toolManager.UpdateSynchronized();
 
 
@@ -372,6 +374,23 @@ public class GameManager : MonoBehaviour
     }
 
     // Step forward the game by one frame
+    // BUG: Calculates currentFrameEndIndex incorrectly
+    // public void StepForward()
+    // {
+    //     SetPlayFalse();
+    //     Debug.Log("StepForward");
+    //     if (NormalizeFrameNr(currentFrameNr) + 1 < frameData.Length)
+    //     {
+    //         currentFrameNr++;
+    //         currentFrameEndIndex += frameData[NormalizeFrameNr(currentFrameNr)].ObjectsTracked;
+    //     }
+    //     else
+    //     {
+    //         currentFrameNr = frameData.Length - 1;
+    //         currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
+    //     }
+    //     MoveObjects();
+    // }
     public void StepForward()
     {
         SetPlayFalse();
@@ -379,15 +398,18 @@ public class GameManager : MonoBehaviour
         if (NormalizeFrameNr(currentFrameNr) + 1 < frameData.Length)
         {
             currentFrameNr++;
-            currentFrameEndIndex += frameData[NormalizeFrameNr(currentFrameNr)].ObjectsTracked;
+            currentFrameStartIndex = currentFrameEndIndex; // Update the start index
+            currentFrameEndIndex += frameData[NormalizeFrameNr(currentFrameNr) + 1].ObjectsTracked; // Update the end index based on the next frame
         }
         else
         {
             currentFrameNr = frameData.Length - 1;
+            currentFrameStartIndex = GetFrameStartIndex(currentFrameNr);
             currentFrameEndIndex = GetFrameEndIndex(currentFrameNr);
         }
         MoveObjects();
     }
+
 
     // Step backward the game by one frame
     public void StepBackward()
@@ -443,11 +465,19 @@ public class GameManager : MonoBehaviour
         {
             string playerName = playerData[currentFrameIndex].Player;
             int i = currentFrameIndex - currentFrameStartIndex;
+            if (i > 23)
+            {
+                Debug.LogError("Index out of bounds: " + i);
+                // break;
+            }
             playerPositions[i] = new PlayerData();
             playerPositions[i].x = playerData[currentFrameIndex].X;
             playerPositions[i].y = playerData[currentFrameIndex].Y;
+            playerPositions[i].x_future = playerData[currentFrameIndex].X_Future;
+            playerPositions[i].y_future = playerData[currentFrameIndex].Y_Future;
             playerPositions[i].team = playerData[currentFrameIndex].Team;
             playerPositions[i].jersey_number = playerData[currentFrameIndex].JerseyNumber;
+            playerPositions[i].player_name = playerData[currentFrameIndex].Player;
             // Convert x velocity and y velocity to the combined velocity
             playerPositions[i].v = Mathf.Sqrt(Mathf.Pow(playerData[currentFrameIndex].V_X, 2) + Mathf.Pow(playerData[currentFrameIndex].V_Y, 2));
             playerPositions[i].orientation = Mathf.Deg2Rad * (playerData[currentFrameIndex].Orientation + 90);
@@ -512,6 +542,7 @@ public class GameManager : MonoBehaviour
         awayOffsideLine = 0;
 
         // Update the pitch control
+        // if (!isPlaying)
         toolManager.UpdateSynchronized();
 
         // Update the time slider

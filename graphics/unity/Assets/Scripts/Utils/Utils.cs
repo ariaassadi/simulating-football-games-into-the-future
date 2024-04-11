@@ -3,7 +3,9 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 
 public class Utils : MonoBehaviour
@@ -226,6 +228,55 @@ public static class JsonParser
         return playerData;
     }
 
+    public static bool ValidatePlayerDataJson(string jsonData)
+    {
+        try
+        {
+            // Deserialize the JSON string into a JObject
+            JObject jsonObj = JObject.Parse(jsonData);
+
+            // Check if the JSON object contains the "players" array
+            if (jsonObj["players"] == null)
+            {
+                UnityEngine.Debug.LogError("Missing 'players' array in JSON data.");
+                return false;
+            }
+
+            // Deserialize the "players" array into an array of PlayerData objects
+            PlayerDataWrapper playerDataWrapper = JsonConvert.DeserializeObject<PlayerDataWrapper>(jsonData);
+
+            // Check if the deserialization was successful
+            if (playerDataWrapper == null || playerDataWrapper.players == null)
+            {
+                UnityEngine.Debug.LogError("Failed to deserialize JSON data into PlayerDataWrapper object.");
+                return false;
+            }
+
+            // Check if the "players" array contains valid PlayerData objects
+            foreach (PlayerData playerData in playerDataWrapper.players)
+            {
+                if (playerData == null)
+                {
+                    UnityEngine.Debug.LogError("Invalid player data object in the 'players' array.");
+                    return false;
+                }
+            }
+
+            UnityEngine.Debug.Log("JSON data validation successful.");
+            return true;
+        }
+        catch (JsonReaderException ex)
+        {
+            UnityEngine.Debug.LogError($"Error parsing JSON data: {ex.Message}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            UnityEngine.Debug.LogError($"Error validating JSON data: {ex.Message}");
+            return false;
+        }
+    }
+
 }
 
 [System.Serializable]
@@ -255,9 +306,12 @@ public class PlayerData
     public float y;
     public string team;
     public int jersey_number;
-
+    public string player_name;
     public float v;
     public float orientation;
+
+    public float x_future;
+    public float y_future;
 }
 
 [System.Serializable]
