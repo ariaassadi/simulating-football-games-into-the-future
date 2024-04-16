@@ -26,7 +26,7 @@ public class PitchControl : Tool
         sourcePath = Application.streamingAssetsPath + "/Python/pitch_control_socket.py";
         if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
         {
-            string destinationPath = Application.persistentDataPath + "/pitch_control_main.py";
+            string destinationPath = Application.persistentDataPath + "/pitch_control_socket.py";
             if (!File.Exists(destinationPath))
             {
                 StartCoroutine(CopyScript(sourcePath, destinationPath));
@@ -234,6 +234,14 @@ public class PitchControl : Tool
     {
         // Remove the plane and texture
         Destroy(pitch);
+        GameObject[] pitchOverlays = GameObject.FindGameObjectsWithTag("PitchOverlay");
+        if (pitchOverlays != null && pitchOverlays.Length > 0)
+        {
+            foreach (GameObject pitchOverlay in pitchOverlays)
+            {
+                Destroy(pitchOverlay);
+            }
+        }
     }
 
     Texture2D GenerateTexture(float[,] data)

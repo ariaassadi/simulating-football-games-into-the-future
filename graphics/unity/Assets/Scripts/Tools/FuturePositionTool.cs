@@ -67,6 +67,7 @@ public class FuturePositionTool : Tool
     private void ClonePlayer(PlayerData player)
     {
         GameObject playerObject = GameObject.Find(player.player_name);
+        Debug.Log(player.ToString());
 
         if (playerObject == null || playerObject.tag != "Player")
         {

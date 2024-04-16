@@ -148,7 +148,7 @@ public class CameraController : MonoBehaviour
                 moveSpeed += 1f;
                 break;
             case "RotationSpeed":
-                rotationSpeed += 1f;
+                rotationSpeed += 10f;
                 break;
             case "VerticalSpeed":
                 verticalSpeed += 1f;

@@ -21,15 +21,8 @@ public class PythonScript : MonoBehaviour
             return false;
         }
 
-        // Path to your Python script relative to the virtual environment directory
-        string pythonScript;
-        if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
-            pythonScript = Application.persistentDataPath + "/pitch_control_main.py";
-        else
-            pythonScript = Application.streamingAssetsPath + "/Python/pitch_control_main.py"; // Replace with actual path
-
+        // Python version to use based on the platform
         string pythonVersion;
-
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             pythonVersion = "python";
@@ -178,11 +171,8 @@ public class PythonScript : MonoBehaviour
                     if (bytesRead > 0)
                     {
                         receivedData.Append(Encoding.UTF8.GetString(_receiveBuffer, 0, bytesRead));
-                        UnityEngine.Debug.Log("Data received from Python script: " + receivedData);
+                        // UnityEngine.Debug.Log("Data received from Python script: " + receivedData);
                         // Check if the received data is complete (e.g., ends with a specific delimiter)
-                        // If yes, return the received data
-                        // Example: if (receivedData.ToString().EndsWith("\n"))
-                        //              return receivedData.ToString();
                         if (receivedData.ToString().EndsWith("}"))
                         {
                             return receivedData.ToString();
@@ -233,7 +223,7 @@ public class PythonScript : MonoBehaviour
             else
             {
                 UnityEngine.Debug.LogWarning("Python script is not running.");
-                return false;
+                return true;
             }
         }
         catch (Exception ex)

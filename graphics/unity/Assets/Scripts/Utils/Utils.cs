@@ -166,6 +166,11 @@ public static class JsonParser
         // Access the pitch values
         int rows = 68;
         int cols = 105;
+        if (pitchData.pitch.Length != rows * cols)
+        {
+            Debug.LogError("Invalid pitch data");
+            return null;
+        }
         // convert pitchData to a 2D array of floats
         float[,] pitch = new float[rows, cols];
         int index = 0;
@@ -201,7 +206,7 @@ public static class JsonParser
         PlayerDataWrapper wrapper = new PlayerDataWrapper();
         wrapper.players = playerDataArray;
         string jsonString = JsonUtility.ToJson(wrapper);
-        Debug.Log("Converted to JSON: " + jsonString);
+        // Debug.Log("Converted to JSON: " + jsonString);
         return jsonString;
     }
 
@@ -312,6 +317,11 @@ public class PlayerData
 
     public float x_future;
     public float y_future;
+
+    public override string ToString()
+    {
+        return $"Player: {player_name}, Team: {team}, Jersey Number: {jersey_number}, Position: ({x}, {y}), Future Position: ({x_future}, {y_future})";
+    }
 }
 
 [System.Serializable]

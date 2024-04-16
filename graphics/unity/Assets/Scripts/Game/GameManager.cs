@@ -78,12 +78,14 @@ public class GameManager : MonoBehaviour
             Debug.LogError("UIManager is not assigned.");
             return;
         }
-        toolManager = GameObject.Find("ToolManager").GetComponent<ToolManager>();
-        if (toolManager == null)
+        GameObject toolManagerObject = GameObject.Find("ToolManager");
+        if (toolManagerObject == null)
         {
-            Debug.LogError("ToolManager is not assigned.");
+            Debug.LogWarning("ToolManager is not assigned.");
             return;
         }
+        else
+            toolManager = toolManagerObject.GetComponent<ToolManager>();
 
         offsideLineHome.startWidth = 0.2f;
         offsideLineHome.endWidth = 0.2f;
@@ -126,7 +128,7 @@ public class GameManager : MonoBehaviour
         }
         // SQL query to retrieve player data for a specific match and period
 
-        // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y FROM games WHERE period={period} AND match_id='{match_id}'";
+        // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{match_id}'";
         string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE frame>=0 AND frame<=5000 AND period={period} AND match_id='{match_id}'";
 
         // string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{match_id}' GROUP BY frame";
@@ -190,8 +192,6 @@ public class GameManager : MonoBehaviour
 
             homeTeamColor = gameInfo.HomeTeamColor;
             awayTeamColor = gameInfo.AwayTeamColor;
-
-            toolManager.UpdateSynchronized();
 
 
             currentFrameNr = startFrame;
@@ -541,8 +541,8 @@ public class GameManager : MonoBehaviour
         homeOffsideLine = 0;
         awayOffsideLine = 0;
 
-        // Update the pitch control
-        // if (!isPlaying)
+        // Update syncgronized tools
+        AssignToolManager();
         toolManager.UpdateSynchronized();
 
         // Update the time slider
@@ -580,6 +580,27 @@ public class GameManager : MonoBehaviour
         {
             position = new Vector3(player.X, 0.1f, player.Y);
             SpawnBall(position, player);
+        }
+    }
+
+    /// <summary>
+    /// Assign the ToolManager object if it is not assigned
+    /// </summary>
+    /// <returns></returns>
+    private void AssignToolManager()
+    {
+        if (toolManager == null)
+        {
+            GameObject toolManagerObject = GameObject.Find("ToolManager");
+            if (toolManagerObject == null)
+            {
+                Debug.LogError("ToolManager cannot be found");
+            }
+            else
+            {
+                toolManager = toolManagerObject.GetComponent<ToolManager>();
+                Debug.Log("ToolManager is assigned.");
+            }
         }
     }
 

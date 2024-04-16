@@ -103,4 +103,19 @@ public class MenuManager : MonoBehaviour
         Application.Quit();
     }
 
+    private void OnApplicationQuit()
+    {
+        // Clean up resources
+        Debug.Log("Application ending after " + Time.time + " seconds");
+        if (!PythonScript.CloseConnectionToPitchControlScript())
+        {
+            Debug.Log("Failed to close connection to pitch control script");
+        }
+        if (!PythonScript.StopPitchControlScript())
+        {
+            Debug.Log("Failed to stop pitch control script");
+        }
+    }
+
+
 }
