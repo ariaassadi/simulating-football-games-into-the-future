@@ -4,7 +4,7 @@
 # # Notebook for training predictive models
 # ### Import packages
 
-# In[1]:
+# In[ ]:
 
 
 from tensorflow.keras.layers import Input, Embedding, Flatten, Concatenate, Dense, BatchNormalization, Dropout, Reshape, LSTM
@@ -21,14 +21,14 @@ import glob
 import os
 
 from utils import load_processed_frames, split_match_ids, get_next_model_filename, euclidean_distance_loss, total_error_loss, define_regularizers, prepare_EL_input_data, prepare_LSTM_input_data, create_embeddings, smooth_predictions_xy, run_model, evaluate_model, print_column_variance
-from utils import prepare_df, add_can_be_sequentialized
+from utils import prepare_df, add_can_be_sequentialized, extract_variables, load_tf_model
 from visualize_game import visualize_training_results
 from settings import *
 
 
 # ### Global variables
 
-# In[2]:
+# In[ ]:
 
 
 # Define numerical, categorical, and y columns
@@ -44,7 +44,7 @@ sequence_length = 10    # Sequence length for LSTM model
 
 # ### Load frames
 
-# In[3]:
+# In[ ]:
 
 
 # Load every frames_df to a list
@@ -66,7 +66,7 @@ val_frames_dfs = [frames_dfs[i] for i in val_ids]
 # ### NN with Embedding layers
 # Player-based model
 
-# In[4]:
+# In[ ]:
 
 
 # Define the neural network model with embeddings for categorical features.
@@ -133,11 +133,11 @@ def train_NN_model_with_embedding(train_frames_dfs, val_frames_dfs, numerical_co
             f.write(f"{key}: {rounded_values}\n")
 
 
-# In[5]:
+# In[ ]:
 
 
 # Train the NN model with embedding layers
-n_epochs = 1
+n_epochs = 5
 categorical_cols = ['position']
 # positions = ["Attacking Midfielder", "Central Midfielder", "Centre-Back", "Defensive Midfielder", "Forward", "Full-Back", "Goalkeeper", "Wide Midfielder", "Winger"]
 positions = ["Central Midfielder", "Winger"]
@@ -148,7 +148,7 @@ numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
 
 # ### Evaluate model
 
-# In[6]:
+# In[ ]:
 
 
 # model_names = ["LSTM_model_v2"]
@@ -168,7 +168,7 @@ numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
 #     alpha -= 0.01
 
 
-# In[35]:
+# In[ ]:
 
 
 # # Print column variance for position
@@ -263,23 +263,41 @@ def train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, position
             f.write(f"{key}: {rounded_values}\n")
 
 
-# In[34]:
+# In[ ]:
 
 
 n_epochs = 5
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
-# positions=['Goalkeeper', 'Winger']
-categorical_cols = ["position"]
+# positions=['Central Midfielder', 'Winger']
+categorical_cols = ['position']
 sequence_length = 10
-
-numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
-train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
 
 numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness']
 train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
 
-numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'height']
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'tiredness_short']
 train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
+
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
+train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
+
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'minute', 'sta', 'distance_ran']
+train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
+
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'angle_to_ball']
+train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
+
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'pac', 'acc']
+train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=positions, l2=1e-6)
+
+
+# In[ ]:
+
+
+# model_name = "LSTM_model_v7"
+# y_test, predictions = run_model_tmp(test_frames_dfs, model_name)
+# error = tf.reduce_mean(euclidean_distance_loss(y_test, predictions)).numpy()
+# print(error)
 
 
 # In[ ]:
@@ -303,4 +321,62 @@ train_LSTM_model(train_frames_dfs, val_frames_dfs, sequence_length, positions=po
 # }
 
 # visualize_training_results(training_results, model_name)
+
+
+# In[ ]:
+
+
+# Example usage: run_model(test_frames_dfs, "NN_model_v1") 
+def run_model_tmp(frames_dfs, model_name):
+    # Load varibles
+    numerical_cols, categorical_cols, positions, sequence_length = extract_variables(model_name)
+
+    # Load model
+    model = load_tf_model(f"models/{model_name}.h5", euclidean_distance_loss=True)
+
+    # Prepared the DataFrames and concatenate into a single large DataFrame
+    prepared_frames_dfs = [prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions) for frames_df in frames_dfs]
+    frames_concat_df = pd.concat(prepared_frames_dfs, ignore_index=True)
+
+    # Save the original index before sorting
+    original_index = frames_concat_df.index
+
+    # Prepare the input data for LSTM model
+    if "LSTM" in model_name:
+        X_test_input, y_test = prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions)
+
+        # Only keep rows that can be sequentialized
+        add_can_be_sequentialized(frames_concat_df, sequence_length)
+
+        frames_concat_df = frames_concat_df[frames_concat_df["can_be_sequentialized"]]
+
+        # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
+        frames_concat_df = frames_concat_df.sort_values(by=['team', 'match_id', 'player'])
+
+    # Prepare the input data for non-LSTM model
+    else:
+        X_test_input, y_test = prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions)
+
+    # Make predictions using the loaded tf model
+    predictions = model.predict(X_test_input)
+
+    # Extract the predicted values
+    x_future_pred = predictions[:, 0]
+    y_future_pred = predictions[:, 1]
+
+    # Add the predicted values to 'frames_concat_df'
+    frames_concat_df['x_future_pred'] = x_future_pred
+    frames_concat_df['y_future_pred'] = y_future_pred
+
+    # Clip values to stay on the pitch
+    frames_concat_df['x_future_pred'] = frames_concat_df['x_future_pred'].clip(lower=0, upper=pitch_length)
+    frames_concat_df['y_future_pred'] = frames_concat_df['y_future_pred'].clip(lower=0, upper=pitch_width)
+
+    # Smooth the predicted coordinates
+    # smooth_predictions_xy(frames_df, alpha=0.98)
+
+    # "Unsort" the DataFrame to get it back to its original order
+    frames_concat_df = frames_concat_df.reindex(original_index)
+
+    return y_test, predictions
 

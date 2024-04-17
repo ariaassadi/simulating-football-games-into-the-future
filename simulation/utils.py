@@ -170,6 +170,7 @@ def total_error_loss(frames_df, include_ball=False, ball_has_to_be_in_motion=Tru
     - define_regularizers()
     - prepare_EL_input_data()
     - create_embeddings()
+    - prepare_LSTM_df()
     - prepare_LSTM_input_data()
 """
 
@@ -356,78 +357,70 @@ def add_can_be_sequentialized(frames_df, sequence_length):
 
 # Sequentialize the numerical and categorical columns
 def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length):
-    # Initialize empty lists with sequentialized data
-    X_seq_num_data = []
-    X_seq_cat_data = []
-    y_seq_data = []
-    
-    # Combined the values in y_df with X_df
+    # Append the future y values to X_df
     X_df['future_xy'] = y_df.values.tolist()
-
-    # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
-    X_df = X_df.sort_values(by=['team', 'match_id', 'player'])
 
     # Add vector 'can_be_sequentialized'
     add_can_be_sequentialized(X_df, sequence_length=sequence_length)
 
-    # Create a vector containg a list of all values in the numerical columns
+    # Prepare columns to store the sequential data
+    X_df['sequential_numerical_data'] = pd.Series(dtype=object)
+    if categorical_cols:
+        X_df['sequential_categorical_data'] = pd.Series(dtype=object)
+
+    # Create a vector containing a list of all values in the numerical columns
     X_df['numerical_data_list'] = X_df[numerical_cols].values.tolist()
     
     # Create a similar list for the categorical columns, if any
     if categorical_cols:
-        # X_df['categorical_data_list'] = X_df[categorical_cols].values.tolist()
-        X_df['categorical_data_list'] = X_df[categorical_cols].apply(lambda x: x.tolist(), axis=1)
+        X_df['categorical_data'] = X_df[categorical_cols].apply(lambda x: x.tolist(), axis=1)
 
-    # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
+    # Sort the DataFrame by 'team', 'match_id', and 'player'
     X_df_sorted = X_df.sort_values(by=['team', 'match_id', 'player'])
 
     # Group by each unique player
-    grouped = X_df_sorted.groupby(['team', 'jersey_number', 'match_id'])
+    grouped = X_df_sorted.groupby(['team', 'jersey_number', 'match_id'], as_index=False)
 
-    # Iterate through each player and create sequences
+    # Iterate through each group and create sequences
     for _, group in grouped:
-        # Create temporary columns with shifted version of 'numerical_cols' and 'categorical_cols'
+        # Create temporary columns with shifted versions of 'numerical_cols' and 'categorical_cols'
         for i in range(sequence_length):
-            group['numerical_data_list_' + str(i)] = group["numerical_data_list"].shift(i)
+            group[f'numerical_data_list_{i}'] = group['numerical_data_list'].shift(i)
 
-        # Concatenate the termporary columns to create the column 'sequential_numerical_data'
-        columns_to_sequentialize = ['numerical_data_list_' + str(i) for i in range(sequence_length)][::-1]
-        group['sequential_numerical_data'] = group[columns_to_sequentialize].values.tolist()
+        # Concatenate the temporary columns to create the column 'sequential_numerical_data'
+        numerical_cols_to_sequentialize = [f'numerical_data_list_{i}' for i in range(sequence_length)][::-1]
+        group['sequential_numerical_data'] = group[numerical_cols_to_sequentialize].apply(lambda row: row.tolist(), axis=1)
 
-        # Only consider rows that can be sequentialized
-        group = group[group['can_be_sequentialized']]
+        # Assign the created sequence back to the main DataFrame
+        X_df.loc[group.index, 'sequential_numerical_data'] = group['sequential_numerical_data']
 
-        # Add the X data to the sequentialized lists
-        X_seq_num_data.append(group['sequential_numerical_data'])
-        
-        if categorical_cols:
-            X_seq_cat_data.append(group['categorical_data_list'])
+    return X_df
 
-        # Add the y data to the sequentialized lists
-        y_seq_data.append(group['future_xy'])
+# Extract the sequentialized columns
+def extract_sequentialized_columns(X_df, categorical_cols):
+    X_filtered_df = X_df[X_df['can_be_sequentialized'] == True]
 
-    # Combine all the sequentialized data to create Series
-    X_seq_num = pd.concat(X_seq_num_data)
-    y_seq = pd.concat(y_seq_data)
+    # Extract and prepare numerical sequences
+    X_seq_num_np = np.array(X_filtered_df['sequential_numerical_data'].tolist()).astype('float32')
 
-    # Convert the Pandas Series of lists to a NumPy array
-    X_seq_num_np = np.array(X_seq_num.tolist()).astype('float32')
-    y_seq_np = np.array(y_seq.tolist()).astype('float32')
-    
-    # Add the data from categorical columns to X_seq_np
-    if categorical_cols:
-        X_seq_cat = pd.concat(X_seq_cat_data)
-        X_seq_cat_np = np.array(X_seq_cat.tolist()).astype('float32')
-        X_seq_np = [X_seq_cat_np, X_seq_num_np]
+    # Prepare categorical data
+    categorical_inputs = []
+    for col in categorical_cols:
+        if col in X_filtered_df.columns:
+            # Reshape data to (None, 1)
+            cat_data = np.array(X_filtered_df[col].tolist()).reshape(-1, 1).astype('float32')
+            categorical_inputs.append(cat_data)
+        else:
+            raise ValueError(f"Expected categorical data for {col} not found.")
 
-        return X_seq_np, y_seq_np
-    
-    # Return the resuls without adding categorical data
-    else:
-        return X_seq_num_np, y_seq_np
+    # Prepare output data
+    y_seq_np = np.array(X_filtered_df['future_xy'].tolist()).astype('float32')
 
-# Preapre the LSTM input data
-def prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[]):
+    # Return all inputs as a list, followed by outputs
+    return categorical_inputs + [X_seq_num_np], y_seq_np
+
+# Create a DataFrame with data ready for LSTM
+def prepare_LSTM_df(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[]):
     # Definie columns to temporarely give to prepare_data()
     unchanged_cols=['player', 'frame', 'team', 'jersey_number', 'match_id']
 
@@ -435,7 +428,17 @@ def prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequen
     X_df, y_df = prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, unchanged_cols=unchanged_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
 
     # Sequentialize the data
-    X_seq, y_seq = sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length)
+    X_df = sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length)
+
+    return X_df
+
+# Preapre the LSTM input data
+def prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[]):
+    # Prepare the LSTM DataFrame
+    X_df = prepare_LSTM_df(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions)
+
+    # Extract the sequentialized columns
+    X_seq, y_seq = extract_sequentialized_columns(X_df, categorical_cols)
 
     return X_seq, y_seq
 
