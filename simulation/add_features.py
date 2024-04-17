@@ -24,6 +24,7 @@ from settings import *
     - add_xy_future()
     - add_velocity_xy()
     - add_acceleration_xy()
+    - add_average_velocity()
     - add_orientation()
     - add_ball_in_motion()
     - add_distance_to_ball()
@@ -31,6 +32,7 @@ from settings import *
     - add_offside()
     - add_FM_data()
     - add_tiredness()
+    - add_tiredness_short_term()
 """
 
 # Helper functions
@@ -92,6 +94,8 @@ def add_xy_future(frames_df, n=50):
 
     # Merge the original DataFrame with the shifted DataFrame to get future coordinates
     frames_df[['x_future', 'y_future']] = future_df[['x', 'y']]
+    
+    return frames_df
 
 # Add the features v_x and v_y (current velocity (m/s) in the x and y axis respectivly). delta_frames determines the time stamp
 def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
@@ -131,6 +135,8 @@ def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
     # Round the results to two decimals
     frames_df['v_x'] = frames_df['v_x'].round(2)
     frames_df['v_y'] = frames_df['v_y'].round(2)
+
+    return frames_df
 
 # Add the features a_x and a_y (current velocity (m/s²) in the x and y axis respectivly). delta_frames determines the time stamp
 def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
@@ -172,6 +178,24 @@ def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
     frames_df['a_x'] = frames_df['a_x'].round(2)
     frames_df['a_y'] = frames_df['a_y'].round(2)
 
+    return frames_df
+
+# Add the vectors 'v_x_avg' and 'v_y_avg' with the average 'v_x' and 'v_y' of all players
+def add_average_velocity(frames_df):
+    # Drop 'v_x_avg' and 'v_y_avg' if they already exist
+    frames_df = frames_df.drop(columns=['v_x_avg', 'v_y_avg'], errors='ignore')
+
+    # Calculate the average velocity in each frame
+    average_velocity = frames_df[frames_df['team'] != 'ball'].groupby('frame')[['v_x', 'v_y']].mean()
+
+    # Round the average velocity to two decimal places
+    average_velocity = average_velocity.round(2)
+
+    # Add the results to frames_df
+    frames_df = frames_df.merge(average_velocity, on='frame', suffixes=('', '_avg'))
+
+    return frames_df
+
 # Add the feature 'oreientation', using the veolicties to return the objects orientation (from 0 to 360 degrees)
 # Oreintation 0 indicates that the object faces the goal to the right
 # Orientation 180 indicates that the object faces the goal to the left
@@ -181,6 +205,8 @@ def add_orientation(frames_df):
     
     # Convert orientation values to be in the range [0, 360)
     frames_df['orientation'] = (frames_df['orientation'] + 360) % 360
+
+    return frames_df
 
 # Add a vector indicating if the ball is in motion
 def add_ball_in_motion(frames_df):
@@ -202,6 +228,8 @@ def add_ball_in_motion(frames_df):
     # Drop unnecessary columns
     frames_df.drop(columns=["x_ball", "x_ball_prev", "y_ball", "y_ball_prev"], inplace=True)
 
+    return frames_df
+
 # Add a vector with the distance to the ball
 def add_distance_to_ball(frames_df):
     # Add 'x_ball' and 'y_ball' columns
@@ -213,6 +241,8 @@ def add_distance_to_ball(frames_df):
 
     # Drop unnecessary columns
     frames_df.drop(columns=["x_ball", "y_ball"], inplace=True)
+
+    return frames_df
 
 # Add a vector with the angle to the ball
 def add_angle_to_ball(frames_df):
@@ -228,6 +258,8 @@ def add_angle_to_ball(frames_df):
 
     # Drop unnecessary columns
     frames_df.drop(columns=["x_ball", "y_ball"], inplace=True)
+
+    return frames_df
 
 # Add a vector with the 'x' position of the second to last defender, for both team directions
 def add_second_to_last_defender(frames_df):
@@ -288,6 +320,8 @@ def add_offside(frames_df):
     # Drop the 'offside_line' column
     frames_df.drop(columns=["offside_line"], inplace=True)
 
+    return frames_df
+
 # Load Football Manager data
 def load_FM_data():
     # Load the data from the Google Sheets URL
@@ -310,7 +344,34 @@ def add_FM_data(frames_df, fm_players_df, fm_features = ['Nationality', 'Height'
 
         frames_df[feature.lower()] = merged_df[feature]
 
+    return frames_df
+
 # Add a vector indicating how tired the player is
 def add_tiredness(frames_df):
     # Calculate tiredness using the formula above
     frames_df["tiredness"] = ((frames_df["distance_ran"] / 1000) + (frames_df["minute"] / 20) + frames_df["period"] - 1) * (1 - (frames_df["sta"] / 20))
+
+    return frames_df
+
+# Add a vector with the short-term tiredness of each player
+def add_tiredness_short_term(frames_df, window=FPS*20):
+    # Calculate the average absolute velocity
+    frames_df['v_abs'] = np.sqrt(frames_df['v_x'] ** 2 + frames_df['v_y'] ** 2)
+    frames_df['v_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number'])['v_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 2)
+
+    # Calculate the average absolute acceleration
+    frames_df['a_abs'] = np.sqrt(frames_df['a_x'] ** 2 + frames_df['a_y'] ** 2)
+    frames_df['a_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number'])['a_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 3)
+
+    # Calculate the tiredness and fill NaN values with 0
+    frames_df['tiredness_short'] = round(frames_df['v_abs_avg'] - frames_df['a_abs_avg']**2, 2)
+    frames_df['tiredness_short'] = frames_df['tiredness_short'].fillna(0)
+
+    # Set 'tiredness_short' to None for the ball
+    frames_df.loc[frames_df['team'] == 'ball', 'tiredness_short'] = None
+    
+    # Drop the temporay columns
+    frames_df.drop(columns=['v_abs', 'v_abs_avg', 'a_abs', 'a_abs_avg'], inplace=True)
+
+    return frames_df
+    
