@@ -375,6 +375,7 @@ def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_le
     if categorical_cols:
         X_df['categorical_data'] = X_df[categorical_cols].apply(lambda x: x.tolist(), axis=1)
 
+    # TODO: Determine if the sorting helps. Furthermore, try to optimize this function
     # Sort the DataFrame by 'team', 'match_id', and 'player'
     X_df_sorted = X_df.sort_values(by=['team', 'match_id', 'player'])
 
@@ -406,12 +407,9 @@ def extract_sequentialized_columns(X_df, categorical_cols):
     # Prepare categorical data
     categorical_inputs = []
     for col in categorical_cols:
-        if col in X_filtered_df.columns:
-            # Reshape data to (None, 1)
-            cat_data = np.array(X_filtered_df[col].tolist()).reshape(-1, 1).astype('float32')
-            categorical_inputs.append(cat_data)
-        else:
-            raise ValueError(f"Expected categorical data for {col} not found.")
+        # Reshape data to (None, 1)
+        cat_data = np.array(X_filtered_df[col].tolist()).reshape(-1, 1).astype('float32')
+        categorical_inputs.append(cat_data)
 
     # Prepare output data
     y_seq_np = np.array(X_filtered_df['future_xy'].tolist()).astype('float32')
