@@ -11,7 +11,7 @@ import os
 from settings import *
 
 # Define variables for plotting
-draw_velocities = True
+draw_velocities = False
 draw_orientations = False
 draw_angle_to_ball = False
 draw_shirt_numbers = False
@@ -208,79 +208,9 @@ def draw_prediction_legend(ax, model_name, home_team, away_team):
     ax.scatter(pitch_length/2 - 2, y_legend, s=ball_size*0.5, color=color_ball, edgecolors=color_edge, linewidth=1.8, zorder=2)
     ax.text(pitch_length/2 - 0, y_legend, 'Ball', ha='left', va='center', fontsize=14)
 
-    ax.scatter(pitch_length/2 - 2, y_predicted, s=predicted_ball_size*0.5, color=color_ball_light, edgecolors=color_edge, linewidth=1.8, zorder=2)
-    ax.text(pitch_length/2 - 0, y_predicted, 'Predicted', ha='left', va='center', fontsize=14)
-
-# Visualize the prediction made in a given frame
-def visualize_frame_prediction(frames_df, frame, model_name):
-    # Find DataFrames for each team and the ball
-    home_team_frame_df = frames_df[(frames_df['team'] == 'home_team') & (frames_df['frame'] == frame)].copy()
-    away_team_frame_df = frames_df[(frames_df['team'] == 'away_team') & (frames_df['frame'] == frame)].copy()
-    ball_frame_df = frames_df[(frames_df['team'] == 'ball') & (frames_df['frame'] == frame)].copy()
-
-    # Find the name of the home and away team
-    home_team = home_team_frame_df.iloc[0]['team_name']
-    away_team = away_team_frame_df.iloc[0]['team_name']
-
-    # Plot pitch
-    pitch = Pitch(pitch_type='uefa', goal_type='box', line_color=color_edge)
-    fig, ax = pitch.grid(grid_height=0.95, title_height=0.025, axis=False, endnote_height=0.025, title_space=0, endnote_space=0)
-
-    # Adjust the x- and y-axis limits
-    ax['pitch'].set_ylim(0, pitch_length)
-    ax['pitch'].set_ylim(-6, pitch_width + 3.4)
-
-    # Add title
-    fig.suptitle(f"{home_team} - {away_team}", fontsize=18)
-
-    # Plot the time stamp
-    time_stamp = f"{home_team_frame_df.iloc[0]['minute']}:{home_team_frame_df.iloc[0]['second']}:{home_team_frame_df.iloc[0]['frame'] % FPS}"
-    ax['pitch'].text(0, 70, time_stamp, ha='left', fontsize=18)
-
-    # Scatter the true positions
-    ax['pitch'].scatter(home_team_frame_df['x_future'], home_team_frame_df['y_future'], s=player_size, color=color_home_team, edgecolors=color_edge, linewidth=1.8, zorder=3)
-    ax['pitch'].scatter(away_team_frame_df['x_future'], away_team_frame_df['y_future'], s=player_size, color=color_away_team, edgecolors=color_edge, linewidth=1.8, zorder=3)
-    ax['pitch'].scatter(ball_frame_df['x_future'], ball_frame_df['y_future'], s=ball_size, color=color_ball, edgecolors=color_edge, linewidth=1.8, zorder=6)
-
-    # Draw jersey numbers inside the true predictions
-    if draw_shirt_numbers:
-        for _, player in home_team_frame_df.iterrows():
-            ax['pitch'].text(player['x_future'], player['y_future'], str(player['jersey_number']), fontsize=10, fontweight='semibold', ha='center', va='center', zorder=4)
-        for _, player in away_team_frame_df.iterrows():
-            ax['pitch'].text(player['x_future'], player['y_future'], str(player['jersey_number']), fontsize=10, fontweight='semibold', ha='center', va='center', zorder=4)
-        
-    # Scatter the predicted positions with an opacity
-    ax['pitch'].scatter(home_team_frame_df['x_future_pred'], home_team_frame_df['y_future_pred'], s=predicted_player_size, color=color_home_team_light, edgecolors=color_edge, linewidth=1.8, zorder=2)
-    ax['pitch'].scatter(away_team_frame_df['x_future_pred'], away_team_frame_df['y_future_pred'], s=predicted_player_size, color=color_away_team_light, edgecolors=color_edge, linewidth=1.8, zorder=2)
-    ax['pitch'].scatter(ball_frame_df['x_future_pred'], ball_frame_df['y_future_pred'], s=predicted_ball_size, color=color_ball_light, edgecolors=color_edge, linewidth=1.8, zorder=5)
-
-    # Plot lines between true positions and predicted positions with the 'pred_error' over each line
-    if draw_prediction_lines:
-        for index, row in home_team_frame_df.iterrows():
-            ax['pitch'].plot([row['x_future'], row['x_future_pred']], [row['y_future'], row['y_future_pred']], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
-
-        for index, row in away_team_frame_df.iterrows():
-            ax['pitch'].plot([row['x_future'], row['x_future_pred']], [row['y_future'], row['y_future_pred']], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
-
-        for index, row in ball_frame_df.iterrows():
-            ax['pitch'].plot([row['x_future'], row['x_future_pred']], [row['y_future'], row['y_future_pred']], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
-
-    # Draw the average prediction error in the bottom left corner
-    average_pred_error = frames_df[frames_df['frame'] == frame]['pred_error'].mean()
-    if average_pred_error is not None:
-        average_pred_error_txt = f"Avg. error: {round(average_pred_error, 2)} m"
-    ax['pitch'].text(pitch_length - 15, -3.5, average_pred_error_txt, ha='left', va='center', fontsize=14)
-
-    # Add legend
-    draw_prediction_legend(ax['pitch'], model_name, home_team, away_team)
-
-    # Save figure
-    img_path = f"images/predictions/{home_team}_vs_{away_team}_frame_{frame}_{model_name}.png"
-    fig.savefig(img_path)
-
 # Example usage:
-# visualize_frame_prediction(frames_df, 100, "naive_static")
-
+# visualize_frame_prediction(frames_df, 0, 100, "naive_static")
+# Visualize an animation of predictions made by a model
 def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name):
     # Find DataFrames for each team and the ball
     home_team_df = frames_df[frames_df['team'] == 'home_team'].copy()
@@ -299,7 +229,7 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     fig.suptitle(f"{home_team} - {away_team}", fontsize=18)
 
     # Add model name
-    ax['pitch'].text(pitch_length, 70, f"{model_name}", ha='right', va='center', fontsize=16)
+    ax['pitch'].text(pitch_length, 71, f"{model_name}".replace('_', ' ').title(), ha='right', va='center', fontsize=16)
 
     # Draw the legend
     draw_prediction_legend(ax['pitch'], model_name, home_team, away_team)
@@ -312,21 +242,18 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     # Decide how each scatter should look for pedicted coordinates
     home_team_pred_scatter = ax['pitch'].scatter([], [], s=predicted_player_size, color=color_home_team_light, edgecolors=color_edge, linewidth=1.8, zorder=2)
     away_team_pred_scatter = ax['pitch'].scatter([], [], s=predicted_player_size, color=color_away_team_light, edgecolors=color_edge, linewidth=1.8, zorder=2)
-    ball_pred_scatter = ax['pitch'].scatter([], [], s=predicted_ball_size, color=color_ball_light, edgecolors=color_edge, linewidth=1.8, zorder=5)
 
     # Decide how each frame-dependent text should look
-    frame_text = ax['pitch'].text(0, 70, '', ha='left', va='center', fontsize=16)
+    frame_text = ax['pitch'].text(0, 71, '', ha='left', va='center', fontsize=16)
     error_text = ax['pitch'].text(pitch_length, -2, '', ha='right', va='center', fontsize=14)
 
     # Define LineCollection objects for each team and the ball
     home_team_error_lines = LineCollection([], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
     away_team_error_lines = LineCollection([], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
-    ball_error_lines = LineCollection([], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
 
     # Add LineCollection objects to the plot
     ax['pitch'].add_collection(home_team_error_lines)
     ax['pitch'].add_collection(away_team_error_lines)
-    ax['pitch'].add_collection(ball_error_lines)
 
     # Function for updating each frame
     def update(frame):
@@ -338,12 +265,10 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
 
         home_team_pred_scatter.set_offsets(np.c_[home_team_frame_df['x_future_pred'], home_team_frame_df['y_future_pred']])
         away_team_pred_scatter.set_offsets(np.c_[away_team_frame_df['x_future_pred'], away_team_frame_df['y_future_pred']])
-        ball_pred_scatter.set_offsets(np.c_[ball_frame_df['x_future_pred'], ball_frame_df['y_future_pred']])
 
         if draw_prediction_lines:
             home_team_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in home_team_frame_df.iterrows()])
             away_team_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in away_team_frame_df.iterrows()])
-            ball_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in ball_frame_df.iterrows()])
 
         frame_text.set_text(f"{home_team_frame_df.iloc[0]['minute']}:{home_team_frame_df.iloc[0]['second']}:{home_team_frame_df.iloc[0]['frame'] % FPS}")
         pred_error = frames_df[frames_df['frame'] == frame]['pred_error'].mean()
