@@ -27,10 +27,12 @@ y_cols = ['x_future', 'y_future']
 denominators = {
     'x': pitch_length,
     'y': pitch_width,
+    'v_x': 13,
     'v_y': 13,
-    'v_y': 13,
+    'a_x': 10,
     'a_y': 10,
-    'a_y': 10,
+    'avg_v_x': 13,
+    'avg_v_y': 13,
     'acc': 20,
     'pac': 20,
     'sta': 20,
@@ -40,6 +42,7 @@ denominators = {
     'angle_to_ball': 360,
     'orientation': 360,
     'tiredness': 10,
+    'tiredness_short': 1,
     'minute': 45,
     'period': 2,
 }
@@ -203,7 +206,7 @@ def prepare_df(frames_df, numerical_cols, categorical_cols, positions=[], downsa
     return frames_df
 
 # Prepare data before training
-def prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols=[], positions=[], include_ball=True, ball_has_to_be_in_motion=False):
+def prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols=[], positions=[], downsampling_factor=downsampling_factor, include_ball=True, ball_has_to_be_in_motion=False):
     # Initialize lists to store features and labels
     X_data = []
     y_data = []
@@ -287,9 +290,9 @@ def prepare_model_inputs(X_numerical, X_categorical):
     return X_input
 
 # Prepare input data for embedding layers
-def prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions=[]):
+def prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions=[], downsampling_factor=1):
     # Prepare data
-    X, y = prepare_data(frames_dfs, numerical_cols, categorical_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
+    X, y = prepare_data(frames_dfs, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor, include_ball=False, ball_has_to_be_in_motion=True)
 
     # No need to do anything more if 'categorical_cols' is empty
     if categorical_cols == []:
@@ -418,12 +421,12 @@ def extract_sequentialized_columns(X_df, categorical_cols):
     return categorical_inputs + [X_seq_num_np], y_seq_np
 
 # Create a DataFrame with data ready for LSTM
-def prepare_LSTM_df(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[]):
+def prepare_LSTM_df(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[], downsampling_factor=1):
     # Definie columns to temporarely give to prepare_data()
     unchanged_cols=['player', 'frame', 'team', 'jersey_number', 'match_id']
 
     # Prepare data
-    X_df, y_df = prepare_data(frames_dfs, numerical_cols=numerical_cols, categorical_cols=categorical_cols, unchanged_cols=unchanged_cols, positions=positions, include_ball=False, ball_has_to_be_in_motion=True)
+    X_df, y_df = prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols, positions, downsampling_factor, include_ball=False, ball_has_to_be_in_motion=True)
 
     # Sequentialize the data
     X_df = sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length)
@@ -459,6 +462,8 @@ def smooth_predictions_xy(frames_df, alpha=0.93):
 
     frames_df['x_future_pred'] = grouped['x_future_pred'].transform(apply_ema)
     frames_df['y_future_pred'] = grouped['y_future_pred'].transform(apply_ema)
+
+    return frames_df
 
 # Load a tf model
 def load_tf_model(model_path, euclidean_distance_loss=False):
@@ -536,7 +541,7 @@ def run_model(frames_dfs, model_name):
 
     # Prepare the input data for non-LSTM model
     else:
-        X_test_input, y_test = prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions)
+        X_test_input, y_test = prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions, downsampling_factor)
 
     # Make predictions using the loaded tf model
     predictions = model.predict(X_test_input)
@@ -554,7 +559,7 @@ def run_model(frames_dfs, model_name):
     frames_concat_df['y_future_pred'] = frames_concat_df['y_future_pred'].clip(lower=0, upper=pitch_width)
 
     # Smooth the predicted coordinates
-    # smooth_predictions_xy(frames_df, alpha=0.98)
+    # frames_concat_df = smooth_predictions_xy(frames_concat_df, alpha=0.98)
 
     # "Unsort" the DataFrame to get it back to its original order
     frames_concat_df = frames_concat_df.reindex(original_index)
