@@ -30,6 +30,7 @@ from settings import *
     - add_distance_to_ball()
     - add_angle_to_ball()
     - add_offside()
+    - add_distance_to_onside()
     - add_FM_data()
     - add_tiredness()
     - add_tiredness_short_term()
@@ -319,6 +320,20 @@ def add_offside(frames_df):
 
     # Drop the 'offside_line' column
     frames_df.drop(columns=["offside_line"], inplace=True)
+
+    return frames_df
+
+# Add a vector with the distance to the offside line
+def add_distance_to_onside(frames_df):
+    # Check if 'offside' column exists and add it if it doesn't
+    if 'offside' not in frames_df.columns:
+        frames_df = add_offside(frames_df)
+
+    # Calculate the distance to the offside line
+    frames_df['distance_to_onside'] = frames_df['x'] - frames_df['offside']
+
+    # Fill NaN values in the 'distance_to_onside' column with 0
+    frames_df['distance_to_onside'].fillna(0, inplace=True)
 
     return frames_df
 
