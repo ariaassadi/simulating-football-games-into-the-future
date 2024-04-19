@@ -8,10 +8,7 @@ FPS = 25
 downsampling_factor = 5     # Keep every n:th frame
 pitch_length = 105
 pitch_width = 68
-
-# Variables describing the data
-n_roles = 13
-n_team_directions = 3
+normalize = False
 
 # Original colors
 ajax_red = '#e40615'
