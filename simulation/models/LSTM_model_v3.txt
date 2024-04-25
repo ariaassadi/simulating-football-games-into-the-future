@@ -1,0 +1,12 @@
+2024-04-18
+epochs=1
+matches=10
+sequence_length=10
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y']
+categorical_cols=['position']
+positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
+l2=1e-06
+
+Training results:
+loss: [1.78]
+val_loss: [1.98]
