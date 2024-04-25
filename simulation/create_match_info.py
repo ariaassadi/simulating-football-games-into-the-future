@@ -129,7 +129,7 @@ for selected_season in seasons:
 
         # Create a DataFrame from the lists
         match_data_df = pd.DataFrame({
-            'match_ID': match_ids,
+            'match_id': match_ids,
             'team_home_name': team_home_names,
             'team_away_name': team_away_names,
             'utc_time': utc_time,
@@ -153,7 +153,7 @@ for selected_season in seasons:
 
         # Convert all columns to the correct type
         match_data_df[['gameweek']] =  match_data_df[['gameweek']].astype('int8')
-        match_data_df[['match_ID', 'team_home_name', 'team_away_name', 'utc_time']] =  match_data_df[['match_ID', 'team_home_name', 'team_away_name', 'utc_time']].astype(str)
+        match_data_df[['match_id', 'team_home_name', 'team_away_name', 'utc_time']] =  match_data_df[['match_id', 'team_home_name', 'team_away_name', 'utc_time']].astype(str)
 
         # Sort the DataFrame by 'UTC_time'
         match_data_df = match_data_df.sort_values(by=['gameweek', 'utc_time'], ascending=[True, True])
