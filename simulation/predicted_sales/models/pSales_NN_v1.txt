@@ -1,0 +1,10 @@
+2024-04-23
+epochs=1
+numerical_cols=['Price', 'Total Sales (kr)']
+categorical_cols=[]
+
+Training results:
+loss: [149.01]
+val_loss: [157.22]
+
+Testing results: 43.28
