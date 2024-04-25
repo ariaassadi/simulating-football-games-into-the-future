@@ -8,7 +8,7 @@ FPS = 25
 downsampling_factor = 5     # Keep every n:th frame
 pitch_length = 105
 pitch_width = 68
-normalize = False
+normalize = True
 
 # Original colors
 ajax_red = '#e40615'
