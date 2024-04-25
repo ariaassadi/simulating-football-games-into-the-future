@@ -37,9 +37,9 @@ color_ball_light = ajax_black_light
 
 # Helper functions
 def get_frame_data(frames_df, frame):
-    home_team_frame_df = frames_df[(frames_df['team'] == 'home_team') & (frames_df['frame'] == frame)].copy()
-    away_team_frame_df = frames_df[(frames_df['team'] == 'away_team') & (frames_df['frame'] == frame)].copy()
-    ball_frame_df = frames_df[(frames_df['team'] == 'ball') & (frames_df['frame'] == frame)].copy()
+    home_team_frame_df = frames_df[(frames_df['team'] == 'home_team') & (frames_df['frame'] == frame)]
+    away_team_frame_df = frames_df[(frames_df['team'] == 'away_team') & (frames_df['frame'] == frame)]
+    ball_frame_df = frames_df[(frames_df['team'] == 'ball') & (frames_df['frame'] == frame)]
     return home_team_frame_df, away_team_frame_df, ball_frame_df
 
 # Draw a legend underneth the pitch
@@ -60,9 +60,9 @@ def draw_legend(ax, home_team, away_team):
 # Create a gif file with a game snippet
 def visualize_game_animation(frames_df, start_frame, end_frame):
     # Find DataFrames for each team and the ball
-    home_team_df = frames_df[frames_df['team'] == 'home_team'].copy()
-    away_team_df = frames_df[frames_df['team'] == 'away_team'].copy()
-    ball_df = frames_df[frames_df['team'] == 'ball'].copy()
+    home_team_df = frames_df[frames_df['team'] == 'home_team']
+    away_team_df = frames_df[frames_df['team'] == 'away_team']
+    ball_df = frames_df[frames_df['team'] == 'ball']
 
     # Find the name of the home and away team
     home_team = home_team_df.iloc[0]['team_name']
@@ -213,13 +213,13 @@ def draw_prediction_legend(ax, model_name, home_team, away_team):
 # Visualize an animation of predictions made by a model
 def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name):
     # Find DataFrames for each team and the ball
-    home_team_df = frames_df[frames_df['team'] == 'home_team'].copy()
-    away_team_df = frames_df[frames_df['team'] == 'away_team'].copy()
-    ball_df = frames_df[frames_df['team'] == 'ball'].copy()
+    home_team_df = frames_df[frames_df['team'] == 'home_team']
+    away_team_df = frames_df[frames_df['team'] == 'away_team']
+    ball_df = frames_df[frames_df['team'] == 'ball']
 
     # Find the name of the home and away team
-    home_team = home_team_df.iloc[0]['team_name']
-    away_team = away_team_df.iloc[0]['team_name']
+    home_team = home_team_df.iloc[0]['team_name'] if not home_team_df.empty else 'Home'
+    away_team = away_team_df.iloc[0]['team_name'] if not away_team_df.empty else 'Away'
 
     # Plot pitch
     pitch = Pitch(pitch_type='uefa', goal_type='box', line_color=color_edge)
@@ -258,22 +258,31 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     # Function for updating each frame
     def update(frame):
         home_team_frame_df, away_team_frame_df, ball_frame_df = get_frame_data(frames_df, frame)
+        
+        # Draw scatters and line for home team
+        if not home_team_frame_df.empty:
+            home_team_true_scatter.set_offsets(np.c_[home_team_frame_df['x_future'], home_team_frame_df['y_future']])
+            home_team_pred_scatter.set_offsets(np.c_[home_team_frame_df['x_future_pred'], home_team_frame_df['y_future_pred']])
+            if draw_prediction_lines:
+                home_team_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in home_team_frame_df.iterrows()])
 
-        home_team_true_scatter.set_offsets(np.c_[home_team_frame_df['x_future'], home_team_frame_df['y_future']])
-        away_team_true_scatter.set_offsets(np.c_[away_team_frame_df['x_future'], away_team_frame_df['y_future']])
-        ball_true_scatter.set_offsets(np.c_[ball_frame_df['x_future'], ball_frame_df['y_future']])
+        # Draw scatters and line for home team
+        if not away_team_frame_df.empty:
+            away_team_true_scatter.set_offsets(np.c_[away_team_frame_df['x_future'], away_team_frame_df['y_future']])
+            away_team_pred_scatter.set_offsets(np.c_[away_team_frame_df['x_future_pred'], away_team_frame_df['y_future_pred']])
+            if draw_prediction_lines:
+                away_team_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in away_team_frame_df.iterrows()])
 
-        home_team_pred_scatter.set_offsets(np.c_[home_team_frame_df['x_future_pred'], home_team_frame_df['y_future_pred']])
-        away_team_pred_scatter.set_offsets(np.c_[away_team_frame_df['x_future_pred'], away_team_frame_df['y_future_pred']])
-
-        if draw_prediction_lines:
-            home_team_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in home_team_frame_df.iterrows()])
-            away_team_error_lines.set_segments([[[row['x_future'], row['y_future']], [row['x_future_pred'], row['y_future_pred']]] for _, row in away_team_frame_df.iterrows()])
-
-        frame_text.set_text(f"{home_team_frame_df.iloc[0]['minute']}:{home_team_frame_df.iloc[0]['second']}:{home_team_frame_df.iloc[0]['frame'] % FPS}")
-        pred_error = frames_df[frames_df['frame'] == frame]['pred_error'].mean()
+        # Draw scatter for ball
+        if not ball_frame_df.empty:
+            ball_true_scatter.set_offsets(np.c_[ball_frame_df['x_future'], ball_frame_df['y_future']])
+        
+        # Draw general information for this frame
+        frame_df = frames_df[frames_df['frame'] == frame]
+        frame_text.set_text(f"{frame_df.iloc[0]['minute']}:{frame_df.iloc[0]['second']}:{frame_df.iloc[0]['frame'] % FPS}")
+        pred_error = frame_df[frame_df['team'] != 'ball']['pred_error'].mean()  # Don't include ball
         if pred_error is not None:
-            error_text.set_text(f"Error: {round(pred_error, 2)} m")
+            error_text.set_text(f"Error: {pred_error:.2f} m")
 
     animation = FuncAnimation(fig, update, frames=range(start_frame, end_frame + 1), interval=200)
 
