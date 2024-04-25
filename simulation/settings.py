@@ -10,6 +10,12 @@ pitch_length = 105
 pitch_width = 68
 normalize = True
 
+# Train, test, val
+train_size = 0.7
+test_size = 0.1
+val_size = 0.2
+random_state = 42
+
 # Original colors
 ajax_red = '#e40615'
 ajax_white = '#ffffff'

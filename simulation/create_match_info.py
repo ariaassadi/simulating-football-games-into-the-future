@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from datetime import datetime
 import pandas as pd
+import numpy as np
 import random
 import json
 import glob
@@ -78,8 +79,8 @@ allsvenskan_schedule_2023 = {
 
 # Construct a dictionary to map each year to the correct schedule
 allsvenskan_schedule = {
-    2022: allsvenskan_schedule_2022,
-    2023: allsvenskan_schedule_2023
+    '2022': allsvenskan_schedule_2022,
+    '2023': allsvenskan_schedule_2023
 }
 
 # Function to determine gameweek
@@ -135,6 +136,21 @@ for selected_season in seasons:
             'gameweek': gameweeks
         })
         
+        # Create a 'train_test_val' column by first examining the count in each set
+        train_count = int(len(match_data_df) * train_size)
+        test_count = int(len(match_data_df) * test_size)
+        val_count = len(match_data_df) - train_count - test_count
+
+        # Create a list of labels corresponding to exact proportions
+        labels = ['train'] * train_count + ['test'] * test_count + ['val'] * val_count
+
+        # Shuffle labels to randomize distribution, maintaining exact counts
+        rng = np.random.default_rng(seed=random_state)
+        rng.shuffle(labels)
+
+        # Assign randomized labels back to DataFrame
+        match_data_df['train_test_val'] = labels
+
         # Convert all columns to the correct type
         match_data_df[['gameweek']] =  match_data_df[['gameweek']].astype('int8')
         match_data_df[['match_ID', 'team_home_name', 'team_away_name', 'utc_time']] =  match_data_df[['match_ID', 'team_home_name', 'team_away_name', 'utc_time']].astype(str)
@@ -146,5 +162,5 @@ for selected_season in seasons:
         output_file_path = os.path.join(OUTPUT_FOLDER, f"match_info_{selected_season}_{selected_competition}.parquet")
 
         # Convert the DataFrame to an parquet file
-        match_data_df.reset_index(drop=True)
+        match_data_df.reset_index(drop=True, inplace=True)
         match_data_df.to_parquet(output_file_path)
