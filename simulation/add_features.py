@@ -343,10 +343,35 @@ def load_FM_data():
     fm_players_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0KwlS1KWQWSNHwpDAyOK5O-0tGC0H6nNapPHNEXGTdmPTBHgDnYm9HyMrdZ79dbLKe1KYDnzOvrno/pub?gid=303039767&single=true&output=csv"
     fm_players_df = google_sheet_to_df(fm_players_url)
 
+    # Manually add the 'ball' row
+    ball_data = {
+        'Player': ['ball'],
+        'Team': ['ball'],
+        'Age': [-1],
+        'Position': ['ball'],
+        'Nationality': ['ball'],
+        'Height': [-1.00],
+        'Weight': [-1],
+        'Acc': [-1],
+        'Pac': [-1],
+        'Sta': [-1]
+    }
+    ball_row = pd.DataFrame(ball_data)
+    
+    # Append the 'ball' row to the DataFrame
+    fm_players_df = pd.concat([fm_players_df, ball_row], ignore_index=True)
+
     return fm_players_df
 
 # Add data from the Football Manager
-def add_FM_data(frames_df, fm_players_df, fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Position']):
+def add_FM_data(frames_df, fm_players_df):
+    # List of feature to add together with their corresponding data types
+    fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Position']
+    fm_types = ['category', 'float64', 'Int8', 'Int8', 'Int8', 'Int8', 'category']
+    
+    # Create a dictionary to map features to types
+    type_dict = dict(zip(fm_features, fm_types))
+
     # Merge Football Manager data with frames_df
     merged_df = frames_df.merge(fm_players_df[['Player', 'Team'] + fm_features],
                                 left_on=['player', 'team_name'],
@@ -356,8 +381,8 @@ def add_FM_data(frames_df, fm_players_df, fm_features = ['Nationality', 'Height'
     # Add each feature as a vector in frames_df
     for feature in fm_features:
         # Keep column names consistent with lowercase in frames_df
-
-        frames_df[feature.lower()] = merged_df[feature]
+        # Apply type conversion directly during the assignment
+        frames_df[feature.lower()] = merged_df[feature].astype(type_dict[feature])
 
     return frames_df
 
