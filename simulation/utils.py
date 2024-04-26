@@ -77,8 +77,8 @@ def google_sheet_to_df(url):
     data_df = pd.read_csv(data)
     return data_df
 
-# Load the processed/frames
-def load_processed_frames(n_matches=None, match_id=None):
+# Load a list with frames_df from the 'processed/' folder
+def load_processed_frames(n_matches=None, match_id=None, match_ids=None):
     # Create DataFrame for storing all frames
     frames_dfs = []
     # Load frames_df
@@ -93,7 +93,10 @@ def load_processed_frames(n_matches=None, match_id=None):
             # Extract the IDs without the ".parquet" extension
             if match_id:
                 # Only load the match with the given match_id
-                match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][match_id : match_id + 1]
+                match_ids = [match_id]
+            elif match_ids:
+                # Load all matches with the specified match_ids
+                match_ids = match_ids
             elif n_matches:
                 # Only load the specified number of matches
                 match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][0:n_matches]
@@ -105,10 +108,11 @@ def load_processed_frames(n_matches=None, match_id=None):
             for match_id in match_ids:
                 # Convert parquet file to a DataFrame
                 file_path_match = f"{DATA_FOLDER_PROCESSED}/{match_id}.parquet"
-                frames_df = pd.read_parquet(file_path_match)
-                
-                # Append the DataFrame to frames_dfs
-                frames_dfs.append(frames_df)
+                if os.path.exists(file_path_match):
+                    frames_df = pd.read_parquet(file_path_match)
+
+                    # Append the DataFrame to frames_dfs
+                    frames_dfs.append(frames_df)
 
     return frames_dfs
 
@@ -120,18 +124,27 @@ def load_processed_frames(n_matches=None, match_id=None):
 """
 
 # Split the games into train, test, and validtion. This way, each game will be treated seperatly
-def split_match_ids(match_ids, train_size=0.7, test_size=0.1, val_size=0.2, random_state=42):
-    # Calculate the remaining size after the test and validation sizes are removed
-    remaining_size = 1.0 - train_size
+def split_match_ids(n_matches):
+    # Combined DataFrame for all matches
+    all_matches_df = pd.DataFrame()
 
-    # Check if the sum of sizes is not equal to 1
-    if remaining_size < 0 or abs(train_size + test_size + val_size - 1.0) > 1e-6:
-        raise ValueError("The sum of train_size, test_size, and val_size must be equal to 1.")
-    
-    # Split the match IDs into train, test, and validation sets
-    train_ids, remaining_ids = train_test_split(match_ids, train_size=train_size, random_state=random_state)
-    val_ids, test_ids = train_test_split(remaining_ids, test_size=test_size / remaining_size, random_state=random_state)
-    
+    # Load match info and concatenate into a single DataFrame
+    for selected_season in seasons:
+        for selected_competition in competitions:
+            match_info_path = f"{DATA_LOCAL_FOLDER}/data/match_info/match_info_{selected_season}_{selected_competition}.parquet"
+            match_info_df = pd.read_parquet(match_info_path)
+            all_matches_df = pd.concat([all_matches_df, match_info_df], ignore_index=True)
+
+    # Fidn the count of each set
+    train_count = int(n_matches * train_size)
+    test_count = int(n_matches * test_size)
+    val_count = n_matches - train_count - test_count
+
+    # Extract the 'match_id' for each set
+    train_ids = all_matches_df[all_matches_df['train_test_val'] == 'train']['match_id'].head(train_count).tolist()
+    test_ids  = all_matches_df[all_matches_df['train_test_val'] == 'test']['match_id'].head(test_count).tolist()
+    val_ids   = all_matches_df[all_matches_df['train_test_val'] == 'val']['match_id'].head(val_count).tolist()
+
     return train_ids, test_ids, val_ids
 
 # Loss function for model training
@@ -144,26 +157,21 @@ def add_pred_error(frames_df):
     frames_df['pred_error'] = round(((frames_df['x_future_pred'] - frames_df['x_future'])**2 + (frames_df['y_future_pred'] - frames_df['y_future'])**2)**0.5, 2)
     
 # Add a column for distance wrongly predicted (in metres) for each object. Also return average_pred_error
-def total_error_loss(frames_df, include_ball=False, ball_has_to_be_in_motion=True):
-    # Add 'pred_error' column
+def total_error_loss(frames_df):
+    # Add the 'pred_error' column
     add_pred_error(frames_df)
     
-    # Create a new column to store modified pred_error values
-    frames_df['pred_error_tmp'] = frames_df['pred_error']
+    # Create a new DataFrame that we can easily manipulate
+    error_df = frames_df[['team', 'pred_error', 'ball_in_motion']].copy()
+
+    # Set pred_error to None for rows where 'team' is 'ball'
+    error_df.loc[error_df['team'] == 'ball', 'pred_error'] = None
     
-    # If specified, set pred_error to None for frames where the ball is not in motion
-    if ball_has_to_be_in_motion:
-        frames_df.loc[frames_df["ball_in_motion"] != True, 'pred_error_tmp'] = None
+    # Set pred_error to None for frames where the ball is not in motion
+    error_df.loc[error_df["ball_in_motion"] != True, 'pred_error'] = None
 
-    # If specified, set pred_error to None for rows where 'team' is 'ball'
-    if not include_ball:
-        frames_df.loc[frames_df['team'] == 'ball', 'pred_error_tmp'] = None
-
-    # Calculate average pred_error_tmp, excluding rows where pred_error is None
-    average_pred_error = frames_df['pred_error_tmp'].mean()
-
-    # Drop the temporary column
-    frames_df.drop(columns=['pred_error_tmp'], inplace=True)
+    # Calculate average pred_error, excluding rows where pred_error is None
+    average_pred_error = error_df['pred_error'].mean()
 
     return round(average_pred_error, 3)
 
@@ -180,20 +188,16 @@ def total_error_loss(frames_df, include_ball=False, ball_has_to_be_in_motion=Tru
 """
 
 # Prepare the DataFrame before training
-def prepare_df(frames_df, numerical_cols, categorical_cols, positions=[], downsampling_factor=downsampling_factor, include_ball=True, ball_has_to_be_in_motion=False):
+def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampling_factor=downsampling_factor, include_ball=False):
     # Fill NaN values with zeros for numerical columns
     frames_df[numerical_cols] = frames_df[numerical_cols].fillna(0)
 
     # Drop rows with NaN values in the labels (y)
     frames_df.dropna(subset=y_cols, inplace=True)
 
-    # Drop rows where 'team' is ball, if specified
-    if not include_ball:
-        frames_df = frames_df[frames_df['team'] != 'ball']
-
-    # Drop rows where ball is not in motion, if specified
-    if ball_has_to_be_in_motion:
-        frames_df = frames_df[frames_df['ball_in_motion']]
+    # TODO: Play around to see if this helps
+    # Drop rows where ball is not in motion
+    frames_df = frames_df[frames_df['ball_in_motion']]
 
     # # Drop rows where all objects werent detected
     # frames_df = frames_df[frames_df['objects_tracked'] == 23]
@@ -202,29 +206,37 @@ def prepare_df(frames_df, numerical_cols, categorical_cols, positions=[], downsa
     frames_df = frames_df[frames_df['frame'] % downsampling_factor == 0]
 
     # Only keep frames with the specified positions
-    if positions:
-        frames_df = frames_df[frames_df['position'].isin(positions)]
+    frames_df = frames_df[frames_df['position'].isin(positions)]
 
     return frames_df
 
-# Prepare data before training
-def prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols=[], positions=[], downsampling_factor=downsampling_factor, include_ball=True, ball_has_to_be_in_motion=False):
-    # Initialize lists to store features and labels
+# Prepare the data, either by usig a list of match_ids or a preloaded frames_df
+def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols=[], positions=[], downsampling_factor=downsampling_factor):
+    # Initialize lists
     X_data = []
     y_data = []
 
-    # For each game
+    # Make sure that we either have a list of match_ids, or a preloaded frames_df
+    if match_ids == [] and preloaded_frames_df.empty:
+        raise ValueError("Either use a list of match_ids or a preloaded frames_df.")
+
+    # Load all DataFrames with the specified match_ids, or the preloaded DataFrame
+    frames_dfs = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
+
+    # For each match
     for frames_df in frames_dfs:
-        # Prepare the DataFrame
-        frames_df = prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor, include_ball=True, ball_has_to_be_in_motion=False)
+        # If we managed to load a DataFrame
+        if not frames_df.empty:
+            # Preapare the DataFrame
+            frames_df = prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor)
 
-        # Extract features and labels from group
-        X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
-        y = frames_df[y_cols]
+            # Extract the desired columns
+            X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
+            y = frames_df[y_cols]
 
-        # Append the data
-        X_data.append(X)
-        y_data.append(y)
+            # Append the data
+            X_data.append(X)
+            y_data.append(y)
 
     # Concatenate the lists to create the final feature and label DataFrame
     X_data_df = pd.concat(X_data)
@@ -293,9 +305,9 @@ def prepare_model_inputs(X_numerical, X_categorical):
     return X_input
 
 # Prepare input data for embedding layers
-def prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions=[], downsampling_factor=1):
+def prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor=1, preloaded_frames_df=pd.DataFrame()):
     # Prepare data
-    X, y = prepare_data(frames_dfs, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor, include_ball=False, ball_has_to_be_in_motion=True)
+    X, y = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor)
 
     # No need to do anything more if 'categorical_cols' is empty
     if categorical_cols == []:
@@ -366,43 +378,6 @@ def add_can_be_sequentialized(frames_df, sequence_length):
 
     return frames_df
 
-# # Sequentialize the numerical and categorical columns
-# def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length):
-#     # Append the future y values to X_df
-#     X_df['y_values'] = y_df.values.tolist()
-
-#     # Add vector 'can_be_sequentialized'
-#     X_df = add_can_be_sequentialized(X_df, sequence_length=sequence_length)
-
-#     # Check if there is at least one frame that can be sequentialized
-#     if not X_df['can_be_sequentialized'].any():
-#         raise ValueError("No frames can be sequentialized based on the provided criteria.")
-
-#     # Create a vector containing a list of all values in the numerical columns
-#     X_df['numerical_data_list'] = X_df[numerical_cols].values.tolist()
-    
-#     # Create a similar list for the categorical columns, if any
-#     if categorical_cols:
-#         X_df['categorical_data'] = X_df[categorical_cols].apply(lambda x: x.tolist(), axis=1)
-
-#     # Group by each unique player
-#     grouped = X_df.groupby(['team', 'jersey_number', 'match_id'], as_index=False)
-
-#     # Iterate through each group and create sequences
-#     for _, group in grouped:
-#         # Create temporary columns with shifted versions of 'numerical_cols' and 'categorical_cols'
-#         for i in range(sequence_length):
-#             group[f'numerical_data_list_{i}'] = group['numerical_data_list'].shift(i)
-
-#         # Concatenate the temporary columns to create the column 'sequential_numerical_data'
-#         numerical_cols_to_sequentialize = [f'numerical_data_list_{i}' for i in range(sequence_length)][::-1]
-#         group['sequential_numerical_data'] = group[numerical_cols_to_sequentialize].apply(lambda row: row.tolist(), axis=1)
-
-#         # Assign the created sequence back to the main DataFrame
-#         X_df.loc[group.index, 'sequential_numerical_data'] = group['sequential_numerical_data']
-
-#     return X_df
-
 # Sequentialize the numerical and categorical columns
 def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length):
     # Add the y values as a vector
@@ -449,41 +424,31 @@ def extract_sequentialized_columns(X_df, categorical_cols):
     # Return all inputs as a list, followed by outputs
     return categorical_inputs + [X_seq_num_np], y_seq_np
 
-import time
-
-# Create a DataFrame with data ready for LSTM
-def prepare_LSTM_df(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[], downsampling_factor=1):
+# Create a DataFrame with data ready for LSTM, either by usig a list of match_ids or a preloaded frames_df
+def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1):
     # Definie columns to temporarely give to prepare_data()
-    unchanged_cols = ['player', 'frame', 'team', 'jersey_number', 'match_id', 'ball_in_motion', 'team_name', 'minute', 'second', 'period'] + y_cols
+    unchanged_cols = ['player', 'frame', 'team', 'jersey_number', 'match_id', 'ball_in_motion', 'team_name', 'minute', 'second'] + y_cols
 
     # Prepare data
-    start_time = time.time()
-    print("Started prepare_data")
-    X_df, y_df = prepare_data(frames_dfs, numerical_cols, categorical_cols, unchanged_cols, positions, downsampling_factor, include_ball=False, ball_has_to_be_in_motion=True)
-    end_time = time.time()
-    print(f"Ended prepare_data, Duration: {end_time - start_time:.2f} seconds")
+    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, positions, downsampling_factor)
 
-    # # Reset the indices of X_df and y_df to ensure they are unique
-    # X_df.reset_index(drop=True, inplace=True)
-    # y_df.reset_index(drop=True, inplace=True)
+    # Reset the indices of X_df and y_df to ensure they are unique
+    X_df.reset_index(drop=True, inplace=True)
+    y_df.reset_index(drop=True, inplace=True)
 
-    # # Sort X_df and y_df based on 'team', 'jersey_number', 'frame', 'match_id' in X_df
-    # X_df = X_df.sort_values(by=['team', 'jersey_number', 'frame', 'match_id'])
-    # y_df = y_df.reindex(X_df.index)
+    # Sort X_df and y_df based on 'team', 'jersey_number', 'frame', 'match_id' in X_df
+    X_df = X_df.sort_values(by=['team', 'jersey_number', 'frame', 'match_id'])
+    y_df = y_df.reindex(X_df.index)
 
     # Sequentialize the data
-    start_time = time.time()
-    print("Started sequentialization")
     X_df = sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length)
-    end_time = time.time()
-    print(f"Ended sequentialization, Duration: {end_time - start_time:.2f} seconds")
 
     return X_df
 
 # Preapre the LSTM input data
-def prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions=[], downsampling_factor=1):
+def prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1, preloaded_frames_df=pd.DataFrame()):
     # Prepare the LSTM DataFrame
-    X_df = prepare_LSTM_df(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor)
+    X_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor)
 
     # Extract the sequentialized columns
     X_seq, y_seq = extract_sequentialized_columns(X_df, categorical_cols)
@@ -557,38 +522,44 @@ def extract_variables(model_name):
 
     return numerical_cols, categorical_cols, positions, sequence_length
 
-# Example usage: run_model(test_frames_dfs, "NN_model_v1") 
-def run_model(frames_dfs, model_name):
+# Example usage: run_model(test_ids, "NN_model_v1") 
+def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
     # Load varibles
     numerical_cols, categorical_cols, positions, sequence_length = extract_variables(model_name)
-
+    positions_with_ball = positions + ['ball']
+    
     # Load model
     model = load_tf_model(f"models/{model_name}.h5", euclidean_distance_loss=True)
 
-    # Prepared the DataFrames and concatenate into a single large DataFrame
-    prepared_frames_dfs = [prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor) for frames_df in frames_dfs]
-    frames_concat_df = pd.concat(prepared_frames_dfs, ignore_index=True)
-
-    # Save the original index before sorting
-    original_index = frames_concat_df.index
-
     # Prepare the input data for LSTM model
     if "LSTM" in model_name:
-        X_test_input, y_test = prepare_LSTM_input_data(frames_dfs, numerical_cols, categorical_cols, sequence_length, positions)
+        # Prepare X_test_input and y_test
+        X_test_input, y_test = prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1, preloaded_frames_df=preloaded_frames_df)
 
-        # Only keep rows that can be sequentialized
-        frames_concat_df = add_can_be_sequentialized(frames_concat_df, sequence_length)
-
-        frames_concat_df = frames_concat_df[frames_concat_df["can_be_sequentialized"]]
-        print(len(X_test_input))
-        print(len(frames_concat_df))
-
-        # Sort the DataFrame by 'team', 'match_id', and most importantly 'player'
-        frames_concat_df = frames_concat_df.sort_values(by=['team', 'match_id', 'player'])
+        # Create the DataFrame that will recieve the predictions
+        frames_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, sequence_length, positions_with_ball, downsampling_factor=1)
 
     # Prepare the input data for non-LSTM model
     else:
-        X_test_input, y_test = prepare_EL_input_data(frames_dfs, numerical_cols, categorical_cols, positions, downsampling_factor)
+        # Prepare X_test_input and y_test
+        X_test_input, y_test = prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor=1, preloaded_frames_df=preloaded_frames_df)
+
+        # Make sure that we either have a list of match_ids, or a preloaded frames_df
+        if match_ids == [] and preloaded_frames_df.empty:
+            raise ValueError("Either use a list of match_ids or a preloaded frames_df.")
+
+        # Create the DataFrame that will recieve the predictions by first creating a list
+        frames_dfs = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
+        frames_df = pd.concat([
+            prepare_df(current_frames_df, numerical_cols, categorical_cols, positions=positions_with_ball, downsampling_factor=1)
+            for current_frames_df in frames_dfs
+        ], axis=0)
+
+    # Extract the ball_frames_df
+    ball_frames_df = frames_df[frames_df['team'] == 'ball']
+    frames_df = frames_df[frames_df['team'] != 'ball']
+    ball_frames_df['x_future_pred'] = 0
+    ball_frames_df['y_future_pred'] = 0
 
     # Make predictions using the loaded tf model
     predictions = model.predict(X_test_input)
@@ -597,26 +568,45 @@ def run_model(frames_dfs, model_name):
     x_future_pred = predictions[:, 0]
     y_future_pred = predictions[:, 1]
 
-    # Add the predicted values to 'frames_concat_df'
-    frames_concat_df['x_future_pred'] = x_future_pred
-    frames_concat_df['y_future_pred'] = y_future_pred
+    # Add the predicted values to 'x_future_pred' and 'y_future_pred' columns
+    if "LSTM" in model_name:
+        # Check that the length of 'x_future_pred' and 'y_future_pred' matches the number of True values in 'can_be_sequentialized'
+        assert len(x_future_pred) == frames_df['can_be_sequentialized'].sum()
+        assert len(y_future_pred) == frames_df['can_be_sequentialized'].sum()
+
+        # Add the predicted values to 'x_future_pred' and 'y_future_pred' columns where 'can_be_sequentialized' is True
+        frames_df.loc[frames_df['can_be_sequentialized'], 'x_future_pred'] = x_future_pred
+        frames_df.loc[frames_df['can_be_sequentialized'], 'y_future_pred'] = y_future_pred
+
+        if normalize:
+            # Unnormalize the numerical columns
+            for col in numerical_cols:
+                if col in denominators:
+                    frames_df[col] = frames_df[col] * denominators[col]
+    else:
+        # Check that the length of 'x_future_pred' and 'y_future_pred' matches the length of 'frames_df'
+        assert len(x_future_pred) == len(frames_df)
+        assert len(y_future_pred) == len(frames_df)
+
+        frames_df['x_future_pred'] = x_future_pred
+        frames_df['y_future_pred'] = y_future_pred
 
     # Clip values to stay on the pitch
-    frames_concat_df['x_future_pred'] = frames_concat_df['x_future_pred'].clip(lower=0, upper=pitch_length)
-    frames_concat_df['y_future_pred'] = frames_concat_df['y_future_pred'].clip(lower=0, upper=pitch_width)
+    frames_df['x_future_pred'] = frames_df['x_future_pred'].clip(lower=0, upper=pitch_length)
+    frames_df['y_future_pred'] = frames_df['y_future_pred'].clip(lower=0, upper=pitch_width)
 
     # Smooth the predicted coordinates
-    # frames_concat_df = smooth_predictions_xy(frames_concat_df, alpha=0.98)
+    # smooth_predictions_xy(frames_df, alpha=0.98)
 
-    # "Unsort" the DataFrame to get it back to its original order
-    frames_concat_df = frames_concat_df.reindex(original_index)
+    # Add the 'ball_frames_df' to 'frames_df'
+    frames_df = pd.concat([frames_df, ball_frames_df], ignore_index=True)
 
-    return frames_concat_df
+    return frames_df
 
-# Example usage: evaluate_model(test_frames_df, "NN_best_v1") 
-def evaluate_model(frames_dfs, model_name):
+# Example usage: evaluate_model(test_ids, "NN_best_v1") 
+def evaluate_model(match_ids, model_name):
     # Run model and the predicted coordinates
-    frames_concat_df = run_model(frames_dfs, model_name)
+    frames_concat_df = run_model(match_ids, model_name)
     
     # Calculate the error
     error = total_error_loss(frames_concat_df)
@@ -624,9 +614,9 @@ def evaluate_model(frames_dfs, model_name):
     return error
 
 # Disaplys how the average 'pred_error' varies with each value in 'column_to_analyze'
-def print_column_variance(frames_dfs, model_name, column_to_analyze):
+def print_column_variance(match_ids, model_name, column_to_analyze):
     # Run model and calculated error
-    frames_concat_df = run_model(frames_dfs, model_name)
+    frames_concat_df = run_model(match_ids, model_name)
     error = total_error_loss(frames_concat_df)
 
     # Convert 'pred_error' to numeric, coercing non-numeric values to NaN
