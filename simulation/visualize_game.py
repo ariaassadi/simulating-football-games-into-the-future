@@ -19,7 +19,7 @@ draw_offsides = False
 draw_prediction_lines = True
 
 player_size = 300
-ball_size = 200
+ball_size = 180
 predicted_player_size = 0.8 * player_size
 predicted_ball_size = 0.8 * ball_size
 offside_line_thickness = 4
@@ -247,7 +247,7 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     frame_text = ax['pitch'].text(0, 71, '', ha='left', va='center', fontsize=16)
     error_text = ax['pitch'].text(pitch_length, -2, '', ha='right', va='center', fontsize=14)
 
-    # Define LineCollection objects for each team and the ball
+    # Define LineCollection objects for each team
     home_team_error_lines = LineCollection([], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
     away_team_error_lines = LineCollection([], color=color_edge, linewidth=1.5, linestyle='--', alpha=0.7, zorder=1)
 
@@ -257,8 +257,9 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
 
     # Function for updating each frame
     def update(frame):
+        # Create DataFrames with the specified rows
         home_team_frame_df, away_team_frame_df, ball_frame_df = get_frame_data(frames_df, frame)
-        
+
         # Draw scatters and line for home team
         if not home_team_frame_df.empty:
             home_team_true_scatter.set_offsets(np.c_[home_team_frame_df['x_future'], home_team_frame_df['y_future']])
@@ -279,10 +280,11 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
         
         # Draw general information for this frame
         frame_df = frames_df[frames_df['frame'] == frame]
-        frame_text.set_text(f"{frame_df.iloc[0]['minute']}:{frame_df.iloc[0]['second']}:{frame_df.iloc[0]['frame'] % FPS}")
-        pred_error = frame_df[frame_df['team'] != 'ball']['pred_error'].mean()  # Don't include ball
-        if pred_error is not None:
-            error_text.set_text(f"Error: {pred_error:.2f} m")
+        if not frame_df.empty:
+            frame_text.set_text(f"{frame_df.iloc[0]['minute']}:{frame_df.iloc[0]['second']}:{frame_df.iloc[0]['frame'] % FPS}")
+            pred_error = frame_df[frame_df['team'] != 'ball']['pred_error'].mean()  # Don't include ball
+            if pred_error is not None:
+                error_text.set_text(f"Error: {pred_error:.2f} m")
 
     animation = FuncAnimation(fig, update, frames=range(start_frame, end_frame + 1), interval=200)
 
