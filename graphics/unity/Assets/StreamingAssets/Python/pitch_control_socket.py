@@ -165,8 +165,15 @@ def main():
             while True:
                 data = connection.recv(8192)
                 if data:
-                    player_data = json.loads(data.decode()) # line 168
-                    # print('Received data from the client: ', player_data)
+                    try:
+                        player_data = json.loads(data.decode()) # line 168
+                    except json.JSONDecodeError as e:
+                        print('Error decoding JSON data:', e)
+                        # Write faulty data to a log file
+                        with open('faulty_data.log', 'a') as logfile:
+                            logfile.write('Faulty JSON data from {}: {}\n'.format(client_address, data.decode()))
+                        continue  # Continue to next iteration of the loop
+
                     ball = next(p for p in player_data['players'] if p['team'] == 'ball')
                     players = [p for p in player_data['players'] if p['team'] != 'ball']
                     for p in players:

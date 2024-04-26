@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+using GameVisualization;
+
 public class TimeManager : MonoBehaviour
 {
     [SerializeField] private GameObject gameManager;

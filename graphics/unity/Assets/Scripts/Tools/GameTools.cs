@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Eggs;
+using Utils;
 
 public class GameTools : MonoBehaviour
 {
@@ -88,7 +89,7 @@ public class GameTools : MonoBehaviour
         GameObject[] borders = GetAllBorders();
         foreach (GameObject border in borders)
         {
-            border.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+            border.GetComponent<Image>().color = ColorHelper.HexToColor("#12326e");
         }
     }
 
@@ -238,7 +239,7 @@ public class GameTools : MonoBehaviour
         }
         if (selectedToolBorder != null)
         {
-            selectedToolBorder.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+            selectedToolBorder.GetComponent<Image>().color = ColorHelper.HexToColor("#12326e");
             selectedToolBorder = null;
         }
         if (players != null)
@@ -279,7 +280,7 @@ public class GameTools : MonoBehaviour
             lineRenderer.endWidth = 0.2f;
             lineRenderer.positionCount = 2;
 
-            Color color = Utils.HexToColor("#12326e");
+            Color color = ColorHelper.HexToColor("#12326e");
             Debug.Log("Color: " + color);
             lineRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
             lineRenderer.material.color = color;
@@ -354,7 +355,7 @@ public class GameTools : MonoBehaviour
         toolSelected = "";
         if (selectedToolBorder != null)
         {
-            selectedToolBorder.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+            selectedToolBorder.GetComponent<Image>().color = ColorHelper.HexToColor("#12326e");
             selectedToolBorder = null;
         }
     }
@@ -476,7 +477,7 @@ public class GameTools : MonoBehaviour
         isDragging = false;
         if (selectedToolBorder != null)
         {
-            selectedToolBorder.GetComponent<Image>().color = Utils.HexToColor("#12326e");
+            selectedToolBorder.GetComponent<Image>().color = ColorHelper.HexToColor("#12326e");
             selectedToolBorder = null;
         }
         if (players != null && players[0] != null)

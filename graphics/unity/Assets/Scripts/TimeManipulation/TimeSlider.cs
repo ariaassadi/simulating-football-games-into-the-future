@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+using GameVisualization;
+
 
 public class TimeSlider : MonoBehaviour
 {
@@ -34,21 +36,14 @@ public class TimeSlider : MonoBehaviour
             Debug.LogError("GameManager component not found on GameManager GameObject.");
             return;
         }
-
-        // startFrame = gameManagerComponent.StartFrame();
-        // endFrame = gameManagerComponent.EndFrame();
-        // period = gameManagerComponent.Period();
-
-        // timeSlider.GetComponent<UnityEngine.UI.Slider>().minValue = startFrame;
-        // timeSlider.GetComponent<UnityEngine.UI.Slider>().maxValue = endFrame - 1;
-        // startTime.text = FrameToTime(startFrame, period).ToString();
-        // endTime.text = FrameToTime(endFrame, period).ToString();
     }
 
     public void UpdateTimeSlider(int startFrame, int endFrame, int period)
     {
         timeSlider.GetComponent<UnityEngine.UI.Slider>().minValue = startFrame;
         timeSlider.GetComponent<UnityEngine.UI.Slider>().maxValue = endFrame - 1;
+        timeSlider.GetComponent<UnityEngine.UI.Slider>().value = startFrame;
+
         this.startFrame = startFrame;
         this.endFrame = endFrame;
         this.period = period;
@@ -85,6 +80,13 @@ public class TimeSlider : MonoBehaviour
         timeSlider.GetComponent<UnityEngine.UI.Slider>().value = frame;
         startTime.text = FrameToTime(frame, period).ToString();
         scoreBoardTime.text = FrameToTime(frame, period).ToString();
+    }
+
+    public void ResetTime()
+    {
+        timeSlider.GetComponent<UnityEngine.UI.Slider>().value = startFrame;
+        startTime.text = FrameToTime(startFrame, period).ToString();
+        scoreBoardTime.text = FrameToTime(startFrame, period).ToString();
     }
 
     public void OnValueChanged()

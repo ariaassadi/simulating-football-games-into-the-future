@@ -61,7 +61,7 @@ public class Game
 }
 
 [Table("schedule")]
-public class Schedule
+public class GameInfo
 {
     [Column("home_team_name")]
     public string HomeTeamName { get; set; }
@@ -97,10 +97,6 @@ public class DatabaseManager : MonoBehaviour
 
     public static Game[] query_db(string conn, string query)
     {
-
-        // conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-        // conn = Application.streamingAssetsPath + "/2sec.sqlite";
-        Debug.Log(conn);
         // Open connection to the database
         var db = new SQLiteConnection(conn);
         // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");
@@ -111,7 +107,7 @@ public class DatabaseManager : MonoBehaviour
     }
 
 
-    public static Schedule[] query_schedule_db(string conn, string query)
+    public static GameInfo[] query_schedule_db(string conn, string query)
     {
         // conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
         // conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
@@ -120,7 +116,7 @@ public class DatabaseManager : MonoBehaviour
 
         var db = new SQLiteConnection(conn);
         // var db = new SQLiteConnection($"{Application.dataPath}/DB/bp_vs_iks.sqlite");
-        Schedule[] frames = db.Query<Schedule>(query).ToArray();
+        GameInfo[] frames = db.Query<GameInfo>(query).ToArray();
         db.Close();
         return frames;
     }

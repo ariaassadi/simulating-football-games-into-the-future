@@ -143,7 +143,7 @@ public class ToolManager : MonoBehaviour
             activeTools = newActiveTools;
         }
     }
-    private void DeselectTools()
+    public void DeselectTools()
     {
         if (activeTools != null)
         {

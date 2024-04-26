@@ -4,12 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Eggs;
+using Utils;
+using Unity.VisualScripting;
 
 public abstract class Tool : MonoBehaviour
 {
     protected GameObject[] players;
     protected Image border;
     protected ToolManager toolManager;
+
+    private Material themeColorPrimary;
 
     protected bool uniqueTool = false;
     protected bool synchronized = false;
@@ -18,6 +22,8 @@ public abstract class Tool : MonoBehaviour
     {
         border = transform.Find("Border").GetComponent<Image>();
         toolManager = GameObject.Find("ToolManager").GetComponent<ToolManager>();
+        themeColorPrimary = Resources.Load<Material>("ThemeColorPrimaryUI");
+
         if (border == null)
         {
             Debug.LogError("Border not found");
@@ -39,12 +45,14 @@ public abstract class Tool : MonoBehaviour
     }
     public virtual void Select()
     {
-        border.color = Color.white;
+        border.material = new Material(Shader.Find("UI/Default"));
+        border.material.color = Color.white;
     }
 
     public virtual void Deselect()
     {
-        border.color = Utils.HexToColor("#12326e");
+        Destroy(border.material);
+        border.material = themeColorPrimary;
     }
 
     public bool IsSynchronized

@@ -54,7 +54,7 @@ public class PythonScript : MonoBehaviour
     }
 
 
-    public static bool ConnectToPitchControlScript(string host = "localhost", int port = 12345, int timeoutMilliseconds = 10000)
+    public static bool ConnectToPitchControlScript(string host = "localhost", int port = 12345, int timeoutMilliseconds = 5000)
     {
         _pythonSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -146,7 +146,13 @@ public class PythonScript : MonoBehaviour
             UnityEngine.Debug.LogError($"Failed to send data to Python script: {ex.Message}");
         }
 
-        string recvJson = ReceiveDataFromPitchControlScript(20000);
+        string recvJson = ReceiveDataFromPitchControlScript(5000);
+        if (recvJson == null)
+        {
+            UnityEngine.Debug.LogWarning("Failed to receive data from Python script.\nData sent: " + jsonData);
+            return null;
+        }
+        UnityEngine.Debug.Log("Received data: " + recvJson);
         return recvJson;
     }
 

@@ -3,6 +3,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+using Utils;
+
 public class CalculateDistanceTool : Tool
 {
     private float distance;
@@ -30,7 +32,7 @@ public class CalculateDistanceTool : Tool
     {
         base.Deselect();
         ResetPlayers(2);
-        RemoveLine();
+        DestroyLine();
         EmptyDistance();
         Debug.Log("Distance tool deselected");
     }
@@ -101,15 +103,15 @@ public class CalculateDistanceTool : Tool
         if (lineRenderer == null)
         {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.startWidth = 0.2f;
+            lineRenderer.endWidth = 0.2f;
+            lineRenderer.positionCount = 2;
+
+            Color color = ColorHelper.HexToColor("#12326e");
+            lineRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            lineRenderer.material.color = color;
         }
 
-        lineRenderer.startWidth = 0.2f;
-        lineRenderer.endWidth = 0.2f;
-        lineRenderer.positionCount = 2;
-
-        Color color = Utils.HexToColor("#12326e");
-        lineRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-        lineRenderer.material.color = color;
 
         lineRenderer.SetPosition(0, player1.transform.position);
         lineRenderer.SetPosition(1, player2.transform.position);
@@ -121,6 +123,14 @@ public class CalculateDistanceTool : Tool
         {
             // Reset the LineRenderer
             lineRenderer.positionCount = 0;
+        }
+    }
+
+    private void DestroyLine()
+    {
+        if (lineRenderer != null)
+        {
+            Destroy(lineRenderer);
         }
     }
 }

@@ -4,6 +4,8 @@ using System.IO;
 using UnityEngine.Networking;
 
 using Eggs;
+using Utils;
+using GameVisualization;
 public class FuturePositionTool : Tool
 {
     private GameManager gameManager;
@@ -81,7 +83,7 @@ public class FuturePositionTool : Tool
 
             playerClone.name = player.player_name + " Future";
             playerClone.tag = "Clone";
-            playerClone.GetComponent<Renderer>().material.color = Color.green;
+            playerClone.GetComponent<Renderer>().material.color = ColorHelper.ChangeBrightness(playerObject.GetComponent<Renderer>().material.color, 0.75f);
             playerObject.transform.GetChild(0).gameObject.SetActive(false);
             playerObject.transform.GetChild(1).gameObject.GetComponent<EggUI>().SetJerseyNumber(player.jersey_number.ToString());
             playerObject.transform.GetChild(1).gameObject.GetComponent<EggUI>().SetPlayerName(player.player_name);
@@ -98,13 +100,13 @@ public class FuturePositionTool : Tool
 
     private void AddLineBetweenPlayers(GameObject player, GameObject playerClone, LineRenderer lineRenderer)
     {
-        lineRenderer.startWidth = 0.2f;
-        lineRenderer.endWidth = 0.2f;
+        lineRenderer.startWidth = 0.1f;
+        lineRenderer.endWidth = 0.1f;
         lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0, player.transform.position);
         lineRenderer.SetPosition(1, playerClone.transform.position);
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.startColor = Color.green;
-        lineRenderer.endColor = Color.green;
+        lineRenderer.startColor = Color.black;
+        lineRenderer.endColor = Color.black;
     }
 }

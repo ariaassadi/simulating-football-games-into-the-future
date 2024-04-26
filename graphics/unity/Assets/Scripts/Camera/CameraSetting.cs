@@ -12,7 +12,7 @@ public class CameraSettings : MonoBehaviour
     private CameraController cameraController;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         cameraController = GameObject.Find("MainCamera").GetComponent<CameraController>();
 
@@ -21,6 +21,7 @@ public class CameraSettings : MonoBehaviour
             Debug.LogError("CameraController not found");
             return;
         }
+        cameraController.LoadSettings();
         settingsValue = transform.Find("Value").GetComponent<TMP_Text>();
         if (settingsValue == null)
         {
