@@ -91,7 +91,7 @@ def define_NN_model(numerical_input_shape, categorical_cols, l1=0, l2=0):
 
     return model
 
-def train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=[], l1=0, l2=0, special_text=None):
+def train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions, l1=0, l2=0, special_text=None):
     # Start time to later display how many seconds the execution too
     start_time = time.time()
 
@@ -141,7 +141,7 @@ def train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorica
             f.write(f"{key}: {rounded_values}\n")
 
 
-# In[17]:
+# In[4]:
 
 
 # Train the NN model with embedding layers
@@ -153,10 +153,10 @@ positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensi
 numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'angle_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
 
 train_ids, _, val_ids = split_match_ids(n_matches)
-# train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=positions)
+# train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions)
 
 
-# In[ ]:
+# In[5]:
 
 
 # Train the NN model with embedding layers
@@ -165,31 +165,27 @@ numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'ang
 categorical_cols = ['position']
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
 # positions = ['Goalkeeper', 'Centre-Back', 'Full-Back']
-
-n_matches = 40
-train_ids, _, val_ids = split_match_ids(n_matches)
-train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=positions)
-
-n_matches = 80
-train_ids, _, val_ids = split_match_ids(n_matches)
-train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=positions)
-
-n_matches = 120
-train_ids, _, val_ids = split_match_ids(n_matches)
-train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=positions)
-
-n_matches = 180
-train_ids, _, val_ids = split_match_ids(n_matches)
-train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=positions)
 
 n_matches = 240
 train_ids, _, val_ids = split_match_ids(n_matches)
-train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions=positions)
+train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions)
+
+n_matches = 80
+train_ids, _, val_ids = split_match_ids(n_matches)
+train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions)
+
+n_matches = 120
+train_ids, _, val_ids = split_match_ids(n_matches)
+train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions)
+
+n_matches = 180
+train_ids, _, val_ids = split_match_ids(n_matches)
+train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions)
 
 
 # ### Evaluate model
 
-# In[5]:
+# In[6]:
 
 
 # model_names = ["LSTM_model_v2"]
@@ -209,7 +205,7 @@ train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_co
 #     alpha -= 0.01
 
 
-# In[6]:
+# In[7]:
 
 
 # # Print column variance for position
@@ -222,7 +218,7 @@ train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_co
 # ### LSTM model
 # Player-based model
 
-# In[7]:
+# In[17]:
 
 
 # Define the architecture of the LSTM model with embeddings layers
@@ -267,7 +263,7 @@ def define_LSTM_model(numerical_input_shape, categorical_cols, sequence_length, 
 
     return model
 
-def train_LSTM_model(train_ids, val_ids, sequence_length, positions=[], l1=0, l2=0, special_text=None):
+def train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions, l1=0, l2=0, special_text=None):
     # Start time to later display how many seconds the execution too
     start_time = time.time()
 
@@ -318,12 +314,12 @@ def train_LSTM_model(train_ids, val_ids, sequence_length, positions=[], l1=0, l2
             f.write(f"{key}: {rounded_values}\n")
 
 
-# In[8]:
+# In[18]:
 
 
 # tf.keras.backend.clear_session()
 n_epochs = 1
-n_matches = 20
+n_matches = 80
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
 # positions=['Goalkeeper']
 categorical_cols = ['position']
@@ -331,29 +327,29 @@ sequence_length = 10
 numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
 
 train_ids, _, val_ids = split_match_ids(n_matches)
-train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e-6)
-
-
-# In[9]:
-
-
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'tiredness_short']
-# train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e-6)
-
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
-# train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e-6)
-
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'minute', 'sta', 'distance_ran']
-# train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e-6)
-
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'angle_to_ball']
-# train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e-6)
-
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'pac', 'acc']
-# train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e-6)
+train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
 
 
 # In[10]:
+
+
+# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'tiredness_short']
+# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
+
+# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
+# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
+
+# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'minute', 'sta', 'distance_ran']
+# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
+
+# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'angle_to_ball']
+# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
+
+# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'pac', 'acc']
+# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
+
+
+# In[11]:
 
 
 # model_name = "LSTM_model_v7"
@@ -362,7 +358,7 @@ train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e
 # print(error)
 
 
-# In[11]:
+# In[12]:
 
 
 # model_name = "LSTM_model_v8"
@@ -372,7 +368,7 @@ train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e
 
 # ### Visualize training results
 
-# In[12]:
+# In[13]:
 
 
 # # Visualize training results
@@ -385,7 +381,7 @@ train_LSTM_model(train_ids, val_ids, sequence_length, positions=positions, l2=1e
 # visualize_training_results(training_results, model_name)
 
 
-# In[13]:
+# In[14]:
 
 
 # Example usage: run_model(test_frames_dfs, "NN_model_v1") 
