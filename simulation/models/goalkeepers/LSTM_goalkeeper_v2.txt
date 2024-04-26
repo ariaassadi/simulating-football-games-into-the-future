@@ -1,0 +1,14 @@
+2024-04-25
+epochs=1
+matches=60
+sequence_length=10
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball']
+categorical_cols=['position']
+positions=['Goalkeeper']
+l2=1e-06
+
+Execution time: 12 minutes
+
+Training results:
+loss: [1.29]
+val_loss: [1.09]

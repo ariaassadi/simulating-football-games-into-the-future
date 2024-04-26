@@ -1,0 +1,15 @@
+2024-04-26
+epochs=1
+matches=10
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'v_x_avg', 'v_y_avg']
+categorical_cols=['position']
+positions=['Goalkeeper', 'Centre-Back', 'Full-Back']
+
+Execution time: 4 minutes
+
+Training results:
+loss: [1.93]
+val_loss: [1.72]
+
+Testing results:
+test_loss: 2.223
