@@ -1,0 +1,12 @@
+2024-04-26
+epochs=1
+matches=40
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'angle_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
+categorical_cols=['position']
+positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
+
+Execution time: 38 minutes
+
+Training results:
+loss: [1.91]
+val_loss: [1.96]
