@@ -80,7 +80,8 @@ def google_sheet_to_df(url):
 # Load a list with frames_df from the 'processed/' folder
 def load_processed_frames(n_matches=None, match_id=None, match_ids=None):
     # Create DataFrame for storing all frames
-    frames_dfs = []
+    frames_list = []
+
     # Load frames_df
     for selected_season in seasons:
         for selected_competition in competitions:
@@ -111,10 +112,10 @@ def load_processed_frames(n_matches=None, match_id=None, match_ids=None):
                 if os.path.exists(file_path_match):
                     frames_df = pd.read_parquet(file_path_match)
 
-                    # Append the DataFrame to frames_dfs
-                    frames_dfs.append(frames_df)
+                    # Append the DataFrame to frames_list
+                    frames_list.append(frames_df)
 
-    return frames_dfs
+    return frames_list
 
 """
     General helper functions
@@ -216,27 +217,39 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
     X_data = []
     y_data = []
 
-    # Make sure that we either have a list of match_ids, or a preloaded frames_df
-    if match_ids == [] and preloaded_frames_df.empty:
+    # Use the list of match_ids
+    if match_ids:
+        # For each match
+        for match_id in match_ids:
+            # Load the frames for the match
+            frames_list = load_processed_frames(match_id=match_id)
+            
+            # If we managed to load a DataFrame
+            if frames_list:
+                # Preapare the DataFrame
+                frames_df = prepare_df(frames_list[0], numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor)
+
+                # Extract the desired columns
+                X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
+                y = frames_df[y_cols]
+
+                # Append the data
+                X_data.append(X)
+                y_data.append(y)
+    
+    # Use the preloaded frames_df
+    elif not preloaded_frames_df.empty:
+        # Extract the desired columns
+        X = preloaded_frames_df[numerical_cols + categorical_cols + unchanged_cols]
+        y = preloaded_frames_df[y_cols]
+
+        # Append the data
+        X_data.append(X)
+        y_data.append(y)
+    
+    # Throw error since none of the earlier options worked
+    else:
         raise ValueError("Either use a list of match_ids or a preloaded frames_df.")
-
-    # Load all DataFrames with the specified match_ids, or the preloaded DataFrame
-    frames_dfs = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
-
-    # For each match
-    for frames_df in frames_dfs:
-        # If we managed to load a DataFrame
-        if not frames_df.empty:
-            # Preapare the DataFrame
-            frames_df = prepare_df(frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor)
-
-            # Extract the desired columns
-            X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
-            y = frames_df[y_cols]
-
-            # Append the data
-            X_data.append(X)
-            y_data.append(y)
 
     # Concatenate the lists to create the final feature and label DataFrame
     X_data_df = pd.concat(X_data)
@@ -379,7 +392,7 @@ def add_can_be_sequentialized(frames_df, sequence_length):
     return frames_df
 
 # Sequentialize the numerical and categorical columns
-def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length):
+def sequentialize_data(X_df, y_df, numerical_cols, sequence_length):
     # Add the y values as a vector
     X_df['y_values'] = y_df.values.tolist()
 
@@ -388,11 +401,11 @@ def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_le
     if not X_df['can_be_sequentialized'].any():
         raise ValueError("No frames can be sequentialized based on the provided criteria.")
 
-    # Create list of all numerical and categorical data
+    # Sort the values on each player from each game
+    X_df = X_df.sort_values(by=['team', 'jersey_number', 'match_id'])
+
+    # Create list of all numerical data
     X_df['numerical_data_list'] = X_df[numerical_cols].values.tolist()
-    
-    if categorical_cols:
-        X_df['categorical_data_list'] = X_df[categorical_cols].values.tolist()
 
     # Vectorized shifting and concatenation of data for sequence creation
     for i in range(sequence_length):
@@ -402,14 +415,14 @@ def sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_le
     X_df['sequential_numerical_data'] = X_df[[f'seq_numerical_{i}' for i in range(sequence_length)[::-1]]].values.tolist()
 
     # Clean up temporary columns
-    return X_df.drop(columns=[f'seq_numerical_{i}' for i in range(sequence_length)])
+    return X_df.drop(columns=[f'seq_numerical_{i}' for i in range(sequence_length)] + ['numerical_data_list'])
 
 # Extract the sequentialized columns
 def extract_sequentialized_columns(X_df, categorical_cols):
     X_filtered_df = X_df[X_df['can_be_sequentialized'] == True]
 
     # Extract and prepare numerical sequences
-    X_seq_num_np = np.array(X_filtered_df['sequential_numerical_data'].tolist()).astype('float32')
+    X_seq_num = np.array(X_filtered_df['sequential_numerical_data'].tolist()).astype('float32')
 
     # Prepare categorical data
     categorical_inputs = []
@@ -419,36 +432,31 @@ def extract_sequentialized_columns(X_df, categorical_cols):
         categorical_inputs.append(cat_data)
 
     # Prepare output data
-    y_seq_np = np.array(X_filtered_df['y_values'].tolist()).astype('float32')
+    y_seq = np.array(X_filtered_df['y_values'].tolist()).astype('float32')
+
+    # Clean up temporary columns
+    X_df.drop(columns=['y_values', 'sequential_numerical_data'], inplace=True)
 
     # Return all inputs as a list, followed by outputs
-    return categorical_inputs + [X_seq_num_np], y_seq_np
+    return categorical_inputs + [X_seq_num], y_seq
 
 # Create a DataFrame with data ready for LSTM, either by usig a list of match_ids or a preloaded frames_df
-def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1):
+def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions, downsampling_factor=1):
     # Definie columns to temporarely give to prepare_data()
-    unchanged_cols = ['player', 'frame', 'team', 'jersey_number', 'match_id', 'ball_in_motion', 'team_name', 'minute', 'second'] + y_cols
+    all_unchanged_cols = ['team', 'jersey_number', 'match_id', 'frame'] + unchanged_cols
 
     # Prepare data
-    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, positions, downsampling_factor)
-
-    # Reset the indices of X_df and y_df to ensure they are unique
-    X_df.reset_index(drop=True, inplace=True)
-    y_df.reset_index(drop=True, inplace=True)
-
-    # Sort X_df and y_df based on 'team', 'jersey_number', 'frame', 'match_id' in X_df
-    X_df = X_df.sort_values(by=['team', 'jersey_number', 'frame', 'match_id'])
-    y_df = y_df.reindex(X_df.index)
+    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, all_unchanged_cols, positions, downsampling_factor)
 
     # Sequentialize the data
-    X_df = sequentialize_data(X_df, y_df, numerical_cols, categorical_cols, sequence_length)
+    X_df = sequentialize_data(X_df, y_df, numerical_cols, sequence_length)
 
     return X_df
 
 # Preapre the LSTM input data
 def prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1, preloaded_frames_df=pd.DataFrame()):
     # Prepare the LSTM DataFrame
-    X_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor)
+    X_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, [], sequence_length, positions, downsampling_factor)
 
     # Extract the sequentialized columns
     X_seq, y_seq = extract_sequentialized_columns(X_df, categorical_cols)
@@ -537,7 +545,8 @@ def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
         X_test_input, y_test = prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1, preloaded_frames_df=preloaded_frames_df)
 
         # Create the DataFrame that will recieve the predictions
-        frames_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, sequence_length, positions_with_ball, downsampling_factor=1)
+        unchanged_cols = ['ball_in_motion', 'team_name', 'minute', 'second', 'frame'] + y_cols
+        frames_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions_with_ball, downsampling_factor=1)
 
     # Prepare the input data for non-LSTM model
     else:
@@ -549,10 +558,10 @@ def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
             raise ValueError("Either use a list of match_ids or a preloaded frames_df.")
 
         # Create the DataFrame that will recieve the predictions by first creating a list
-        frames_dfs = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
+        frames_list = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
         frames_df = pd.concat([
             prepare_df(current_frames_df, numerical_cols, categorical_cols, positions=positions_with_ball, downsampling_factor=1)
-            for current_frames_df in frames_dfs
+            for current_frames_df in frames_list
         ], axis=0)
 
     # Extract the ball_frames_df
