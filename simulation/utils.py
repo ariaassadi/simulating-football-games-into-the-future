@@ -468,6 +468,8 @@ def prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequenc
     - smooth_predictions_xy()
     - run_model()
     - evaluate_model()
+    - write_testing_error()
+    - test_model()
     - print_column_variance()
 """
 
@@ -510,6 +512,7 @@ def extract_variables(model_name):
     categorical_cols = []
     positions = []
     sequence_length = 0
+    n_matches = 0
 
     # Read the file line by line
     with open(file_path, 'r') as file:
@@ -527,17 +530,19 @@ def extract_variables(model_name):
                     positions = eval(value)  # Convert string representation to list
                 elif key == 'sequence_length':
                     sequence_length = eval(value)  # Convert string representation to list
+                elif key == 'matches':
+                    n_matches = eval(value)  # Convert string representation to list
 
-    return numerical_cols, categorical_cols, positions, sequence_length
+    return numerical_cols, categorical_cols, positions, sequence_length, n_matches
 
 # Example usage: run_model(test_ids, "NN_model_v1") 
 def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
     # Load varibles
-    numerical_cols, categorical_cols, positions, sequence_length = extract_variables(model_name)
+    numerical_cols, categorical_cols, positions, sequence_length, _ = extract_variables(model_name)
     positions_with_ball = positions + ['ball']
     
     # Load model
-    model = load_tf_model(f"models/{model_name}.h5", euclidean_distance_loss=True)
+    model = load_tf_model(f'models/{model_name}.h5', euclidean_distance_loss=True)
 
     # Prepare the input data for LSTM model
     if "LSTM" in model_name:
@@ -615,12 +620,37 @@ def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
 # Example usage: evaluate_model(test_ids, "NN_best_v1") 
 def evaluate_model(match_ids, model_name):
     # Run model and the predicted coordinates
-    frames_concat_df = run_model(match_ids, model_name)
+    frames_df = run_model(match_ids, model_name)
     
     # Calculate the error
-    error = total_error_loss(frames_concat_df)
+    error = total_error_loss(frames_df)
 
     return error
+
+# Write the testing error to the txt file of the model
+def write_testing_error(model_name, error):
+    # Define the file path
+    file_path = f"models/{model_name}.txt"
+    # if 'Testing results' does not exists in txt file
+    with open(file_path, 'r') as file:
+        if 'Testing results' not in file.read():
+            # Write the following with f.write
+            with open(file_path, 'a') as file:  # 'a' mode to append data
+                file.write(f"\nTesting results:\ntest_loss: {error}\n")
+            print("Testing results added to the file.")
+
+# Test an existing model
+def test_model(model_name):
+    # Extract n_matches to find the correct test_ids
+    _, _, _, _, n_matches = extract_variables(model_name)
+    _, test_ids, _ = split_match_ids(n_matches)
+
+    # Evaluate the model
+    error = evaluate_model(test_ids, model_name)
+    print(f"Error: {error} m")
+
+    # Write error to txt files
+    write_testing_error(model_name, error)
 
 # Disaplys how the average 'pred_error' varies with each value in 'column_to_analyze'
 def print_column_variance(match_ids, model_name, column_to_analyze):
