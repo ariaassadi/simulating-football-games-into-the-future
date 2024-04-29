@@ -8,13 +8,15 @@ using UnityEngine.Networking;
 
 namespace GameVisualization
 {
-
-
+    /// <summary>
+    /// Responsible for creating the game options in the UI and loading the
+    /// selected game. The game options are created based on the games
+    /// </summary>
     public class ChooseGame : MonoBehaviour
     {
-        private GameInfo[] schedule;
+        private GameInfo[] games;
 
-        private bool scheduleIsCreated = false;
+        private bool gamesAreCreated = false;
         [SerializeField] private GameObject gameOptionPrefab;
 
         [SerializeField] private GameObject HorizontalPanelPrefab;
@@ -24,8 +26,6 @@ namespace GameVisualization
         private GameObject uiManager;
 
         private GameObject gameManager;
-
-
 
         private void Start()
         {
@@ -43,13 +43,16 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Get the game information from the database and create the game options.
+        /// </summary>
         public void GetGameInfo()
         {
-            string pathToDB = "";
+            string pathToDB;
 
-            if (schedule == null)
+            if (games == null)
             {
-                if (schedule == null)
+                if (games == null)
                 {
                     if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
                     {
@@ -60,12 +63,12 @@ namespace GameVisualization
                     else
                         pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
 
-                    schedule = DatabaseManager.query_schedule_db(pathToDB, "SELECT * FROM schedule");
+                    games = DatabaseManager.query_games_db(pathToDB, "SELECT * FROM schedule");
                 }
 
             }
 
-            if (schedule == null)
+            if (games == null)
             {
                 Debug.LogError("No schedule found");
                 return;
@@ -74,24 +77,35 @@ namespace GameVisualization
             GameObject horizontalPanel;
             GameObject g;
 
-            Debug.Log(schedule.Length);
-            if (!scheduleIsCreated)
+            Debug.Log(games.Length);
+            if (!gamesAreCreated)
             {
-                for (int i = 0; i < schedule.Length; i++)
+                for (int i = 0; i < games.Length; i++)
                 {
                     horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
-                    horizontalPanel.name = $"{schedule[i].HomeTeamName} vs {schedule[i].AwayTeamName}";
+                    horizontalPanel.name = $"{games[i].HomeTeamName} vs {games[i].AwayTeamName}";
 
                     for (int j = 1; j < 3; j++)
                     {
                         g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-                        AddGameInfo(schedule[i], g, j);
+                        AddGameInfo(games[i], g, j);
                     }
                 }
-                scheduleIsCreated = true;
+                gamesAreCreated = true;
             }
         }
 
+        /// <summary>
+        /// Copy the database from the StreamingAssets folder to the persistentDataPath.
+        /// </summary>
+        /// <param name="destinationPath">The path to copy the database to.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This method is used to copy the database from the StreamingAssets folder to the
+        /// persistentDataPath. This is necessary because the database in the StreamingAssets
+        /// folder is not readable when using android, so we need to copy it to a writeable location in order to
+        /// query it.
+        /// </remarks>
         IEnumerator CopyDatabase(string destinationPath)
         {
             string sourcePath = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
@@ -114,7 +128,12 @@ namespace GameVisualization
             }
         }
 
-
+        /// <summary>
+        /// Add the game information to the game option.
+        /// </summary>
+        /// <param name="game">The game game information for a game.</param>
+        /// <param name="g">The game option object where the game information is visualized.</param>
+        /// <param name="period">The period of the game. </param>
         private void AddGameInfo(GameInfo game, GameObject g, int period)
         {
             g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}\nPeriod: {period}";
@@ -130,6 +149,11 @@ namespace GameVisualization
             g.GetComponent<Button>().onClick.AddListener(() => LoadGame(game, period));
         }
 
+        /// <summary>
+        /// Loads the game asynchronously and shows a loading screen while loading the game data.
+        /// </summary>
+        /// <param name="game">Da gaem information.</param>
+        /// <param name="period"></param>
         private async void LoadGame(GameInfo game, int period)
         {
             // Show loading screen
@@ -153,6 +177,12 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Loads the game asynchronously calling on GameManager.
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="period"></param>
+        /// <returns>True if successfull, false otherwise.</returns>
         private async Task<bool> LoadGameAsync(GameInfo game, int period)
         {
             // Perform the loading asynchronously

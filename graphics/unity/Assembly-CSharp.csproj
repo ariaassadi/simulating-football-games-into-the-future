@@ -116,7 +116,6 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TeleType.cs" />
     <Compile Include="Assets/Scripts/Old/PitchColor.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextEventCheck.cs" />
-    <Compile Include="Assets/Scripts/WebServer.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets/Scripts/Camera/CameraSetting.cs" />
     <Compile Include="Assets/Scripts/Game/GameDataLoader.cs" />
@@ -132,7 +131,6 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/ShaderPropAnimator.cs" />
     <Compile Include="Assets/Scripts/Tools/GameTools.cs" />
     <Compile Include="Assets/Scripts/Utils/JsonParser.cs" />
-    <Compile Include="Assets/Scripts/SpawnSphere.cs" />
     <Compile Include="Assets/Scripts/Tools/OffsideTool.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextInfoDebugTool.cs" />
   </ItemGroup>

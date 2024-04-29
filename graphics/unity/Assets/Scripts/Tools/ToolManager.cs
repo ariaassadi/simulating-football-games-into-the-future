@@ -3,155 +3,184 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ToolManager : MonoBehaviour
+/// <summary>
+/// The Tools namespace includes all classes that are responsible for the tools in the game.
+/// </summary>
+namespace Tools
 {
-    private Tool[] activeTools;
-    private GameObject[] players;
-
-    private PlayerData[] playerData;
-
-    public void Update()
+    /// <summary>
+    /// The ToolManager class is responsible for managing the tools in the game.
+    /// </summary>
+    public class ToolManager : MonoBehaviour
     {
-        if (activeTools != null)
+        private Tool[] activeTools;
+
+        public void Update()
         {
-            foreach (Tool tool in activeTools)
+            if (activeTools != null)
             {
-                if (!tool.IsSynchronized)
+                foreach (Tool tool in activeTools)
                 {
-                    tool.UpdateTool();
+                    if (!tool.IsSynchronized)
+                    {
+                        tool.UpdateTool();
+                    }
                 }
             }
         }
-    }
 
-    public void UpdateSynchronized()
-    {
-        if (activeTools != null)
+        /// <summary>
+        /// Update the synchronized tools.
+        /// </summary>
+        public void UpdateSynchronized()
         {
-            foreach (Tool tool in activeTools)
+            if (activeTools != null)
             {
-                if (tool.IsSynchronized)
+                foreach (Tool tool in activeTools)
                 {
-                    tool.UpdateTool();
+                    if (tool.IsSynchronized)
+                    {
+                        tool.UpdateTool();
+                    }
                 }
             }
         }
-    }
 
-    public void SelectTool(GameObject toolObject)
-    {
-        Tool tool = toolObject.GetComponent<Tool>();
-        if (tool != null)
+        /// <summary>
+        /// Handles what to do with the tool.
+        /// </summary>
+        /// <param name="toolObject">The GameObject that contains the tool.</param>
+        public void SelectTool(GameObject toolObject)
         {
-            if (tool.IsUniqueTool)
+            Tool tool = toolObject.GetComponent<Tool>();
+            if (tool != null)
             {
-                if (ToolInActiveTools(tool))
+                if (tool.IsUniqueTool)
+                {
+                    if (ToolInActiveTools(tool))
+                    {
+                        DeselectTool(tool);
+                    }
+                    else
+                    {
+                        DeselectTools();
+                        SelectToolHelper(tool);
+                    }
+                }
+                else if (ToolInActiveTools(tool))
                 {
                     DeselectTool(tool);
                 }
                 else
                 {
-                    DeselectTools();
                     SelectToolHelper(tool);
                 }
             }
-            else if (ToolInActiveTools(tool))
+        }
+
+
+        /// <summary>
+        /// Add a tool to the selected tools array.
+        /// </summary>
+        /// <param name="tool"></param>
+        private void AddToSelectedTools(Tool tool)
+        {
+            if (activeTools == null)
             {
-                DeselectTool(tool);
+                activeTools = new Tool[1];
+                activeTools[0] = tool;
             }
             else
             {
-                SelectToolHelper(tool);
-                if (players == null)
-                    Debug.Log("Number of players in manager select: " + 0);
-                else
-                    Debug.Log("Number of players in manager select: " + players.Length);
-
-            }
-        }
-    }
-
-    private void AddToSelectedTools(Tool tool)
-    {
-        if (activeTools == null)
-        {
-            activeTools = new Tool[1];
-            activeTools[0] = tool;
-        }
-        else
-        {
-            Tool[] newActiveTools = new Tool[activeTools.Length + 1];
-            for (int i = 0; i < activeTools.Length; i++)
-            {
-                newActiveTools[i] = activeTools[i];
-            }
-            newActiveTools[activeTools.Length] = tool;
-            activeTools = newActiveTools;
-        }
-    }
-
-    private bool ToolInActiveTools(Tool tool)
-    {
-        if (activeTools != null)
-        {
-            foreach (Tool activeTool in activeTools)
-            {
-                if (activeTool == tool)
+                Tool[] newActiveTools = new Tool[activeTools.Length + 1];
+                for (int i = 0; i < activeTools.Length; i++)
                 {
-                    return true;
+                    newActiveTools[i] = activeTools[i];
+                }
+                newActiveTools[activeTools.Length] = tool;
+                activeTools = newActiveTools;
+            }
+        }
+
+        /// <summary>
+        /// Check if the tool is in the active tools.
+        /// </summary>
+        /// <param name="tool"></param>
+        /// <returns></returns>
+        private bool ToolInActiveTools(Tool tool)
+        {
+            if (activeTools != null)
+            {
+                foreach (Tool activeTool in activeTools)
+                {
+                    if (activeTool == tool)
+                    {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
-    }
 
-    // If any tool that has property uniqueToo set to true, deselect that tool
-    private void SelectToolHelper(Tool tool)
-    {
-        if (activeTools != null)
+        /// <summary>
+        /// Select a tool helper.
+        /// </summary>
+        /// <param name="tool"></param>
+        private void SelectToolHelper(Tool tool)
         {
-            foreach (Tool activeTool in activeTools)
+            if (activeTools != null)
             {
-                if (activeTool.IsUniqueTool)
+                foreach (Tool activeTool in activeTools)
                 {
-                    DeselectTool(activeTool);
+                    if (activeTool.IsUniqueTool)
+                    {
+                        DeselectTool(activeTool);
+                    }
                 }
             }
+            tool.Select();
+            AddToSelectedTools(tool);
         }
-        tool.Select();
-        AddToSelectedTools(tool);
-    }
 
-    private void DeselectTool(Tool tool)
-    {
-        if (activeTools != null)
+        /// <summary>
+        /// Deslect a tool.
+        /// </summary>
+        /// <param name="tool"></param>
+        private void DeselectTool(Tool tool)
         {
-            Tool[] newActiveTools = new Tool[activeTools.Length - 1];
-            int j = 0;
-            for (int i = 0; i < activeTools.Length; i++)
+            if (activeTools != null)
             {
-                if (activeTools[i] != tool)
+                Tool[] newActiveTools = new Tool[activeTools.Length - 1];
+                int j = 0;
+                for (int i = 0; i < activeTools.Length; i++)
                 {
-                    newActiveTools[j] = activeTools[i];
-                    j++;
+                    if (activeTools[i] != tool)
+                    {
+                        newActiveTools[j] = activeTools[i];
+                        j++;
+                    }
+                    else
+                    {
+                        activeTools[i].Deselect();
+                    }
                 }
-                else
-                {
-                    activeTools[i].Deselect();
-                }
+                activeTools = newActiveTools;
             }
-            activeTools = newActiveTools;
         }
-    }
-    public void DeselectTools()
-    {
-        if (activeTools != null)
+
+        /// <summary>
+        /// Deselect all tools.
+        /// </summary>
+        public void DeselectTools()
         {
-            foreach (Tool tool in activeTools)
+            if (activeTools != null)
             {
-                tool.Deselect();
+                foreach (Tool tool in activeTools)
+                {
+                    tool.Deselect();
+                }
+                activeTools = null;
             }
-            activeTools = null;
         }
     }
 }

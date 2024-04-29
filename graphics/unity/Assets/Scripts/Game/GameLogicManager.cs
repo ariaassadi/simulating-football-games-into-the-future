@@ -12,10 +12,14 @@ using TMPro;
 
 using Eggs;
 using Utils;
+using Tools;
 
 
 namespace GameVisualization
 {
+    /// <summary>
+    /// The GameManager class is responsible for managing the game state logic.
+    /// </summary>
     public class GameLogicManager
     {
         // Handle missing players and subs
@@ -28,8 +32,6 @@ namespace GameVisualization
         public int StartFrame { get { return startFrame; } }
         private int endFrame;
         public int EndFrame { get { return endFrame; } }
-        private int period;
-        public int Period { get { return period; } }
 
         private int currentFrameNr;
         public int CurrentFrameNr { get { return currentFrameNr; } }
@@ -40,17 +42,25 @@ namespace GameVisualization
 
         private ToolManager toolManager;
 
-        public GameLogicManager(GameDataLoader gameDataLoader, GameObjectSpawner gameObjectSpawner, int period)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameLogicManager"/> class.
+        /// </summary>
+        /// <param name="gameDataLoader">The game data loader <see cref="GameDataLoader"/>.</param>
+        /// <param name="gameObjectSpawner">The game object spawner <see cref="GameObjectSpawner"/>.</param>
+        public GameLogicManager(GameDataLoader gameDataLoader, GameObjectSpawner gameObjectSpawner)
         {
             this.gameDataLoader = gameDataLoader;
             this.gameObjectSpawner = gameObjectSpawner;
-            this.period = period;
             startFrame = gameDataLoader.FrameData[0].Frame;
             endFrame = gameDataLoader.FrameData[gameDataLoader.FrameData.Length - 1].Frame;
             currentFrameNr = startFrame;
+            // Spawn the first frame to fill the scene.
             SpawnFirstFrame();
         }
 
+        /// <summary>
+        /// Spawns the first frame to fill the scene with players at the first frame. 
+        /// </summary>
         private void SpawnFirstFrame()
         {
             if (gameObjectSpawner == null)
@@ -60,15 +70,14 @@ namespace GameVisualization
             }
             playerData = AddPlayerData(gameDataLoader.GetFrameData(currentFrameNr));
             activePlayers = GetPlayersInFrame();
-            foreach (PlayerData player in playerData)
-            {
-#if DEBUG_MODE
-                Debug.Log(player.player_name + " " + player.x + " " + player.y);
-#endif
-                gameObjectSpawner.SpawnObject(player);
-            }
+            gameObjectSpawner.SpawnObjects(playerData);
         }
 
+        /// <summary>
+        /// Verifies that the frame number is within the range of the game data.
+        /// </summary>
+        /// <param name="frameNr">The frame number</param>
+        /// <returns>The frameNr if it is in range, otherwise the appropriate extremities.</returns>
         private int VerifyFrame(int frameNr)
         {
             if (frameNr < startFrame)
@@ -79,12 +88,19 @@ namespace GameVisualization
                 return frameNr;
         }
 
-
+        /// <summary>
+        /// Moves the game forward by a number of frames (backwards if the number is negative).
+        /// </summary>
+        /// <param name="frames">The number of frames to move.</param>
         public void MoveXFrames(int frames)
         {
             MoveTo(VerifyFrame(currentFrameNr + frames));
         }
 
+        /// <summary>
+        /// Moves the game to a specific frame.
+        /// </summary>
+        /// <param name="frameNr">The frame to move to.</param>
         public void MoveTo(int frameNr)
         {
             // SetPlayFalse();
@@ -92,7 +108,10 @@ namespace GameVisualization
             MoveObjects();
         }
 
-        public void MoveObjects()
+        /// <summary>
+        /// Moves the game objects according to the current frame.
+        /// </summary>
+        private void MoveObjects()
         {
 #if DEBUG_MODE
             Debug.Log("Current frame: " + currentFrameNr);
@@ -100,48 +119,30 @@ namespace GameVisualization
             playerData = AddPlayerData(gameDataLoader.GetFrameData(currentFrameNr));
             string[] playersInFrame = GetPlayersInFrame();
 
-            UpdatePlayerPositions(playersInFrame);
+            // Update player positions
+            UpdatePlayerPositions();
+            // Hide players not in frame
             HidePlayersNotInFrame(playersInFrame);
+            // Update tools as necessary
             UpdateTools();
         }
 
-        private void UpdateTools()
-        {
-            // Update syncgronized tools
-            AssignToolManager();
-            toolManager.UpdateSynchronized();
-        }
-
-        private void AssignToolManager()
-        {
-            if (toolManager == null)
-            {
-                GameObject toolManagerObject = GameObject.Find("ToolManager");
-                if (toolManagerObject == null)
-                {
-                    Debug.LogError("ToolManager cannot be found");
-                }
-                else
-                {
-                    toolManager = toolManagerObject.GetComponent<ToolManager>();
-                }
-            }
-        }
-
-        private string[] GetPlayersInFrame()
-        {
-            return playerData.Select(player => player.player_name).ToArray();
-        }
-
-        private void UpdatePlayerPositions(string[] playersInFrame)
+        /// <summary>
+        /// Updates the positions of all players in a frame.
+        /// </summary>
+        private void UpdatePlayerPositions()
         {
             for (int i = 0; i < playerData.Length; i++)
             {
-                UpdatePlayerPositions(playersInFrame, i);
+                UpdatePlayerPositions(i);
             }
         }
 
-        private void UpdatePlayerPositions(string[] playersInFrame, int i)
+        /// <summary>
+        /// Updates the position of a specific player in the frame.
+        /// </summary>
+        /// <param name="i">The index of the player in PlayerData[]<see cref="PlayerData"/> </param>
+        private void UpdatePlayerPositions(int i)
         {
             // playersInFrame[frame - currentFrameStartIndex] = playerName;
             if (i > 23)
@@ -155,6 +156,11 @@ namespace GameVisualization
             MovePlayer(playerObject, playerData[i]);
         }
 
+        /// <summary>
+        /// Moves the player to the new position.
+        /// </summary>
+        /// <param name="playerObject">The player object to be moved.</param>
+        /// <param name="player">The data about where the player object should be moved.</param>
         private void MovePlayer(GameObject playerObject, PlayerData player)
         {
             if (playerObject == null && (inactivePlayerNames == null || (inactivePlayerNames != null && Array.IndexOf(inactivePlayerNames, player.player_name) == -1)))
@@ -185,6 +191,10 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Hides the players that are not in the frame.
+        /// </summary>
+        /// <param name="playersInFrame">An array of players in the frame (to not hide).</param>
         private void HidePlayersNotInFrame(string[] playersInFrame)
         {
             foreach (string player in activePlayers)
@@ -209,6 +219,49 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Updates the tools in the scene.
+        /// </summary>
+        private void UpdateTools()
+        {
+            // Update syncgronized tools
+            AssignToolManager();
+            toolManager.UpdateSynchronized();
+        }
+
+        /// <summary>
+        /// Assigns the tool manager if it is not already assigned.
+        /// </summary>
+        private void AssignToolManager()
+        {
+            if (toolManager == null)
+            {
+                GameObject toolManagerObject = GameObject.Find("ToolManager");
+                if (toolManagerObject == null)
+                {
+                    Debug.LogError("ToolManager cannot be found");
+                }
+                else
+                {
+                    toolManager = toolManagerObject.GetComponent<ToolManager>();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the player in the frame.
+        /// </summary>
+        /// <returns>A string array of player names.</returns>
+        private string[] GetPlayersInFrame()
+        {
+            return playerData.Select(player => player.player_name).ToArray();
+        }
+
+        /// <summary>
+        /// Converts the game data to player data.
+        /// </summary>
+        /// <param name="game">The game data.</param>
+        /// <returns>The player data. </returns>
         private PlayerData AddPlayerData(Game game)
         {
             PlayerData player = new PlayerData();
@@ -226,6 +279,11 @@ namespace GameVisualization
             return player;
         }
 
+        /// <summary>
+        /// Converts the game data to player data.
+        /// </summary>
+        /// <param name="games">A game array data.</param>
+        /// <returns>A PlayerData array.</returns>
         private PlayerData[] AddPlayerData(Game[] games)
         {
             PlayerData[] players = new PlayerData[games.Length];
@@ -236,6 +294,12 @@ namespace GameVisualization
             return players;
         }
 
+        /// <summary>
+        /// Adds an element to the specified array.
+        /// </summary>
+        /// <typeparam name="T">The type of the element.</typeparam>
+        /// <param name="element">The element to add.</param>
+        /// <param name="array">The array to add the element to.</param>
         private void AddToArray<T>(T element, ref T[] array)
         {
             if (array == null)
@@ -250,6 +314,12 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Removes an element from the specified array.
+        /// </summary>
+        /// <typeparam name="T">The type of the element.</typeparam>
+        /// <param name="element">The element to remove.</param>
+        /// <param name="array">The array to remove the element from.</param>
         private void RemoveFromArray<T>(T element, ref T[] array)
         {
             if (array == null)
@@ -264,11 +334,19 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Checks if the game is currently running.
+        /// </summary>
+        /// <returns>True if the game is running, false otherwise.</returns>
         public bool IsGameRunning()
         {
             return currentFrameNr < endFrame;
         }
 
+        /// <summary>
+        /// Retrieves the player data.
+        /// </summary>
+        /// <returns>An array of PlayerData containing player information for the current frame.</returns>
         public PlayerData[] GetPlayerData()
         {
             return playerData;

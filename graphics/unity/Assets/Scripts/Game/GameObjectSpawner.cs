@@ -13,7 +13,10 @@ using Utils;
 
 namespace GameVisualization
 {
-
+    /// <summary>
+    /// The GameObjectSpawner is responsible for spawning the players and ball
+    /// in the scene, as well as "coloring" them, and removing them. 
+    /// </summary>
     public class GameObjectSpawner : MonoBehaviour
     {
         // Prefabs for players and ball
@@ -26,6 +29,11 @@ namespace GameVisualization
         private GameObject awayTeam;
         private GameObject ball;
 
+        /// <summary>
+        /// Initializes the GameObjectSpawner with the home and away team colors.
+        /// </summary>
+        /// <param name="homeColor"></param>
+        /// <param name="awayColor"></param>
         public void Initialize(string homeColor, string awayColor)
         {
             homeTeam = GameObject.Find("Home Team");
@@ -35,6 +43,9 @@ namespace GameVisualization
             SetTeamColor(homeColor, awayColor);
         }
 
+        /// <summary>
+        /// Removes all players and the ball from the scene.
+        /// </summary>
         public void RemovePlayers()
         {
             // Remove all child objects of home team, away team, and ball
@@ -43,6 +54,10 @@ namespace GameVisualization
             DestroyChildren(ball);
         }
 
+        /// <summary>
+        /// Helper function to destroy all children of a parent object.
+        /// </summary>
+        /// <param name="parent"></param>
         private void DestroyChildren(GameObject parent)
         {
             // Destroy all child objects of a parent object
@@ -52,6 +67,9 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Loads the player and ball prefabs from the Resources folder.
+        /// </summary>
         private void LoadPrefabs()
         {
             playerHomePrefab = Resources.Load("EggPrefabHome") as GameObject;
@@ -59,6 +77,11 @@ namespace GameVisualization
             ballPrefab = Resources.Load("BallPrefab") as GameObject;
         }
 
+        /// <summary>
+        /// Sets the color of the players based on the home and away team colors.
+        /// </summary>
+        /// <param name="homeColor"></param>
+        /// <param name="awayColor"></param>
         private void SetTeamColor(string homeColor, string awayColor)
         {
             if (playerHomePrefab == null || playerAwayPrefab == null)
@@ -71,6 +94,10 @@ namespace GameVisualization
             playerAwayPrefab.GetComponent<Renderer>().sharedMaterial.color = ColorHelper.HexToColor(awayColor, 1);
         }
 
+        /// <summary>
+        /// Instantiates the players and ball in the scene.
+        /// </summary>
+        /// <param name="playerData"></param>
         public void SpawnObjects(PlayerData[] playerData)
         {
             foreach (var player in playerData)
@@ -90,6 +117,10 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Instantiates a player or the ball in the scene.
+        /// </summary>
+        /// <param name="playerData"></param>
         public void SpawnObject(PlayerData playerData)
         {
             if (playerData.team == "home_team")
@@ -106,6 +137,12 @@ namespace GameVisualization
             }
         }
 
+        /// <summary>
+        /// Spawns a player in the scene.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="playerPrefab"></param>
+        /// <param name="spawn">The parent of the player game object.</param>
         private void SpawnPlayer(PlayerData player, GameObject playerPrefab, GameObject spawn)
         {
             if (playerPrefab == null)
@@ -126,6 +163,11 @@ namespace GameVisualization
 
         }
 
+        /// <summary>
+        /// Spawns the ball in the scene.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="ballPrefab"></param>
         private void SpawnBall(PlayerData player, GameObject ballPrefab)
         {
             if (ballPrefab == null)

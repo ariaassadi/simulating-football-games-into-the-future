@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 using Utils;
 
+namespace Tools
+{
 public class CalculateDistanceTool : Tool
 {
     private float distance;
@@ -133,4 +135,6 @@ public class CalculateDistanceTool : Tool
             Destroy(lineRenderer);
         }
     }
+}
+
 }

@@ -89,12 +89,6 @@ public class GameInfo
 public class DatabaseManager : MonoBehaviour
 {
     // QUERIES
-    // private static string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-    // private static string conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/unity/Assets/DB/2sec.sqlite";
-    // private static string conn;
-
-    // private static string conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-
     public static Game[] query_db(string conn, string query)
     {
         // Open connection to the database
@@ -107,11 +101,8 @@ public class DatabaseManager : MonoBehaviour
     }
 
 
-    public static GameInfo[] query_schedule_db(string conn, string query)
+    public static GameInfo[] query_games_db(string conn, string query)
     {
-        // conn = "C:/Users/oskar/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-        // conn = "/home/oskarrick/uni/exjobb/simulating-football-games-into-the-future/graphics/data_processing/data/2sec.sqlite";
-        // conn = Application.streamingAssetsPath + "/2sec.sqlite";
         Debug.Log(conn);
 
         var db = new SQLiteConnection(conn);

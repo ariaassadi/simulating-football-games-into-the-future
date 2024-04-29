@@ -1,55 +1,57 @@
 using UnityEngine;
 
-
-public class ShowPlayerNamesTool : Tool
+namespace Tools
 {
-    protected override void Start()
+    public class ShowPlayerNamesTool : Tool
     {
-        base.Start();
-    }
-
-    public override void Select()
-    {
-        base.Select();
-        players = GameObject.FindGameObjectsWithTag("Player");
-        ShowPlayerNames();
-        Debug.Log("Show player names tool selected");
-    }
-
-    public override void Deselect()
-    {
-        base.Deselect();
-        HidePlayerNames();
-        Debug.Log("Show player names tool deselected");
-    }
-
-    public override void UpdateTool()
-    {
-        return;
-    }
-
-    private void ShowPlayerNames()
-    {
-        if (players != null)
+        protected override void Start()
         {
-            for (int i = 0; i < players.Length; i++)
+            base.Start();
+        }
+
+        public override void Select()
+        {
+            base.Select();
+            players = GameObject.FindGameObjectsWithTag("Player");
+            ShowPlayerNames();
+            Debug.Log("Show player names tool selected");
+        }
+
+        public override void Deselect()
+        {
+            base.Deselect();
+            HidePlayerNames();
+            Debug.Log("Show player names tool deselected");
+        }
+
+        public override void UpdateTool()
+        {
+            return;
+        }
+
+        private void ShowPlayerNames()
+        {
+            if (players != null)
             {
-                print("Player: " + players[i].name);
-                ShowPlayerName(players[i]);
+                for (int i = 0; i < players.Length; i++)
+                {
+                    print("Player: " + players[i].name);
+                    ShowPlayerName(players[i]);
+                }
             }
         }
-    }
 
-    private void HidePlayerNames()
-    {
-        if (players != null)
+        private void HidePlayerNames()
         {
-            foreach (GameObject player in players)
+            if (players != null)
             {
-                if (player != null)
+                foreach (GameObject player in players)
                 {
-                    HidePlayerName(player);
+                    if (player != null)
+                    {
+                        HidePlayerName(player);
 
+                    }
                 }
             }
         }
