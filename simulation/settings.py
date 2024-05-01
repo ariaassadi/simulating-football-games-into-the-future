@@ -8,6 +8,7 @@ FPS = 25
 pitch_length = 105
 pitch_width = 68
 normalize = True
+y_cols = ['x_future', 'y_future']
 
 # Train, test, val
 train_size = 0.7
