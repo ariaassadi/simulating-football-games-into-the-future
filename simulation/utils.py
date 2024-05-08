@@ -20,11 +20,6 @@ import os
 
 from settings import *
 
-normalize = True
-
-# Define global variables
-y_cols = ['x_future', 'y_future']
-
 # Define denominators for normalization
 denominators = {
     'x': pitch_length,
@@ -136,6 +131,9 @@ def split_match_ids(n_matches):
             match_info_df = pd.read_parquet(match_info_path)
             all_matches_df = pd.concat([all_matches_df, match_info_df], ignore_index=True)
 
+    # Sort the DataFrame to ensure consistent order
+    all_matches_df = all_matches_df.sort_values(by='match_id')
+
     # Fidn the count of each set
     train_count = int(n_matches * train_size)
     test_count = int(n_matches * test_size)
@@ -157,22 +155,21 @@ def add_pred_error(frames_df):
     # Create a vector with the Eculidian distance between the true position and the predicted position
     frames_df['pred_error'] = round(((frames_df['x_future_pred'] - frames_df['x_future'])**2 + (frames_df['y_future_pred'] - frames_df['y_future'])**2)**0.5, 2)
     
+    # Set pred_error to None for rows where 'team' is 'ball'
+    frames_df.loc[frames_df['team'] == 'ball', 'pred_error'] = None
+    
+    # Set pred_error to None for frames where the ball is not in motion
+    frames_df.loc[frames_df['ball_in_motion'] != True, 'pred_error'] = None
+
+    return frames_df
+
 # Add a column for distance wrongly predicted (in metres) for each object. Also return average_pred_error
 def total_error_loss(frames_df):
     # Add the 'pred_error' column
     add_pred_error(frames_df)
     
-    # Create a new DataFrame that we can easily manipulate
-    error_df = frames_df[['team', 'pred_error', 'ball_in_motion']].copy()
-
-    # Set pred_error to None for rows where 'team' is 'ball'
-    error_df.loc[error_df['team'] == 'ball', 'pred_error'] = None
-    
-    # Set pred_error to None for frames where the ball is not in motion
-    error_df.loc[error_df["ball_in_motion"] != True, 'pred_error'] = None
-
     # Calculate average pred_error, excluding rows where pred_error is None
-    average_pred_error = error_df['pred_error'].mean()
+    average_pred_error = frames_df['pred_error'].mean()
 
     return round(average_pred_error, 3)
 
@@ -189,16 +186,16 @@ def total_error_loss(frames_df):
 """
 
 # Prepare the DataFrame before training
-def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampling_factor=downsampling_factor, include_ball=False):
+def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampling_factor):
     # Fill NaN values with zeros for numerical columns
     frames_df[numerical_cols] = frames_df[numerical_cols].fillna(0)
 
     # Drop rows with NaN values in the labels (y)
     frames_df.dropna(subset=y_cols, inplace=True)
 
-    # TODO: Play around to see if this helps
+    # TODO: Play around to see if this helps with a large number of games
     # Drop rows where ball is not in motion
-    frames_df = frames_df[frames_df['ball_in_motion']]
+    # frames_df = frames_df[frames_df['ball_in_motion']]
 
     # # Drop rows where all objects werent detected
     # frames_df = frames_df[frames_df['objects_tracked'] == 23]
@@ -212,7 +209,7 @@ def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampl
     return frames_df
 
 # Prepare the data, either by usig a list of match_ids or a preloaded frames_df
-def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols=[], positions=[], downsampling_factor=downsampling_factor):
+def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, unchanged_cols=[]):
     # Initialize lists
     X_data = []
     y_data = []
@@ -227,7 +224,7 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
             # If we managed to load a DataFrame
             if frames_list:
                 # Preapare the DataFrame
-                frames_df = prepare_df(frames_list[0], numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor)
+                frames_df = prepare_df(frames_list[0], numerical_cols, categorical_cols, positions, downsampling_factor)
 
                 # Extract the desired columns
                 X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
@@ -259,6 +256,12 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
     for col in categorical_cols:
         label_encoder = LabelEncoder()
         X_data_df[col] = label_encoder.fit_transform(X_data_df[col])
+
+    # TODO: Examine if this a good way of handling NaN values
+    # Handling NaNs in numerical columns
+    for col in numerical_cols:
+        if X_data_df[col].isnull().any():
+            X_data_df[col].fillna(X_data_df[col].mean(), inplace=True)  # Fill NaN values with the mean
 
     if normalize:
         # Apply custom normalization
@@ -318,9 +321,9 @@ def prepare_model_inputs(X_numerical, X_categorical):
     return X_input
 
 # Prepare input data for embedding layers
-def prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor=1, preloaded_frames_df=pd.DataFrame()):
+def prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor, preloaded_frames_df=pd.DataFrame()):
     # Prepare data
-    X, y = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions=positions, downsampling_factor=downsampling_factor)
+    X, y = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor)
 
     # No need to do anything more if 'categorical_cols' is empty
     if categorical_cols == []:
@@ -358,19 +361,69 @@ def create_embeddings(categorical_cols):
     
     return input_layers, flat_layers
 
+# # Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
+# def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
+#     # Initialize vector
+#     frames_df['can_be_sequentialized'] = False
+
+#     # Create temporary vectors with the expected frame for each sequence step
+#     for i in range(sequence_length):
+#         frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * downsampling_factor
+
+#     # Group by each unique player
+#     grouped = frames_df.groupby(['team', 'jersey_number', 'match_id'])
+
+#     # Iterate through each group and find if we can create sequences
+#     for _, group in grouped:
+#         # Convert the frame column to a set for efficient lookups
+#         frame_set = set(group['frame'])
+
+#         # Check if all sequence steps exist
+#         group['temp_sequential'] = group.apply(
+#             lambda x: all((x[f'sequence_step_{i}'] in frame_set) for i in range(sequence_length)),
+#             axis=1
+#         )
+
+#         # Update the main DataFrame
+#         frames_df.loc[group.index, 'can_be_sequentialized'] = group['temp_sequential']
+
+#     # Drop temporary columns
+#     frames_df.drop(columns=[f'sequence_step_{i}' for i in range(sequence_length)], inplace=True)
+
+#     return frames_df
+
+# # Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
+# def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
+#     # Calculate the expected sequence start frame
+#     frames_df['expected_sequence_start_frame'] = frames_df['frame'] - (sequence_length - 1) * FPS // downsampling_factor
+    
+#     # Group by each unique player
+#     grouped = frames_df.groupby(['team', 'jersey_number', 'match_id'])
+    
+#     # For each player, shift the 'frame' column to identify potential sequences
+#     frames_df['shifted_frame'] = grouped['frame'].shift(sequence_length - 1)
+    
+#     # Check if the shifted frame matches 'expected_sequence_start_frame' and set 'can_be_sequentialized' to True if it does
+#     frames_df['can_be_sequentialized'] = frames_df['expected_sequence_start_frame'] == frames_df['shifted_frame']
+    
+#     # Drop temporary columns
+#     frames_df.drop(['expected_sequence_start_frame', 'shifted_frame'], axis=1, inplace=True)
+
+#     return frames_df
+
 # Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
-def add_can_be_sequentialized(frames_df, sequence_length):
+def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
     # Initialize vector
     frames_df['can_be_sequentialized'] = False
 
     # Create temporary vectors with the expexted frame for each sequence step
     for i in range(sequence_length):
-        frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * FPS // downsampling_factor
+        frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * downsampling_factor
 
     # Group by each unique player
     grouped = frames_df.groupby(['team', 'jersey_number', 'match_id'])
 
-    # Iterate through each player and find it we can create sequences
+    # Iterate through each player and find if we can create sequences
     for _, group in grouped:
         # Convert the frame column to a set for efficient lookups
         frame_set = set(group['frame'])
@@ -392,14 +445,14 @@ def add_can_be_sequentialized(frames_df, sequence_length):
     return frames_df
 
 # Sequentialize the numerical and categorical columns
-def sequentialize_data(X_df, y_df, numerical_cols, sequence_length):
+def sequentialize_data(X_df, y_df, numerical_cols, sequence_length, downsampling_factor):
     # Add the y values as a vector
     X_df['y_values'] = y_df.values.tolist()
 
     # Print error if none of the rows can be sequentialized
-    X_df = add_can_be_sequentialized(X_df, sequence_length)
+    X_df = add_can_be_sequentialized(X_df, sequence_length, downsampling_factor)
     if not X_df['can_be_sequentialized'].any():
-        raise ValueError("No frames can be sequentialized based on the provided criteria.")
+        raise ValueError("No frames can be sequentialized based on the provided parameters.")
 
     # Sort the values on each player from each game
     X_df = X_df.sort_values(by=['team', 'jersey_number', 'match_id'])
@@ -419,7 +472,7 @@ def sequentialize_data(X_df, y_df, numerical_cols, sequence_length):
 
 # Extract the sequentialized columns
 def extract_sequentialized_columns(X_df, categorical_cols):
-    X_filtered_df = X_df[X_df['can_be_sequentialized'] == True]
+    X_filtered_df = X_df[X_df['can_be_sequentialized']]
 
     # Extract and prepare numerical sequences
     X_seq_num = np.array(X_filtered_df['sequential_numerical_data'].tolist()).astype('float32')
@@ -441,20 +494,20 @@ def extract_sequentialized_columns(X_df, categorical_cols):
     return categorical_inputs + [X_seq_num], y_seq
 
 # Create a DataFrame with data ready for LSTM, either by usig a list of match_ids or a preloaded frames_df
-def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions, downsampling_factor=1):
+def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions, downsampling_factor):
     # Definie columns to temporarely give to prepare_data()
     all_unchanged_cols = ['team', 'jersey_number', 'match_id', 'frame'] + unchanged_cols
 
     # Prepare data
-    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, all_unchanged_cols, positions, downsampling_factor)
+    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, all_unchanged_cols)
 
     # Sequentialize the data
-    X_df = sequentialize_data(X_df, y_df, numerical_cols, sequence_length)
+    X_df = sequentialize_data(X_df, y_df, numerical_cols, sequence_length, downsampling_factor)
 
     return X_df
 
 # Preapre the LSTM input data
-def prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1, preloaded_frames_df=pd.DataFrame()):
+def prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor, preloaded_frames_df=pd.DataFrame()):
     # Prepare the LSTM DataFrame
     X_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, [], sequence_length, positions, downsampling_factor)
 
@@ -536,7 +589,7 @@ def extract_variables(model_name):
     return numerical_cols, categorical_cols, positions, sequence_length, n_matches
 
 # Example usage: run_model(test_ids, "NN_model_v1") 
-def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
+def run_model(match_ids, model_name, downsampling_factor_testing=1, preloaded_frames_df=pd.DataFrame()):
     # Load varibles
     numerical_cols, categorical_cols, positions, sequence_length, _ = extract_variables(model_name)
     positions_with_ball = positions + ['ball']
@@ -547,16 +600,16 @@ def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
     # Prepare the input data for LSTM model
     if "LSTM" in model_name:
         # Prepare X_test_input and y_test
-        X_test_input, y_test = prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor=1, preloaded_frames_df=preloaded_frames_df)
+        X_test_input, y_test = prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequence_length, positions, downsampling_factor_testing, preloaded_frames_df=preloaded_frames_df)
 
         # Create the DataFrame that will recieve the predictions
-        unchanged_cols = ['ball_in_motion', 'team_name', 'minute', 'second', 'frame'] + y_cols
-        frames_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions_with_ball, downsampling_factor=1)
+        unchanged_cols = ['ball_in_motion', 'team_name', 'minute', 'second'] + y_cols
+        frames_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions_with_ball, downsampling_factor_testing)
 
     # Prepare the input data for non-LSTM model
     else:
         # Prepare X_test_input and y_test
-        X_test_input, y_test = prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor=1, preloaded_frames_df=preloaded_frames_df)
+        X_test_input, y_test = prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor_testing, preloaded_frames_df=preloaded_frames_df)
 
         # Make sure that we either have a list of match_ids, or a preloaded frames_df
         if match_ids == [] and preloaded_frames_df.empty:
@@ -565,7 +618,7 @@ def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
         # Create the DataFrame that will recieve the predictions by first creating a list
         frames_list = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
         frames_df = pd.concat([
-            prepare_df(current_frames_df, numerical_cols, categorical_cols, positions=positions_with_ball, downsampling_factor=1)
+            prepare_df(current_frames_df, numerical_cols, categorical_cols, positions_with_ball, downsampling_factor_testing)
             for current_frames_df in frames_list
         ], axis=0)
 
@@ -618,9 +671,9 @@ def run_model(match_ids, model_name, preloaded_frames_df=pd.DataFrame()):
     return frames_df
 
 # Example usage: evaluate_model(test_ids, "NN_best_v1") 
-def evaluate_model(match_ids, model_name):
+def evaluate_model(match_ids, model_name, downsampling_factor_testing=1):
     # Run model and the predicted coordinates
-    frames_df = run_model(match_ids, model_name)
+    frames_df = run_model(match_ids, model_name, downsampling_factor_testing)
     
     # Calculate the error
     error = total_error_loss(frames_df)
@@ -640,13 +693,12 @@ def write_testing_error(model_name, error):
             print("Testing results added to the file.")
 
 # Test an existing model
-def test_model(model_name):
+def test_model(model_name, downsampling_factor_testing=1):
     # Extract n_matches to find the correct test_ids
-    _, _, _, _, n_matches = extract_variables(model_name)
-    _, test_ids, _ = split_match_ids(n_matches)
+    _, test_ids, _ = split_match_ids(240)
 
     # Evaluate the model
-    error = evaluate_model(test_ids, model_name)
+    error = evaluate_model(test_ids[0:10], model_name, downsampling_factor_testing)
     print(f"Error: {error} m")
 
     # Write error to txt files
@@ -654,15 +706,18 @@ def test_model(model_name):
 
 # Disaplys how the average 'pred_error' varies with each value in 'column_to_analyze'
 def print_column_variance(match_ids, model_name, column_to_analyze):
-    # Run model and calculated error
-    frames_concat_df = run_model(match_ids, model_name)
-    error = total_error_loss(frames_concat_df)
+    # Run model and calculate error
+    frames_df = run_model(match_ids, model_name)
+    error = total_error_loss(frames_df)
+    frames_df = add_pred_error(frames_df)
+
+    print(frames_df['pred_error'])
 
     # Convert 'pred_error' to numeric, coercing non-numeric values to NaN
-    frames_concat_df['pred_error'] = pd.to_numeric(frames_concat_df['pred_error'], errors='coerce')
+    # frames_df['pred_error'] = pd.to_numeric(frames_df['pred_error'], errors='coerce')
 
     # Group by 'column_to_analyze' and calculate the average 'pred_error'
-    column_variance_df = frames_concat_df.groupby(column_to_analyze)['pred_error'].mean().reset_index()
+    column_variance_df = frames_df.groupby(column_to_analyze)['pred_error'].mean().reset_index()
 
     # Round to 2 decimal places
     column_variance_df['pred_error'] = round(column_variance_df['pred_error'], 2)

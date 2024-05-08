@@ -1,4 +1,4 @@
-2024-05-07
+2024-05-08
 epochs=1
 matches=40
 sequence_length=10
@@ -6,10 +6,9 @@ numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tired
 categorical_cols=['position']
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
 l2=1e-06
-New method
 
-Execution time: 22 minutes
+Execution time: 23 minutes
 
 Training results:
-loss: [1.71]
-val_loss: [1.51]
+loss: [1.74]
+val_loss: [1.58]

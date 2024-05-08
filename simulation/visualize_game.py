@@ -229,7 +229,7 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     fig.suptitle(f"{home_team} - {away_team}", fontsize=18)
 
     # Add model name
-    ax['pitch'].text(pitch_length, 71, f"{model_name}".replace('_', ' ').title(), ha='right', va='center', fontsize=16)
+    ax['pitch'].text(pitch_length, 71, f"{model_name}".replace('_', ' '), ha='right', va='center', fontsize=16)
 
     # Draw the legend
     draw_prediction_legend(ax['pitch'], model_name, home_team, away_team)
