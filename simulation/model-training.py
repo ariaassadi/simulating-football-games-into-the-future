@@ -1,8 +1,12 @@
-# %% [markdown]
+#!/usr/bin/env python
+# coding: utf-8
+
 # # Notebook for training predictive models
 # ### Import packages
 
-# %%
+# In[ ]:
+
+
 from tensorflow.keras.layers import Input, Embedding, Flatten, Concatenate, Dense, BatchNormalization, Dropout, Reshape, LSTM
 from tensorflow.keras.models import Model, load_model
 from sklearn.compose import ColumnTransformer
@@ -22,23 +26,25 @@ from utils import prepare_df, add_can_be_sequentialized, extract_variables, load
 from visualize_game import visualize_training_results
 from settings import *
 
-import old_utils as old
 
-# %% [markdown]
 # ### Global variables
 
-# %%
+# In[ ]:
+
+
 # Define parameters for model training
 batch_size = 32
 sequence_length = 10        # Sequence length for LSTM model
 downsampling_factor = 5     # Keep every n:th frame
 
-# %% [markdown]
+
 # ## Predictive model 1
 # ### NN with Embedding layers
 # Player-based model
 
-# %%
+# In[ ]:
+
+
 # Define the architecture of the neural network model with embeddings layers
 def define_NN_model(numerical_input_shape, categorical_cols, l1=0, l2=0):
     # Inputs for each categorical feature
@@ -126,7 +132,10 @@ def train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorica
             rounded_values = [round(v, 2) for v in value]
             f.write(f"{key}: {rounded_values}\n")
 
-# %%
+
+# In[ ]:
+
+
 # Train the NN model with embedding layers
 n_epochs = 1
 n_matches = 10
@@ -138,12 +147,14 @@ numerical_cols = ['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'ang
 train_ids, _, val_ids = split_match_ids(n_matches)
 # train_NN_model_with_embedding(train_ids, val_ids, numerical_cols, categorical_cols, positions)
 
-# %% [markdown]
+
 # ## Predictive model 2
 # ### LSTM model
 # Player-based model
 
-# %%
+# In[ ]:
+
+
 # Define the architecture of the LSTM model with embeddings layers
 def define_LSTM_model(numerical_input_shape, categorical_cols, sequence_length, l1=0, l2=0):
     categorical_inputs = []
@@ -239,43 +250,61 @@ def train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, seque
             rounded_values = [round(v, 2) for v in value]
             f.write(f"{key}: {rounded_values}\n")
 
-# %%
+
+# In[ ]:
+
+
 # tf.keras.backend.clear_session()
-n_epochs = 1
-n_matches = 40
+n_epochs = 5
+n_matches = 60
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
 # positions=['Goalkeeper']
 categorical_cols = ['position']
 sequence_length = 10
-numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness']
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
 
 # Only use 3 matches
 # n_matches = 3
 # train_ids, test_ids, val_ids = ['3acbc760-5bad-426c-ab7c-ef2d80f5ecf9'], ['b37b8919-e5bf-460e-a431-48feb878729f'], ['c820079c-2c34-485e-8b0a-73226152d986']
 
+train_ids, _, val_ids = split_match_ids(n_matches)
+train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-4)
+
+
+# In[ ]:
+
+
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'tiredness_short', 'v_x_avg', 'v_y_avg']
+train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-5)
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg', 'distance_to_onside']
+train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-5)
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'angle_to_ball', 'tiredness', 'tiredness_short', 'v_x_avg', 'v_y_avg']
+train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-5)
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'angle_to_ball', 'tiredness', 'tiredness_short', 'v_x_avg', 'v_y_avg']
+train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-5)
+
+
+# In[ ]:
+
+
+# n_matches = 160
 # train_ids, _, val_ids = split_match_ids(n_matches)
-train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
-
-# %%
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'tiredness_short']
 # train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
 
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg']
+# n_matches = 280
+# train_ids, _, val_ids = split_match_ids(n_matches)
 # train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
 
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'minute', 'sta', 'distance_ran']
+# n_matches = 560
+# train_ids, _, val_ids = split_match_ids(n_matches)
 # train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
 
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'angle_to_ball']
-# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
 
-# numerical_cols=['x', 'y', 'v_x', 'v_y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'pac', 'acc']
-# train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_length, positions=positions, l2=1e-6)
-
-# %% [markdown]
 # ### Visualize training results
 
-# %%
+# In[ ]:
+
+
 # # Visualize training results
 # model_name = 'NN_model_v3'
 # training_results = {
@@ -284,5 +313,4 @@ train_LSTM_model(train_ids, val_ids, numerical_cols, categorical_cols, sequence_
 # }
 
 # visualize_training_results(training_results, model_name)
-
 
