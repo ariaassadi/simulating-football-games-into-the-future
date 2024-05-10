@@ -1,6 +1,6 @@
 # Define global variables
 DATA_LOCAL_FOLDER = '/mimer/NOBACKUP/groups/two_second_football'
-seasons = ['2023']
+seasons = ['2022', '2023']
 competitions = ['Allsvenskan']
 reload_data = True
 seconds_into_the_future = 2
