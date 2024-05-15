@@ -46,9 +46,69 @@ namespace GameVisualization
         /// <summary>
         /// Get the game information from the database and create the game options.
         /// </summary>
+        // public void GetGameInfo()
+        // {
+        //     string pathToDB;
+
+        //     if (games == null)
+        //     {
+        //         if (games == null)
+        //         {
+        //             if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
+        //             {
+        //                 pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo.sqlite");
+        //                 if (!File.Exists(pathToDB) || new FileInfo(pathToDB).Length == 0)
+        //                     StartCoroutine(CopyDatabase(pathToDB));
+        //             }
+        //             else
+        //                 pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
+
+        //             games = DatabaseManager.query_games_db(pathToDB, "SELECT * FROM schedule");
+        //         }
+
+        //     }
+
+        //     if (games == null)
+        //     {
+        //         Debug.LogError("No schedule found");
+        //         return;
+        //     }
+
+        //     GameObject horizontalPanel;
+        //     GameObject g;
+
+        //     Debug.Log(games.Length);
+        //     if (!gamesAreCreated)
+        //     {
+        //         for (int i = 0; i < games.Length; i++)
+        //         {
+        //             horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
+        //             horizontalPanel.name = $"{games[i].HomeTeamName} vs {games[i].AwayTeamName}";
+
+        //             for (int j = 1; j < 3; j++)
+        //             {
+        //                 g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
+        //                 AddGameInfo(games[i], g, j);
+        //             }
+        //         }
+        //         gamesAreCreated = true;
+        //     }
+        // }
+
+        // Create game options from json files
         public void GetGameInfo()
         {
             string pathToDB;
+            string pathToClips = Path.Combine(Application.streamingAssetsPath, "Clips");
+            string[] files = Directory.GetFiles(pathToClips, "*.json");
+
+            if (files == null)
+            {
+                Debug.LogError("No game files found");
+                return;
+            }
+
+
 
             if (games == null)
             {
@@ -56,12 +116,12 @@ namespace GameVisualization
                 {
                     if (Application.platform == RuntimePlatform.Android && !Application.isEditor)
                     {
-                        pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo.sqlite");
+                        pathToDB = Path.Combine(Application.persistentDataPath, "2sec_demo_clips.sqlite");
                         if (!File.Exists(pathToDB) || new FileInfo(pathToDB).Length == 0)
                             StartCoroutine(CopyDatabase(pathToDB));
                     }
                     else
-                        pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
+                        pathToDB = Path.Combine(Application.streamingAssetsPath, "2sec_demo_clips.sqlite");
 
                     games = DatabaseManager.query_games_db(pathToDB, "SELECT * FROM schedule");
                 }
@@ -88,7 +148,7 @@ namespace GameVisualization
                     for (int j = 1; j < 3; j++)
                     {
                         g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-                        AddGameInfo(games[i], g, j);
+                        AddGameInfoJSON(games[i], g);
                     }
                 }
                 gamesAreCreated = true;
@@ -108,7 +168,7 @@ namespace GameVisualization
         /// </remarks>
         IEnumerator CopyDatabase(string destinationPath)
         {
-            string sourcePath = Path.Combine(Application.streamingAssetsPath, "2sec_demo.sqlite");
+            string sourcePath = Path.Combine(Application.streamingAssetsPath, "2sec_demo_clips.sqlite");
 
             // Use a UnityWebRequest to copy the file from StreamingAssets to persistentDataPath
             using (UnityWebRequest www = UnityWebRequest.Get(sourcePath))
@@ -134,21 +194,22 @@ namespace GameVisualization
         /// <param name="game">The game game information for a game.</param>
         /// <param name="g">The game option object where the game information is visualized.</param>
         /// <param name="period">The period of the game. </param>
-        private void AddGameInfo(GameInfo game, GameObject g, int period)
+        private void AddGameInfoJSON(GameInfo game, GameObject g)
         {
-            g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}\nPeriod: {period}";
-            if (period == 1)
-            {
-                g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFirst Half";
-            }
-            else
-            {
-                g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nSecond Half";
-            }
+            string frame_range = ParseFrameRangeFromJson(game);
+            g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFrame range: {frame_range}";
+            g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFrame range: {frame_range}";
+
             // g.GetComponent<Button>().onClick.AddListener(() => uiManager.GetComponent<MenuManager>().ShowLoadingScreen());
-            g.GetComponent<Button>().onClick.AddListener(() => LoadGame(game, period));
+            g.GetComponent<Button>().onClick.AddListener(() => LoadGame(game, 2));
         }
 
+        private string ParseFrameRangeFromJson(GameInfo game)
+        {
+            string startFrame = game.Clip.Split('_')[1];
+            string endFrame = game.Clip.Split('_')[2].Replace(".json", "");
+            return $"{startFrame} - {endFrame}";
+        }
         /// <summary>
         /// Loads the game asynchronously and shows a loading screen while loading the game data.
         /// </summary>

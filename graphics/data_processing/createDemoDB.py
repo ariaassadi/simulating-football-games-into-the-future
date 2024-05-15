@@ -7,8 +7,8 @@ from pathlib import Path
 import sqlite3
 
 path = os.getcwd()
-data_path = path + '/data' + '/games'
-
+data_path = path + '/data' + '/demo_data'
+# print(data_path)S
 match_paths = glob.glob(os.path.join(data_path, "*.parquet"))
 match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths]
 
@@ -21,6 +21,7 @@ home_colors_dict = {item['Team']: item['Home Color Hex'] for item in df_club_inf
 away_colors_dict = {item['Team']: item['Away Color Hex'] for item in df_club_info[["Team", "Away Color Hex"]].to_dict(orient='records')}
 
 path_to_db = path + '/data' + '/2sec_demo.sqlite'
+
 
 schedule_df = pd.DataFrame(columns=['match_id', 'home_team_name', 'away_team_name', 'home_team_name_short', 'away_team_name_short'])
 write_to_db = True
@@ -48,48 +49,56 @@ def select_away_team_color(home_team_color_hex, color_option1_hex, color_option2
     else:
         return color_option1_hex
 
-match_id = match_ids[0]
-file_path_match = f"{data_path}/{match_id}.parquet"
-print(file_path_match)
-frames_df = pd.read_parquet(file_path_match)
-frames_df.drop(columns=['minute', 'second', 'ball_in_motion', 'a_x', 'a_y', 'role', 'distance_ran', 'events'], inplace=True)
 
-if write_to_db:
-    # Connect to the SQLite database
-    conn = sqlite3.connect(path_to_db)
+for i, match_id in enumerate(match_ids):
+    file_path_match = f"{data_path}/{match_id}.parquet"
+    print(file_path_match)
+    frames_df = pd.read_parquet(file_path_match)
+    frames_df.drop(columns=['minute', 'second', 'ball_in_motion', 'a_x', 'a_y', 'role', 'distance_ran', 'events'], inplace=True)    
+    if write_to_db:
+        # Connect to the SQLite database
+        conn = sqlite3.connect(path_to_db)
 
-    table_name = f'games'
-    frames_df.to_sql(table_name, conn, if_exists='replace')
-    # Close the connection
-    conn.close()
+        # Iterate over each DataFrame in frames_dfs and write it to the database
+
+        if (i==0):
+            table_name = f'games'
+            frames_df.to_sql(table_name, conn, if_exists='replace')
+        else:
+            table_name = f'games'
+            frames_df.to_sql(table_name, conn, if_exists='append')
+
+        # Close the connection
+        conn.close()
+    frames_df['team_name'] = frames_df['team_name'].astype(str)    
     
-frames_df['team_name'] = frames_df['team_name'].astype(str)    
-
-home_team_df = frames_df[frames_df['team'] == 'home_team']
-away_team_df = frames_df[frames_df['team'] == 'away_team']
-
-match_id = frames_df['match_id'].iloc[0]
-home_team_name = home_team_df['team_name'].iloc[0]
-away_team_name = away_team_df['team_name'].iloc[0]
-
-home_team_color = home_colors_dict[home_team_name]
-away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
-
-
-
-new_df = pd.DataFrame({'match_id': match_id,
-                        'home_team_name': home_team_name,
-                        'away_team_name': away_team_name,
-                        'home_team_name_short': long_to_short_name[home_team_name],
-                        'away_team_name_short': long_to_short_name[away_team_name],
-                        'home_team_color': home_team_color,
-                        'away_team_color': away_team_color},
-                        index=[0])
-
-# concat the new_df to the schedule_df
-schedule_df = pd.concat([schedule_df, new_df])
+    home_team_df = frames_df[frames_df['team'] == 'home_team']
+    away_team_df = frames_df[frames_df['team'] == 'away_team']
+    
+    match_id = frames_df['match_id'].iloc[0]
+    home_team_name = home_team_df['team_name'].iloc[0]
+    away_team_name = away_team_df['team_name'].iloc[0]
+    
+    home_team_color = home_colors_dict[home_team_name]
+    away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
+    
+    
+    
+    new_df = pd.DataFrame({'match_id': match_id,
+                           'home_team_name': home_team_name,
+                           'away_team_name': away_team_name,
+                           'home_team_name_short': long_to_short_name[home_team_name],
+                           'away_team_name_short': long_to_short_name[away_team_name],
+                           'home_team_color': home_team_color,
+                           'away_team_color': away_team_color},
+                          index=[i])
+    
+    # concat the new_df to the schedule_df
+    schedule_df = pd.concat([schedule_df, new_df])
     
 print(schedule_df)
+
+write_to_db = True
 
 if write_to_db:
     print('Writing to DB' + path_to_db)

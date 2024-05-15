@@ -3,7 +3,7 @@ using System.Data; // 1
 using SQLite; // 1
 
 [Table("games")]
-public class Game
+public class Games
 {
     [PrimaryKey, AutoIncrement]
     public int Index { get; set; }
@@ -50,14 +50,19 @@ public class Game
     [Column("y_future")]
     public float Y_Future { get; set; }
 
-    [Column("offside")]
-    public float Offside { get; set; }
+    // [Column("offside")]
+    // public float Offside { get; set; }
 
     [Column("match_id")]
     public string MatchId { get; set; }
 
     [Column("orientation")]
     public float Orientation { get; set; }
+
+    public override string ToString()
+    {
+        return $"Player: {Player}, Team: {Team}, Jersey Number: {JerseyNumber}, Position: ({X}, {Y}), Future Position: ({X_Future}, {Y_Future})";
+    }
 }
 
 [Table("schedule")]
@@ -83,6 +88,9 @@ public class GameInfo
 
     [Column("match_id")]
     public string MatchId { get; set; }
+
+    [Column("clip")]
+    public string Clip { get; set; }
 }
 
 

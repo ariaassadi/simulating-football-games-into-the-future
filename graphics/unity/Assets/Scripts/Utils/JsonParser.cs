@@ -148,7 +148,66 @@ namespace Utils
             return jsonString;
         }
 
+
+        ////////////////////////
+        /// Game Data
+        ////////////////////////
+
+        public static Game[] GetGameFromJson(string json)
+        {
+            GameWrapper gameWrapper = JsonUtility.FromJson<GameWrapper>(json);
+            Game[] games = gameWrapper.game;
+            Debug.Log("Game lenght: " + games.Length);
+            Debug.Log("First game object: " + games[0].player);
+            return games;
+        }
+
     }
+}
+
+[System.Serializable]
+public class Game
+{
+    public string team;
+    public string team_name;
+    public string team_direction;
+    public int jersey_number;
+    public string player;
+    public float x;
+    public float y;
+    public int frame;
+    public int period;
+    public int objects_tracked;
+    public float x_future;
+    public float y_future;
+    public float v_x;
+    public float v_y;
+    public float v_x_avg;
+    public float v_y_avg;
+    public float orientation;
+    public float distance_to_ball;
+    public float angle_to_ball;
+    public string nationality;
+    public float height;
+    public int weight;
+    public int acc;
+    public int pac;
+    public int sta;
+    public string position;
+    public float tiredness;
+    public float tiredness_short;
+    public string match_id;
+
+    public override string ToString()
+    {
+        return $"Player: {this.player}, Frame: {this.frame}, Team: {this.team}, Jersey Number: {this.jersey_number}, Position: ({this.x}, {this.y}), Future Position: ({this.x_future}, {this.y_future})";
+    }
+}
+
+[System.Serializable]
+public class GameWrapper
+{
+    public Game[] game;
 }
 
 [System.Serializable]

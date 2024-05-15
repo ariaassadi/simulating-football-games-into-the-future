@@ -105,7 +105,7 @@ namespace GameVisualization
 
             // Initialize Game Data Loader
             gameDataLoader = new GameDataLoader(gameInfo);
-            bool success = await gameDataLoader.LoadGameAsync(period);
+            bool success = await gameDataLoader.LoadGameAsyncJson();
             if (!success)
                 return success;
 

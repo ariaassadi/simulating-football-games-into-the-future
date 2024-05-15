@@ -1507,9 +1507,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fb2b4934faa8dbfb7d28078c3a48c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  homeTeam: {fileID: 1007526013}
-  awayTeam: {fileID: 926502382}
-  ball: {fileID: 1899479602}
   playIcon: {fileID: 2800000, guid: f850fc48833377c3c83a118cc092a131, type: 3}
   pauseIcon: {fileID: 2800000, guid: 84776de9806603b3fbdfb7b21cb4e89a, type: 3}
   playPauseButton: {fileID: 1921477510}
@@ -7181,6 +7178,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Offside
       objectReference: {fileID: 0}
+    - target: {fileID: 7534515400999126885, guid: 496a582982833fa7cab587d344fc6ada,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_Pivot.x
@@ -7199,7 +7201,7 @@ PrefabInstance:
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
@@ -7209,7 +7211,7 @@ PrefabInstance:
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
@@ -7259,12 +7261,12 @@ PrefabInstance:
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -940
       objectReference: {fileID: 0}
     - target: {fileID: 8340591861967060686, guid: 496a582982833fa7cab587d344fc6ada,
         type: 3}

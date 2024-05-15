@@ -51,8 +51,8 @@ namespace GameVisualization
         {
             this.gameDataLoader = gameDataLoader;
             this.gameObjectSpawner = gameObjectSpawner;
-            startFrame = gameDataLoader.FrameData[0].Frame;
-            endFrame = gameDataLoader.FrameData[gameDataLoader.FrameData.Length - 1].Frame;
+            startFrame = gameDataLoader.StartFrame();
+            endFrame = gameDataLoader.EndFrame;
             currentFrameNr = startFrame;
             // Spawn the first frame to fill the scene.
             SpawnFirstFrame();
@@ -69,6 +69,10 @@ namespace GameVisualization
                 return;
             }
             playerData = AddPlayerData(gameDataLoader.GetFrameData(currentFrameNr));
+            foreach (PlayerData player in playerData)
+            {
+                Debug.Log("Player: " + player);
+            }
             activePlayers = GetPlayersInFrame();
             gameObjectSpawner.SpawnObjects(playerData);
         }
@@ -265,17 +269,17 @@ namespace GameVisualization
         private PlayerData AddPlayerData(Game game)
         {
             PlayerData player = new PlayerData();
-            player.x = game.X;
-            player.y = game.Y;
-            player.x_future = game.X_Future;
-            player.y_future = game.Y_Future;
-            player.team = game.Team;
-            player.offside = game.Offside;
-            player.jersey_number = game.JerseyNumber;
-            player.player_name = game.Player;
+            player.x = game.x;
+            player.y = game.y;
+            player.x_future = game.x_future;
+            player.y_future = game.y_future;
+            player.team = game.team;
+            // player.offside = game.Offside;
+            player.jersey_number = game.jersey_number;
+            player.player_name = game.player;
             // Convert x velocity and y velocity to the combined velocity
-            player.v = Mathf.Sqrt(Mathf.Pow(game.V_X, 2) + Mathf.Pow(game.V_Y, 2));
-            player.orientation = Mathf.Deg2Rad * (game.Orientation);
+            player.v = Mathf.Sqrt(Mathf.Pow(game.v_x, 2) + Mathf.Pow(game.v_y, 2));
+            player.orientation = Mathf.Deg2Rad * (game.orientation);
             return player;
         }
 

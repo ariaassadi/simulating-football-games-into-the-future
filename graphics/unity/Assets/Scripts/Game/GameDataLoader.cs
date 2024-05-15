@@ -1,5 +1,10 @@
 using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
 using UnityEngine;
+
+using Utils;
+using System.Collections.Generic;
 
 namespace GameVisualization
 {
@@ -12,6 +17,13 @@ namespace GameVisualization
         private GameInfo gameInfo;
         private Game[] gameData;
         private Game[] frameData;
+
+        // public int StartFrame { get { return gameData.Min(x => x.Frame); } }
+        public int StartFrame()
+        {
+            return gameData[0].frame;
+        }
+        public int EndFrame { get { return gameData.Max(x => x.frame); } }
 
         /// <summary>
         /// The frame data for the game.
@@ -36,7 +48,8 @@ namespace GameVisualization
         {
             // Load game data asynchronously
             string pathToDB = GetDatabasePath();
-            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
+            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
+            // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
             string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}' GROUP BY frame";
 
             gameData = await Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));
@@ -50,6 +63,43 @@ namespace GameVisualization
             return true;
         }
 
+        public async Task<bool> LoadGameAsyncJson()
+        {
+            // get clip file name from gameInfo
+            string clipFileName = gameInfo.Clip;
+
+            // Load game data asynchronously
+            string pathToClips = Path.Combine(Application.streamingAssetsPath, "Clips");
+            string pathToClip = Path.Combine(pathToClips, clipFileName);
+            Debug.Log("Loading game data from: " + pathToClip);
+            string json = await Task.Run(() => File.ReadAllText(pathToClip));
+            Debug.Log("Loaded json: " + json);
+            gameData = await Task.Run(() => JsonParser.GetGameFromJson(json));
+            if (gameData == null || gameData.Length == 0)
+            {
+                Debug.LogError("Failed to load game data.");
+                return false;
+            }
+            // frameData = (from game in gameData
+            //              group game by game.Frame into frameGroup
+            //              select new Game
+            //              {
+            //                  Frame = frameGroup.Key,
+            //                  ObjectsTracked = frameGroup.First().ObjectsTracked
+            //              }).ToArray();
+            // if (frameData == null || frameData.Length == 0)
+            // {
+            //     Debug.LogError("Failed to load frame data.");
+            //     return false;
+            // }
+            Debug.Log("Loaded game data." + gameData.Length);
+            foreach (Game g in gameData)
+            {
+                Debug.Log(g);
+            }
+            return true;
+        }
+
         /// <summary>
         /// Gets the game data for the given frame.
         /// </summary>
@@ -57,7 +107,10 @@ namespace GameVisualization
         /// <returns>The Game data for a given frame.</returns>
         public Game[] GetFrameData(int frame)
         {
-            return System.Array.FindAll(gameData, x => x.Frame == frame);
+            Debug.Log("Getting frame data for frame: " + frame);
+            Game[] players = System.Array.FindAll(gameData, x => x.frame == frame);
+            Debug.Log("Found players: " + players.Length);
+            return players;
         }
 
         /// <summary>
@@ -76,5 +129,6 @@ namespace GameVisualization
             }
         }
     }
-
 }
+
+// public class

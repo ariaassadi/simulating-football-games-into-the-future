@@ -7,14 +7,13 @@ from pathlib import Path
 import sqlite3
 
 path = os.getcwd()
-path = os.path.abspath(os.path.join(path, os.pardir))
-data_path = path + '/data_processing' + '/data' + '/games'
+data_path = path + '/data' + '/games'
 # print(data_path)
 match_paths = glob.glob(os.path.join(data_path, "*.parquet"))
 match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths]
 
 # Dictionary to convert long name to short name:
-df_club_info = pd.read_excel(path + '/data_processing' + '/data' + '/club_info.xlsx')
+df_club_info = pd.read_excel(path + '/data' + '/club_info.xlsx')
 
 long_to_short_name = {item['Team']: item['Short Name'] for item in df_club_info[["Team", "Short Name"]].to_dict(orient='records')}
 
@@ -22,7 +21,7 @@ home_colors_dict = {item['Team']: item['Home Color Hex'] for item in df_club_inf
 away_colors_dict = {item['Team']: item['Away Color Hex'] for item in df_club_info[["Team", "Away Color Hex"]].to_dict(orient='records')}
 
 print(long_to_short_name['BK Häcken'])
-path_to_db = path + '/data_processing' + '/data' + '/2sec.sqlite'
+path_to_db = path + '/data' + '/2sec.sqlite'
 
 
 schedule_df = pd.DataFrame(columns=['match_id', 'home_team_name', 'away_team_name', 'home_team_name_short', 'away_team_name_short'])
