@@ -94,8 +94,12 @@ def add_xy_future(frames_df, n=50):
     future_df = frames_df.groupby(['team', 'jersey_number']).shift(-n)
 
     # Merge the original DataFrame with the shifted DataFrame to get future coordinates
-    frames_df[['x_future', 'y_future']] = future_df[['x', 'y']]
-    
+    frames_df[[f"x_future_{n}", f"y_future_{n}"]] = future_df[['x', 'y']]
+
+    # Add the standard columns 'x_future' and 'y_future' if n corresponds to the numbers specified in the global variables file
+    if n == FPS * seconds_into_the_future:
+        frames_df[['x_future', 'y_future']] = future_df[['x', 'y']]
+
     return frames_df
 
 # Add the features v_x and v_y (current velocity (m/s) in the x and y axis respectivly). delta_frames determines the time stamp
