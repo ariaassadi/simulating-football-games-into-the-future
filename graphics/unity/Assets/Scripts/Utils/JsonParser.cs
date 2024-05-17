@@ -190,6 +190,7 @@ public class Game
     public string nationality;
     public float height;
     public int weight;
+    public int offside;
     public int acc;
     public int pac;
     public int sta;

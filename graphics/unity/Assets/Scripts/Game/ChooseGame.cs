@@ -145,11 +145,8 @@ namespace GameVisualization
                     horizontalPanel = Instantiate(HorizontalPanelPrefab, content.transform, false);
                     horizontalPanel.name = $"{games[i].HomeTeamName} vs {games[i].AwayTeamName}";
 
-                    for (int j = 1; j < 3; j++)
-                    {
-                        g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
-                        AddGameInfoJSON(games[i], g);
-                    }
+                    g = Instantiate(gameOptionPrefab, horizontalPanel.transform, false);
+                    AddGameInfoJSON(games[i], g);
                 }
                 gamesAreCreated = true;
             }
@@ -196,19 +193,19 @@ namespace GameVisualization
         /// <param name="period">The period of the game. </param>
         private void AddGameInfoJSON(GameInfo game, GameObject g)
         {
-            string frame_range = ParseFrameRangeFromJson(game);
-            g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFrame range: {frame_range}";
-            g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFrame range: {frame_range}";
+            string timeRange = ParseTimeRangeFromJson(game);
+            g.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = $"{game.HomeTeamName} vs {game.AwayTeamName}\nTime range: {timeRange}";
+            g.name = $"{game.HomeTeamName} vs {game.AwayTeamName}\nFrame range: {timeRange}";
 
             // g.GetComponent<Button>().onClick.AddListener(() => uiManager.GetComponent<MenuManager>().ShowLoadingScreen());
             g.GetComponent<Button>().onClick.AddListener(() => LoadGame(game, 2));
         }
 
-        private string ParseFrameRangeFromJson(GameInfo game)
+        private string ParseTimeRangeFromJson(GameInfo game)
         {
-            string startFrame = game.Clip.Split('_')[1];
-            string endFrame = game.Clip.Split('_')[2].Replace(".json", "");
-            return $"{startFrame} - {endFrame}";
+            string startTime = game.Clip.Split('_')[1];
+            string endTime = game.Clip.Split('_')[2].Replace(".json", "");
+            return $"{startTime} - {endTime}";
         }
         /// <summary>
         /// Loads the game asynchronously and shows a loading screen while loading the game data.

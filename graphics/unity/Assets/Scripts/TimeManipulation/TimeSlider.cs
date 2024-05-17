@@ -21,6 +21,7 @@ public class TimeSlider : MonoBehaviour
     private int startFrame;
     private int endFrame;
     private int period;
+    private int second_half_frame;
 
     private void Start()
     {
@@ -38,7 +39,7 @@ public class TimeSlider : MonoBehaviour
         }
     }
 
-    public void UpdateTimeSlider(int startFrame, int endFrame, int period)
+    public void UpdateTimeSlider(int startFrame, int endFrame, int period, int second_half_frame = 0)
     {
         timeSlider.GetComponent<UnityEngine.UI.Slider>().minValue = startFrame;
         timeSlider.GetComponent<UnityEngine.UI.Slider>().maxValue = endFrame - 1;
@@ -47,6 +48,7 @@ public class TimeSlider : MonoBehaviour
         this.startFrame = startFrame;
         this.endFrame = endFrame;
         this.period = period;
+        this.second_half_frame = second_half_frame;
         startTime.text = FrameToTime(startFrame, period).ToString();
         endTime.text = FrameToTime(endFrame, period).ToString();
         scoreBoardTime.text = FrameToTime(startFrame, period).ToString();
@@ -65,7 +67,7 @@ public class TimeSlider : MonoBehaviour
         else
         {
             Debug.Log((frame - startFrame).ToString());
-            ms = (frame - startFrame) * 40;
+            ms = (frame - second_half_frame) * 40;
             minutes = ms / 60000 + 45;
             seconds = (ms % 60000) / 1000;
         }

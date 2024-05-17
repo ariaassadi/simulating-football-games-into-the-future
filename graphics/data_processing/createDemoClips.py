@@ -74,6 +74,7 @@ for match_id in match_clips:
     # print(file_path_match)
     frames_df = pd.read_parquet(file_path_match)
     frames_df.drop(columns=['minute', 'second', 'ball_in_motion', 'a_x', 'a_y', 'role', 'distance_ran', 'events'], inplace=True)
+    second_half_frame = frames_df[frames_df['period'] == 2]['frame'].head(1).values[0]
     print(frames_df[frames_df['period'] == 2]['frame'].head(1))
     for (start_frame, end_frame) in match_clips[match_id]:
         # filter based on start_frame, end_frame and period
@@ -82,7 +83,20 @@ for match_id in match_clips:
         # print(filtered_df.info())
 
         # write to json
-        file_name = f'{match_id}_{start_frame}_{end_frame}.json'
+        def frames_to_time(frame, period, second_half_frame=0):
+            if period == 1:
+                ms = frame * 40
+            else:
+                ms = (frame - second_half_frame) * 40
+            minutes = ms // 60000 + (45 if period != 1 else 0)
+            seconds = (ms % 60000) // 1000
+            return f'{minutes}:{seconds:02d}'
+
+        period = 1 if start_frame < second_half_frame else 2
+        start_time = frames_to_time(start_frame, period, second_half_frame)
+        end_time = frames_to_time(end_frame, period, second_half_frame)
+
+        file_name = f'{match_id}_{start_time}_{end_time}.json'
         formated_json = {'game': filtered_df.to_dict(orient='records')}
         with open(f'{path}/data/clips/{file_name}', 'w') as f:
             json.dump(formated_json, f, indent=2)
@@ -115,9 +129,7 @@ for match_id in match_clips:
         
         home_team_color = home_colors_dict[home_team_name]
         away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
-        
-        
-        
+                
         new_df = pd.DataFrame({'match_id': match_id,
                             'home_team_name': home_team_name,
                             'away_team_name': away_team_name,
@@ -125,23 +137,24 @@ for match_id in match_clips:
                             'away_team_name_short': long_to_short_name[away_team_name],
                             'home_team_color': home_team_color,
                             'away_team_color': away_team_color,
+                            'second_half_frame': second_half_frame,
                             'clip': file_name},
                             index=[i])
         i += 1
         # concat the new_df to the schedule_df
         schedule_df = pd.concat([schedule_df, new_df])
         
-filtered_df = frames_df[frames_df['period'] == 1]
+# filtered_df = frames_df[frames_df['period'] == 1]
 
-print(filtered_df.info())
+# print(filtered_df.info())
 
-# write to json
-start_frame = 0
-end_frame = frames_df[frames_df['period'] == 1]['frame'].tail(1).values[0]
-file_name = f'{match_id}_{start_frame}_{end_frame}.json'
-formated_json = {'game': filtered_df.to_dict(orient='records')}
-with open(f'{path}/data/clips/{file_name}', 'w') as f:
-    json.dump(formated_json, f, indent=2)
+# # write to json
+# start_frame = 0
+# end_frame = frames_df[frames_df['period'] == 1]['frame'].tail(1).values[0]
+# file_name = f'{match_id}_{start_frame}_{end_frame}.json'
+# formated_json = {'game': filtered_df.to_dict(orient='records')}
+# with open(f'{path}/data/clips/{file_name}', 'w') as f:
+#     json.dump(formated_json, f, indent=2)
 
 
 # write to db
@@ -161,31 +174,31 @@ with open(f'{path}/data/clips/{file_name}', 'w') as f:
 #     # Close the connection
 #     conn.close()
 
-filtered_df['team_name'] = filtered_df['team_name'].astype(str)    
+# filtered_df['team_name'] = filtered_df['team_name'].astype(str)    
 
-home_team_df = filtered_df[frames_df['team'] == 'home_team']
-away_team_df = filtered_df[frames_df['team'] == 'away_team']
+# home_team_df = filtered_df[frames_df['team'] == 'home_team']
+# away_team_df = filtered_df[frames_df['team'] == 'away_team']
 
-match_id = filtered_df['match_id'].iloc[0]
-home_team_name = home_team_df['team_name'].iloc[0]
-away_team_name = away_team_df['team_name'].iloc[0]
+# match_id = filtered_df['match_id'].iloc[0]
+# home_team_name = home_team_df['team_name'].iloc[0]
+# away_team_name = away_team_df['team_name'].iloc[0]
 
-home_team_color = home_colors_dict[home_team_name]
-away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
+# home_team_color = home_colors_dict[home_team_name]
+# away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
 
 
 
-new_df = pd.DataFrame({'match_id': match_id,
-                    'home_team_name': home_team_name,
-                    'away_team_name': away_team_name,
-                    'home_team_name_short': long_to_short_name[home_team_name],
-                    'away_team_name_short': long_to_short_name[away_team_name],
-                    'home_team_color': home_team_color,
-                    'away_team_color': away_team_color,
-                    'clip': file_name},
-                    index=[i])
-# concat the new_df to the schedule_df
-schedule_df = pd.concat([schedule_df, new_df])
+# new_df = pd.DataFrame({'match_id': match_id,
+#                     'home_team_name': home_team_name,
+#                     'away_team_name': away_team_name,
+#                     'home_team_name_short': long_to_short_name[home_team_name],
+#                     'away_team_name_short': long_to_short_name[away_team_name],
+#                     'home_team_color': home_team_color,
+#                     'away_team_color': away_team_color,
+#                     'clip': file_name},
+#                     index=[i])
+# # concat the new_df to the schedule_df
+# schedule_df = pd.concat([schedule_df, new_df])
 
 write_to_db = True
 

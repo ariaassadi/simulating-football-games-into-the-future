@@ -113,7 +113,7 @@ namespace GameVisualization
             gameObjectSpawner.Initialize(gameInfo.HomeTeamColor, gameInfo.AwayTeamColor);
 
             gameLogicManager = new GameLogicManager(gameDataLoader, gameObjectSpawner);
-            timeSlider.GetComponent<TimeSlider>().UpdateTimeSlider(gameLogicManager.StartFrame, gameLogicManager.EndFrame, period);
+            timeSlider.GetComponent<TimeSlider>().UpdateTimeSlider(gameLogicManager.StartFrame, gameLogicManager.EndFrame, period, gameLogicManager.SecondHalfFrame);
             return success;
         }
 

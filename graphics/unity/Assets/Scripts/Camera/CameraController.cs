@@ -152,12 +152,12 @@ public class CameraController : MonoBehaviour
     private void BirdsEyeView()
     {
         // Set camera position and rotation for birds eye view
-        transform.position = new Vector3(57.5f, 100f, 34f);
+        transform.position = new Vector3(57.5f, 100f, -36.67f);
         transform.rotation = Quaternion.Euler(90, 0, 0);
 
         // Enable orthographic mode and set orthographic size
         mainCamera.orthographic = true;
-        mainCamera.orthographicSize = 34f;
+        mainCamera.orthographicSize = 43f;
     }
 
     // Move the camera to a side view
@@ -168,7 +168,7 @@ public class CameraController : MonoBehaviour
         mainCamera.fieldOfView = 80f;
 
         // Set camera position and rotation for side view
-        transform.position = new Vector3(52.2f, 20f, 78f);
+        transform.position = new Vector3(52.2f, 20f, 10f);
         transform.rotation = Quaternion.Euler(35, 180, 0);
     }
 

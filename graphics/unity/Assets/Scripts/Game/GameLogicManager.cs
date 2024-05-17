@@ -33,6 +33,9 @@ namespace GameVisualization
         private int endFrame;
         public int EndFrame { get { return endFrame; } }
 
+        private int second_half_frame;
+        public int SecondHalfFrame { get { return second_half_frame; } }
+
         private int currentFrameNr;
         public int CurrentFrameNr { get { return currentFrameNr; } }
 
@@ -52,6 +55,7 @@ namespace GameVisualization
             this.gameDataLoader = gameDataLoader;
             this.gameObjectSpawner = gameObjectSpawner;
             startFrame = gameDataLoader.StartFrame();
+            second_half_frame = gameDataLoader.SecondHalfFrame;
             endFrame = gameDataLoader.EndFrame;
             currentFrameNr = startFrame;
             // Spawn the first frame to fill the scene.
@@ -270,16 +274,16 @@ namespace GameVisualization
         {
             PlayerData player = new PlayerData();
             player.x = game.x;
-            player.y = game.y;
+            player.y = -game.y;
             player.x_future = game.x_future;
-            player.y_future = game.y_future;
+            player.y_future = -game.y_future;
             player.team = game.team;
-            // player.offside = game.Offside;
+            player.offside = game.offside;
             player.jersey_number = game.jersey_number;
             player.player_name = game.player;
             // Convert x velocity and y velocity to the combined velocity
-            player.v = Mathf.Sqrt(Mathf.Pow(game.v_x, 2) + Mathf.Pow(game.v_y, 2));
-            player.orientation = Mathf.Deg2Rad * (game.orientation);
+            player.v = Mathf.Sqrt(Mathf.Pow(game.v_x, 2) + Mathf.Pow(-game.v_y, 2));
+            player.orientation = Mathf.Deg2Rad * (game.orientation) - 90;
             return player;
         }
 

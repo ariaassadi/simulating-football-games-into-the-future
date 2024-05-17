@@ -35,9 +35,9 @@ public class PythonScript : MonoBehaviour
             FileName = $"{pythonVersion}",
             Arguments = $"{path}",
             UseShellExecute = false,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
+            RedirectStandardInput = false,
+            RedirectStandardOutput = false,
+            RedirectStandardError = false,
             CreateNoWindow = true
         };
 

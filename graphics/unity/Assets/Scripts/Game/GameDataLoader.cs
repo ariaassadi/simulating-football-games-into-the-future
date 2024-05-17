@@ -30,6 +30,8 @@ namespace GameVisualization
         /// </summary>
         public Game[] FrameData { get { return frameData; } }
 
+        public int SecondHalfFrame { get { return gameInfo.SecondHalfFrame; } }
+
         /// <summary>
         /// Initializes the GameDataLoader object with the game information.
         /// </summary>
@@ -48,8 +50,8 @@ namespace GameVisualization
         {
             // Load game data asynchronously
             string pathToDB = GetDatabasePath();
-            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
-            // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
+            // string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
+            string query_tracking = $"SELECT player, x, y, frame, team, orientation, jersey_number, offside, v_x, v_y, x_future, y_future FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}'";
             string query_frames = $"SELECT frame, objects_tracked FROM games WHERE period={period} AND match_id='{gameInfo.MatchId}' GROUP BY frame";
 
             gameData = await Task.Run(() => DatabaseManager.query_db(pathToDB, query_tracking));

@@ -50,8 +50,8 @@ public class Games
     [Column("y_future")]
     public float Y_Future { get; set; }
 
-    // [Column("offside")]
-    // public float Offside { get; set; }
+    [Column("offside")]
+    public float Offside { get; set; }
 
     [Column("match_id")]
     public string MatchId { get; set; }
@@ -88,6 +88,9 @@ public class GameInfo
 
     [Column("match_id")]
     public string MatchId { get; set; }
+
+    [Column("second_half_frame")]
+    public int SecondHalfFrame { get; set; }
 
     [Column("clip")]
     public string Clip { get; set; }
