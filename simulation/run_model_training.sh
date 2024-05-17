@@ -4,3 +4,6 @@ jupyter nbconvert --to script model-training.ipynb
 
 # Execute the converted Python script
 python3 model-training.py
+
+# Delete the temporary file
+rm model-training.py
