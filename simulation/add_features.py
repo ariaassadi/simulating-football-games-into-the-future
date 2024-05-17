@@ -370,8 +370,8 @@ def load_FM_data():
 # Add data from the Football Manager
 def add_FM_data(frames_df, fm_players_df):
     # List of feature to add together with their corresponding data types
-    fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Position']
-    fm_types = ['category', 'float64', 'Int8', 'Int8', 'Int8', 'Int8', 'category']
+    fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Position', 'Specific Position']
+    fm_types = ['category', 'float64', 'Int8', 'Int8', 'Int8', 'Int8', 'category', 'category']
     
     # Create a dictionary to map features to types
     type_dict = dict(zip(fm_features, fm_types))
@@ -385,8 +385,10 @@ def add_FM_data(frames_df, fm_players_df):
     # Add each feature as a vector in frames_df
     for feature in fm_features:
         # Keep column names consistent with lowercase in frames_df
+        feature_name = feature.lower().replace(" ", "_")
+
         # Apply type conversion directly during the assignment
-        frames_df[feature.lower()] = merged_df[feature].astype(type_dict[feature])
+        frames_df[feature_name] = merged_df[feature].astype(type_dict[feature])
 
     return frames_df
 
