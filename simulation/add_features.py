@@ -341,32 +341,6 @@ def add_distance_to_onside(frames_df):
 
     return frames_df
 
-# Load Football Manager data
-def load_FM_data():
-    # Load the data from the Google Sheets URL
-    fm_players_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0KwlS1KWQWSNHwpDAyOK5O-0tGC0H6nNapPHNEXGTdmPTBHgDnYm9HyMrdZ79dbLKe1KYDnzOvrno/pub?gid=303039767&single=true&output=csv"
-    fm_players_df = google_sheet_to_df(fm_players_url)
-
-    # Manually add the 'ball' row
-    ball_data = {
-        'Player': ['ball'],
-        'Team': ['ball'],
-        'Age': [-1],
-        'Position': ['ball'],
-        'Nationality': ['ball'],
-        'Height': [-1.00],
-        'Weight': [-1],
-        'Acc': [-1],
-        'Pac': [-1],
-        'Sta': [-1]
-    }
-    ball_row = pd.DataFrame(ball_data)
-    
-    # Append the 'ball' row to the DataFrame
-    fm_players_df = pd.concat([fm_players_df, ball_row], ignore_index=True)
-
-    return fm_players_df
-
 # Add data from the Football Manager
 def add_FM_data(frames_df, fm_players_df):
     # List of feature to add together with their corresponding data types

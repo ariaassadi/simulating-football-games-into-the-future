@@ -4,7 +4,6 @@
 
 from tensorflow.keras.layers import Input, Embedding, Flatten, Concatenate, Dense, BatchNormalization, Dropout, Reshape, LSTM
 from tensorflow.keras.models import Model, load_model
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from tensorflow.keras import regularizers 
@@ -20,42 +19,11 @@ import os
 
 from settings import *
 
-# Define denominators for normalization
-denominators = {
-    'x': pitch_length,
-    'y': pitch_width,
-    'v_x': 13,
-    'v_y': 13,
-    'a_x': 10,
-    'a_y': 10,
-    'avg_v_x': 13,
-    'avg_v_y': 13,
-    'acc': 20,
-    'pac': 20,
-    'sta': 20,
-    'height': 2.10,
-    'weight': 110,
-    'distance_to_ball': round(np.sqrt((pitch_length**2 + pitch_width**2)), 2),
-    'angle_to_ball': 360,
-    'orientation': 360,
-    'tiredness': 10,
-    'tiredness_short': 1,
-    'minute': 45,
-    'period': 2,
-}
-
-# Embedding configuration for each categorical column
-embedding_config = {
-    'team_direction': {'n_categories': 2, 'output_dim': 2},
-    'role': {'n_categories': 13, 'output_dim': 6},
-    'position': {'n_categories': 10, 'output_dim': 5},
-    'nationality': {'n_categories': 20, 'output_dim': 7}
-}
-
 """
     Functions for loading data:
     - google_sheet_to_df()
     - load_processed_frames()
+    - load_FM_data()
 """
 
 # Fetches data from a Google Sheets CSV URL and converts it into a DataFrame
@@ -106,11 +74,99 @@ def load_processed_frames(n_matches=None, match_id=None, match_ids=None):
                 file_path_match = f"{DATA_FOLDER_PROCESSED}/{match_id}.parquet"
                 if os.path.exists(file_path_match):
                     frames_df = pd.read_parquet(file_path_match)
-
+                    
                     # Append the DataFrame to frames_list
                     frames_list.append(frames_df)
 
     return frames_list
+
+
+# Load Football Manager data
+def load_FM_data():
+    # Load the data from the Google Sheets URL
+    fm_players_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0KwlS1KWQWSNHwpDAyOK5O-0tGC0H6nNapPHNEXGTdmPTBHgDnYm9HyMrdZ79dbLKe1KYDnzOvrno/pub?gid=303039767&single=true&output=csv"
+    fm_players_df = google_sheet_to_df(fm_players_url)
+
+    # Manually add the 'ball' row
+    ball_data = {
+        'Player': ['ball'],
+        'Team': ['ball'],
+        'Age': [-1],
+        'Position': ['ball'],
+        'Specific Position': ['ball'],
+        'Nationality': ['ball'],
+        'Height': [-1.00],
+        'Weight': [-1],
+        'Acc': [-1],
+        'Pac': [-1],
+        'Sta': [-1]
+    }
+    ball_row = pd.DataFrame(ball_data)
+    
+    # Append the 'ball' row to the DataFrame
+    fm_players_df = pd.concat([fm_players_df, ball_row], ignore_index=True)
+
+    return fm_players_df
+
+"""
+    Variables used during model training etc
+"""
+
+# Define denominators for normalization
+denominators = {
+    'x': pitch_length,
+    'y': pitch_width,
+    'v_x': 13,
+    'v_y': 13,
+    'a_x': 10,
+    'a_y': 10,
+    'avg_v_x': 13,
+    'avg_v_y': 13,
+    'acc': 20,
+    'pac': 20,
+    'sta': 20,
+    'height': 2.10,
+    'weight': 110,
+    'distance_to_ball': round(np.sqrt((pitch_length**2 + pitch_width**2)), 2),
+    'angle_to_ball': 360,
+    'orientation': 360,
+    'tiredness': 10,
+    'tiredness_short': 1,
+    'minute': 45,
+    'period': 2,
+}
+
+# Load dataset with Football Manager players
+fm_players_df = load_FM_data()
+
+# Define all possible values for each categorical column 
+team_directions = ['left', 'right', 'ball']
+roles = list(range(-1, 12))
+positions = sorted(fm_players_df['Position'].unique())
+specific_positions = sorted(fm_players_df['Specific Position'].unique())
+nationalities = sorted(fm_players_df['Nationality'].unique())
+
+# Function to calculate embedding dimension with a refined heuristic
+def calculate_embedding_dim(input_dim):
+    return min(50, max(2, int(np.ceil(input_dim**0.25))))
+
+# Embedding configuration for each categorical column with dynamic output_dim calculation
+embedding_config = {
+    'team_direction':    {'n_categories': len(team_directions),    'output_dim': calculate_embedding_dim(len(team_directions))},
+    'role':              {'n_categories': len(roles),              'output_dim': calculate_embedding_dim(len(roles))},
+    'position':          {'n_categories': len(positions),          'output_dim': calculate_embedding_dim(len(positions))},
+    'specific_position': {'n_categories': len(specific_positions), 'output_dim': calculate_embedding_dim(len(specific_positions))},
+    'nationality':       {'n_categories': len(nationalities),      'output_dim': calculate_embedding_dim(len(nationalities))}
+}
+
+# Create mappings
+embedding_mapping = {
+    'team_direction': {v: i for i, v in enumerate(team_directions)},
+    'role': {v: i for i, v in enumerate(roles)},
+    'position': {v: i for i, v in enumerate(positions)},
+    'specific_position': {v: i for i, v in enumerate(specific_positions)},
+    'nationality': {v: i for i, v in enumerate(nationalities)}
+}
 
 """
     General helper functions
@@ -252,21 +308,26 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
     X_data_df = pd.concat(X_data)
     y_data_df = pd.concat(y_data)
 
-    # Apply label encoding to categorical variables
+    # Apply custom label encoding to categorical variables
     for col in categorical_cols:
+        # Raise ValueError if we have NaN values in the column
         if X_data_df[col].isnull().any():
             raise ValueError(f"NaN values found in {col} column. Please handle these before continuing.")
-        label_encoder = LabelEncoder()
-        X_data_df[col] = label_encoder.fit_transform(X_data_df[col])
 
-    # TODO: Examine if this a good way of handling NaN values
+        # Raise ValueError if we have values that does not exist in the mapping
+        invalid_values = df[~df[col].isin(mapping.keys())]
+        if not invalid_values.empty:
+            raise ValueError(f"Invalid values found in {col} column: {invalid_values[col].unique()}")
+
+        X_data_df[col] = X_data_df[col].map(embedding_mapping[col])
+
     # Handling NaNs in numerical columns
     for col in numerical_cols:
         if X_data_df[col].isnull().any():
             X_data_df[col].fillna(X_data_df[col].mean(), inplace=True)  # Fill NaN values with the mean
 
+    # Apply custom normalization
     if normalize:
-        # Apply custom normalization
         for col in numerical_cols:
             if col in denominators:
                 X_data_df[col] = X_data_df[col] / denominators[col]
