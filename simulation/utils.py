@@ -231,6 +231,7 @@ def total_error_loss(frames_df):
 
 """
     Functions only for model training
+    - add_can_be_sequentialized()
     - prepare_data()
     - get_next_model_filename()
     - adjust_for_embeddings()
@@ -241,8 +242,45 @@ def total_error_loss(frames_df):
     - prepare_LSTM_input_data()
 """
 
+# Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
+def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
+    # Initialize vector
+    frames_df['can_be_sequentialized'] = False
+
+    # Create temporary vectors with the expexted frame for each sequence step
+    for i in range(sequence_length):
+        frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * downsampling_factor
+
+    # Group by each unique player
+    grouped = frames_df.groupby(['team_name', 'jersey_number', 'period'])
+
+    # Iterate through each player and find if we can create sequences
+    for _, group in grouped:
+        # Skip if group['team_name'] == 'ball. The step is crucial since the function behavies weird if we keep the ball frames
+        if group['team_name'].iloc[0] == 'ball':
+            continue
+
+        # Convert the frame column to a set for efficient lookups
+        frame_set = set(group['frame'])
+
+        # Create temporary columns indicating if each step in the sequences exists
+        for i in range(sequence_length):
+            group[f'sequence_step_exists_{i}'] = group[f'sequence_step_{i}'].isin(frame_set)
+
+        # Aggregate 'sequence_step_exists_' checks to set 'can_be_sequentialized'
+        sequence_steps_exist_cols = [f'sequence_step_exists_{i}' for i in range(sequence_length)]
+        group['can_be_sequentialized'] = group[sequence_steps_exist_cols].all(axis=1)
+
+        # Update the main DataFrame
+        frames_df.loc[group.index, 'can_be_sequentialized'] = group['can_be_sequentialized']
+    
+    # Drop temporary columns
+    frames_df.drop(columns=[f'sequence_step_{i}' for i in range(sequence_length)], inplace=True)
+
+    return frames_df
+
 # Prepare the DataFrame before training
-def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampling_factor):
+def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, sequence_length=None):
     # Fill NaN values with zeros for numerical columns
     frames_df[numerical_cols] = frames_df[numerical_cols].fillna(0)
 
@@ -262,10 +300,14 @@ def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampl
     # Only keep frames with the specified positions
     frames_df = frames_df[frames_df['position'].isin(positions)]
 
+    # Add the vector 'can_be_sequentialized', if a sequence_length is specified
+    if sequence_length:
+        frames_df = add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor)
+
     return frames_df
 
 # Prepare the data, either by usig a list of match_ids or a preloaded frames_df
-def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, unchanged_cols=[]):
+def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, unchanged_cols=[], sequence_length=None):
     # Initialize lists
     X_data = []
     y_data = []
@@ -280,7 +322,7 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
             # If we managed to load a DataFrame
             if frames_list:
                 # Preapare the DataFrame
-                frames_df = prepare_df(frames_list[0], numerical_cols, categorical_cols, positions, downsampling_factor)
+                frames_df = prepare_df(frames_list[0], numerical_cols, categorical_cols, positions, downsampling_factor, sequence_length)
 
                 # Extract the desired columns
                 X = frames_df[numerical_cols + categorical_cols + unchanged_cols]
@@ -313,11 +355,6 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
         # Raise ValueError if we have NaN values in the column
         if X_data_df[col].isnull().any():
             raise ValueError(f"NaN values found in {col} column. Please handle these before continuing.")
-
-        # Raise ValueError if we have values that does not exist in the mapping
-        invalid_values = df[~df[col].isin(mapping.keys())]
-        if not invalid_values.empty:
-            raise ValueError(f"Invalid values found in {col} column: {invalid_values[col].unique()}")
 
         X_data_df[col] = X_data_df[col].map(embedding_mapping[col])
 
@@ -424,110 +461,17 @@ def create_embeddings(categorical_cols):
     
     return input_layers, flat_layers
 
-# # Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
-# def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
-#     # Initialize vector
-#     frames_df['can_be_sequentialized'] = False
-
-#     # Create temporary vectors with the expected frame for each sequence step
-#     for i in range(sequence_length):
-#         frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * downsampling_factor
-
-#     # Group by each unique player
-#     grouped = frames_df.groupby(['team_name', 'jersey_number', 'match_id'])
-
-#     # Iterate through each group and find if we can create sequences
-#     for _, group in grouped:
-#         # Convert the frame column to a set for efficient lookups
-#         frame_set = set(group['frame'])
-
-#         # Check if all sequence steps exist
-#         group['temp_sequential'] = group.apply(
-#             lambda x: all((x[f'sequence_step_{i}'] in frame_set) for i in range(sequence_length)),
-#             axis=1
-#         )
-
-#         # Update the main DataFrame
-#         frames_df.loc[group.index, 'can_be_sequentialized'] = group['temp_sequential']
-
-#     # Drop temporary columns
-#     frames_df.drop(columns=[f'sequence_step_{i}' for i in range(sequence_length)], inplace=True)
-
-#     return frames_df
-
-# # Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
-# def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
-#     # Calculate the expected sequence start frame
-#     frames_df['expected_sequence_start_frame'] = frames_df['frame'] - (sequence_length - 1) * FPS // downsampling_factor
-    
-#     # Group by each unique player
-#     grouped = frames_df.groupby(['team_name', 'jersey_number', 'match_id'])
-    
-#     # For each player, shift the 'frame' column to identify potential sequences
-#     frames_df['shifted_frame'] = grouped['frame'].shift(sequence_length - 1)
-    
-#     # Check if the shifted frame matches 'expected_sequence_start_frame' and set 'can_be_sequentialized' to True if it does
-#     frames_df['can_be_sequentialized'] = frames_df['expected_sequence_start_frame'] == frames_df['shifted_frame']
-    
-#     # Drop temporary columns
-#     frames_df.drop(['expected_sequence_start_frame', 'shifted_frame'], axis=1, inplace=True)
-
-#     return frames_df
-
-# Add a vector indicating if the row can be sequentialized, i.e. the player has 'sequence_length' consecutive frames
-def add_can_be_sequentialized(frames_df, sequence_length, downsampling_factor):
-    # Initialize vector
-    frames_df['can_be_sequentialized'] = False
-
-    # Create temporary vectors with the expexted frame for each sequence step
-    for i in range(sequence_length):
-        frames_df[f'sequence_step_{i}'] = frames_df['frame'] - i * downsampling_factor
-
-    # Group by each unique player
-    grouped = frames_df.groupby(['team_name', 'jersey_number', 'match_id'])
-
-    # Iterate through each player and find if we can create sequences
-    for _, group in grouped:
-        # Skip if group['team_name'] == 'ball. The step is crucial since the function behavies weird if we keep the ball frames
-        if group['team_name'].iloc[0] == 'ball':
-            continue
-
-        # Convert the frame column to a set for efficient lookups
-        frame_set = set(group['frame'])
-
-        # TODO: This doesnt help. We never enter this if-block
-        if len(group['frame']) != len(frame_set):
-            print("We have a bug with the groupby since we have multiple frames!!!")
-            frame_counts = group['frame'].value_counts()
-            print(frame_counts[frame_counts > 1])
-            print(group[['team_name', 'jersey_number', 'match_id']].drop_duplicates())
-
-        # Create temporary columns indicating if each step in the sequences exists
-        for i in range(sequence_length):
-            group[f'sequence_step_exists_{i}'] = group[f'sequence_step_{i}'].isin(frame_set)
-
-        # Aggregate 'sequence_step_exists_' checks to set 'can_be_sequentialized'
-        sequence_steps_exist_cols = [f'sequence_step_exists_{i}' for i in range(sequence_length)]
-        group['can_be_sequentialized'] = group[sequence_steps_exist_cols].all(axis=1)
-
-        # Update the main DataFrame
-        frames_df.loc[group.index, 'can_be_sequentialized'] = group['can_be_sequentialized']
-    
-    # Drop temporary columns
-    frames_df.drop(columns=[f'sequence_step_{i}' for i in range(sequence_length)], inplace=True)
-
-    return frames_df
-
 # Sequentialize the numerical and categorical columns
 def sequentialize_data(X_df, y_df, numerical_cols, sequence_length, downsampling_factor):
     # Add the y values as a vector
     X_df['y_values'] = y_df.values.tolist()
 
     # Sort the values on each player from each game
-    X_df = X_df.sort_values(by=['team_name', 'jersey_number', 'match_id'])
+    X_df = X_df.sort_values(by=['team_name', 'jersey_number', 'period', 'match_id'])
 
     # Print error if none of the rows can be sequentialized
-    X_df = add_can_be_sequentialized(X_df, sequence_length, downsampling_factor)
+    # TODO: Test adding add_can_be_sequentialized() to prepare_df() 
+    # X_df = add_can_be_sequentialized(X_df, sequence_length, downsampling_factor)
     if not X_df['can_be_sequentialized'].any():
         raise ValueError("No frames can be sequentialized based on the provided parameters.")
 
@@ -570,10 +514,10 @@ def extract_sequentialized_columns(X_df, categorical_cols):
 # Create a DataFrame with data ready for LSTM, either by usig a list of match_ids or a preloaded frames_df
 def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions, downsampling_factor):
     # Definie columns to temporarely give to prepare_data()
-    all_unchanged_cols = ['team_name', 'jersey_number', 'match_id', 'frame'] + unchanged_cols
+    all_unchanged_cols = ['team_name', 'jersey_number', 'match_id', 'period', 'frame', 'can_be_sequentialized'] + unchanged_cols
 
     # Prepare data
-    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, all_unchanged_cols)
+    X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, all_unchanged_cols, sequence_length)
 
     # Sequentialize the data
     X_df = sequentialize_data(X_df, y_df, numerical_cols, sequence_length, downsampling_factor)
@@ -602,8 +546,8 @@ def prepare_LSTM_input_data(match_ids, numerical_cols, categorical_cols, sequenc
 
 # Smooth the vectors 'x_future_pred' and 'y_future_pred'
 def smooth_predictions_xy(frames_df, alpha=0.93):
-    # Group by unique combinations of 'team_name', 'jersey_number', and 'match_id'
-    grouped = frames_df.groupby(['team_name', 'jersey_number', 'match_id'])
+    # Group by unique combinations of 'team_name', 'jersey_number', 'period' and 'match_id'
+    grouped = frames_df.groupby(['team_name', 'jersey_number', 'period', 'match_id'])
     
     # Apply the Exponential Moving Average filter to smooth the predictions
     def apply_ema(x):
