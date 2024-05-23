@@ -375,23 +375,26 @@ def add_tiredness(frames_df):
 
 # Add a vector with the short-term tiredness of each player
 def add_tiredness_short_term(frames_df, window=FPS*20):
-    # Calculate the average absolute velocity
-    frames_df['v_abs'] = np.sqrt(frames_df['v_x'] ** 2 + frames_df['v_y'] ** 2)
-    frames_df['v_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number', 'period'])['v_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 2)
-
     # Calculate the average absolute acceleration
     frames_df['a_abs'] = np.sqrt(frames_df['a_x'] ** 2 + frames_df['a_y'] ** 2)
-    frames_df['a_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number', 'period'])['a_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 3)
+    frames_df['a_abs_avg_20s'] = round(frames_df.groupby(['team', 'jersey_number', 'period'])['a_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 3)
 
-    # Calculate the tiredness and fill NaN values with 0
-    frames_df['tiredness_short'] = round(frames_df['v_abs_avg'] - frames_df['a_abs_avg'], 2)
+    # Create past_df by shifting frames_df by window for each player
+    past_df = frames_df.groupby(['team', 'jersey_number', 'period']).shift(window)
+    
+    # Calculate the distance ran over the time window
+    consecutive_frames = frames_df['frame'] == past_df['frame'] + window
+    frames_df.loc[consecutive_frames, 'distance_ran_time_window'] = frames_df['distance_ran'] - past_df['distance_ran']
+
+    # Calculate the tiredness using the given formula and fill NaN values with 0
+    frames_df['tiredness_short'] = round((frames_df['distance_ran_time_window'] / 100) + frames_df['a_abs_avg_20s'], 2)
     frames_df['tiredness_short'] = frames_df['tiredness_short'].fillna(0)
 
     # Set 'tiredness_short' to None for the ball
     frames_df.loc[frames_df['team'] == 'ball', 'tiredness_short'] = None
     
-    # Drop the temporay columns
-    frames_df.drop(columns=['v_abs', 'v_abs_avg', 'a_abs', 'a_abs_avg'], inplace=True)
+    # Drop the temporary columns
+    frames_df.drop(columns=['a_abs', 'a_abs_avg_20s', 'distance_ran_time_window'], inplace=True)
 
     return frames_df
     
