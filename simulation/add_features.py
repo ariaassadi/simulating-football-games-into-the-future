@@ -48,7 +48,7 @@ def add_x_ball(frames_df):
     x_ball.update(ball_positions)
 
     # Add the 'x_ball' column to the DataFrame
-    frames_df["x_ball"] = x_ball.values
+    frames_df['x_ball'] = x_ball.values
 
 # Add a vector with the shifted 'x' coordinate of the ball
 def add_x_ball_prev(frames_df, frames_to_shift=1):
@@ -60,7 +60,7 @@ def add_x_ball_prev(frames_df, frames_to_shift=1):
     x_ball.update(ball_positions)
 
     # Add the 'x_ball_prev' column to the DataFrame
-    frames_df["x_ball_prev"] = x_ball.values
+    frames_df['x_ball_prev'] = x_ball.values
 
 # Add a vector with the 'y' coordinate of the ball
 def add_y_ball(frames_df):
@@ -72,7 +72,7 @@ def add_y_ball(frames_df):
     y_ball.update(ball_positions)
 
     # Add the 'y_ball' column to the DataFrame
-    frames_df["y_ball"] = y_ball.values
+    frames_df['y_ball'] = y_ball.values
 
 # Add a vector with the shifted 'y' coordinate of the ball
 def add_y_ball_prev(frames_df, frames_to_shift=1):
@@ -84,14 +84,14 @@ def add_y_ball_prev(frames_df, frames_to_shift=1):
     y_ball.update(ball_positions)
 
     # Add the 'y_ball_prev' column to the DataFrame
-    frames_df["y_ball_prev"] = y_ball.values
+    frames_df['y_ball_prev'] = y_ball.values
 
 # Here we go!
 
 # Add the features x_future and y_future (the x and y coordinate of each player n frames into the future)
 def add_xy_future(frames_df, n=50):
     # Shift the DataFrame by n frames for each player
-    future_df = frames_df.groupby(['team', 'jersey_number']).shift(-n)
+    future_df = frames_df.groupby(['team', 'jersey_number', 'period']).shift(-n)
 
     # Merge the original DataFrame with the shifted DataFrame to get future coordinates
     frames_df[[f"x_future_{n}", f"y_future_{n}"]] = future_df[['x', 'y']]
@@ -109,7 +109,7 @@ def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
     frames_df['v_y'] = pd.Series(dtype='float64')
 
     # Create past_df by shifting frames_df by delta_frames for each player
-    past_df = frames_df.groupby(['team', 'jersey_number']).shift(delta_frames)
+    past_df = frames_df.groupby(['team', 'jersey_number', 'period']).shift(delta_frames)
 
     # Use the past coordinates to calculate the current velocity
     consecutive_frames = frames_df['frame'] == past_df['frame'] + delta_frames
@@ -126,7 +126,7 @@ def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
         # Apply Exponential Moving Average smoothing on the velocity columns
         def smooth_velocity_xy_ema(frames_df, alpha=0.93):
             # Group by unique combinations of 'team' and 'jersey_number'
-            grouped = frames_df.groupby(['team', 'jersey_number'])
+            grouped = frames_df.groupby(['team', 'jersey_number', 'period'])
             
             # Apply the Exponential Moving Average filter to smooth the velocity
             def apply_ema(x):
@@ -150,8 +150,8 @@ def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
     frames_df['a_y'] = pd.Series(dtype='float64')
 
     # Create past_df by shifting frames_df by delta_frames for each player
-    past_df = frames_df.groupby(['team', 'jersey_number']).shift(delta_frames)
-    more_past_df = frames_df.groupby(['team', 'jersey_number']).shift(2 * delta_frames)
+    past_df = frames_df.groupby(['team', 'jersey_number', 'period']).shift(delta_frames)
+    more_past_df = frames_df.groupby(['team', 'jersey_number', 'period']).shift(2 * delta_frames)
 
     # Use the past coordinates to calculate the current acceleration
     consecutive_frames = frames_df['frame'] == more_past_df['frame'] + 2 * delta_frames
@@ -168,7 +168,7 @@ def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
         # Apply Exponential Moving Average smoothing on the acceleration columns
         def smooth_acceleration_xy_ema(frames_df, alpha=0.2):
             # Group by unique combinations of 'team' and 'jersey_number'
-            grouped = frames_df.groupby(['team', 'jersey_number'])
+            grouped = frames_df.groupby(['team', 'jersey_number', 'period'])
             
             # Apply the Exponential Moving Average filter to smooth the acceleration
             def apply_ema(x):
@@ -231,7 +231,7 @@ def add_ball_in_motion(frames_df):
     frames_df.loc[(frames_df['y_ball'].notna()) & (frames_df['y_ball'] != frames_df['y_ball_prev']), 'ball_in_motion'] = True
 
     # Drop unnecessary columns
-    frames_df.drop(columns=["x_ball", "x_ball_prev", "y_ball", "y_ball_prev"], inplace=True)
+    frames_df.drop(columns=['x_ball', 'x_ball_prev', 'y_ball', 'y_ball_prev'], inplace=True)
 
     return frames_df
 
@@ -245,7 +245,7 @@ def add_distance_to_ball(frames_df):
     frames_df['distance_to_ball'] = round(np.sqrt((frames_df['x'] - frames_df['x_ball'])**2 + (frames_df['y'] - frames_df['y_ball'])**2), 2)
 
     # Drop unnecessary columns
-    frames_df.drop(columns=["x_ball", "y_ball"], inplace=True)
+    frames_df.drop(columns=['x_ball', 'y_ball'], inplace=True)
 
     return frames_df
 
@@ -262,7 +262,7 @@ def add_angle_to_ball(frames_df):
     frames_df['angle_to_ball'] = (frames_df['angle_to_ball'] + 360) % 360
 
     # Drop unnecessary columns
-    frames_df.drop(columns=["x_ball", "y_ball"], inplace=True)
+    frames_df.drop(columns=['x_ball', 'y_ball'], inplace=True)
 
     return frames_df
 
@@ -272,21 +272,21 @@ def add_second_to_last_defender(frames_df):
     sorted_frames_df = frames_df.sort_values(by=['team', 'frame', 'x']).copy()
 
     # Find the x coordinates of players attacking left and right for each frame
-    x_players_attacking_left = sorted_frames_df[sorted_frames_df["team_direction"] == 'left'].groupby("frame")["x"].apply(list)
-    x_players_attacking_right = sorted_frames_df[sorted_frames_df["team_direction"] == 'right'].groupby("frame")["x"].apply(list)
+    x_players_attacking_left = sorted_frames_df[sorted_frames_df['team_direction'] == 'left'].groupby('frame')['x'].apply(list)
+    x_players_attacking_right = sorted_frames_df[sorted_frames_df['team_direction'] == 'right'].groupby('frame')['x'].apply(list)
 
     # Find the x of the second to last defender
     x_second_to_last_player_left = x_players_attacking_left.apply(lambda x: x[-2] if len(x) >= 2 else pitch_length / 2)
     x_second_to_last_player_right = x_players_attacking_right.apply(lambda x: x[1] if len(x) >= 2 else pitch_length / 2)
 
     # Add 'x_second_to_last_player_left' and 'x_second_to_last_player_right' columns
-    frames_df["x_second_to_last_player_left"] = x_second_to_last_player_left.reindex(frames_df['frame']).values
-    frames_df["x_second_to_last_player_right"] = x_second_to_last_player_right.reindex(frames_df['frame']).values
+    frames_df['x_second_to_last_player_left'] = x_second_to_last_player_left.reindex(frames_df['frame']).values
+    frames_df['x_second_to_last_player_right'] = x_second_to_last_player_right.reindex(frames_df['frame']).values
 
 # Add a vector with the 'offside_line'
 def add_offside_line(frames_df):
     # Create a vector for the values of the half way line
-    frames_df["half_way_line"] = pitch_length / 2
+    frames_df['half_way_line'] = pitch_length / 2
 
     # Add 'x_ball' column and fill None values with the half way line
     add_x_ball(frames_df)
@@ -295,20 +295,20 @@ def add_offside_line(frames_df):
     # Add 'x_second_to_last_player_left' and 'x_second_to_last_player_right' columns
     add_second_to_last_defender(frames_df)
 
-    # Update "offside_line" column based on team direction
-    frames_df["offside_line"] = np.where(
-        frames_df["team_direction"] == 'right',
+    # Update 'offside_line' column based on team direction
+    frames_df['offside_line'] = np.where(
+        frames_df['team_direction'] == 'right',
         # If team_direction is 'right', the offside line will be the max value of the second to last defender, ball, and half way line
-        np.maximum.reduce([frames_df["x_second_to_last_player_left"], frames_df["x_ball"], frames_df["half_way_line"]]),
+        np.maximum.reduce([frames_df['x_second_to_last_player_left'], frames_df['x_ball'], frames_df['half_way_line']]),
         # If team_direction is 'left', the offside line will be the min value of the second to last defender, ball, and half way line
-        np.minimum.reduce([frames_df["x_second_to_last_player_right"], frames_df["x_ball"], frames_df["half_way_line"]])
+        np.minimum.reduce([frames_df['x_second_to_last_player_right'], frames_df['x_ball'], frames_df['half_way_line']])
     )
 
     # Set offside line to half way line if the 'team' is ball
     frames_df.loc[frames_df['team'] == 'ball', 'offside_line'] = pitch_length / 2
 
     # Drop unnecessary columns
-    frames_df.drop(columns=["half_way_line", "x_ball", "x_second_to_last_player_left", "x_second_to_last_player_right"], inplace=True)
+    frames_df.drop(columns=['half_way_line', 'x_ball', 'x_second_to_last_player_left', 'x_second_to_last_player_right'], inplace=True)
 
 # Add a vector the sets the value to 'offside_line' if a player is standing in an offside position
 def add_offside(frames_df):
@@ -316,14 +316,14 @@ def add_offside(frames_df):
     add_offside_line(frames_df)
     
     # Create the empty column
-    frames_df["offside"] = None
+    frames_df['offside'] = None
     
     # Fill the 'offside' column based on conditions
     frames_df.loc[(frames_df['team_direction'] == 'right') & (frames_df['x'] > frames_df['offside_line']), 'offside'] = frames_df['offside_line']
     frames_df.loc[(frames_df['team_direction'] == 'left') & (frames_df['x'] < frames_df['offside_line']), 'offside'] = frames_df['offside_line']
 
     # Drop the 'offside_line' column
-    frames_df.drop(columns=["offside_line"], inplace=True)
+    frames_df.drop(columns=['offside_line'], inplace=True)
 
     return frames_df
 
@@ -369,7 +369,7 @@ def add_FM_data(frames_df, fm_players_df):
 # Add a vector indicating how tired the player is
 def add_tiredness(frames_df):
     # Calculate tiredness using the formula above
-    frames_df["tiredness"] = ((frames_df["distance_ran"] / 1000) + (frames_df["minute"] / 20) + frames_df["period"] - 1) * (1 - (frames_df["sta"] / 20))
+    frames_df['tiredness'] = ((frames_df['distance_ran'] / 1000) + (frames_df['minute'] / 20) + frames_df['period'] - 1) * (1 - (frames_df['sta'] / 20))
 
     return frames_df
 
@@ -377,14 +377,14 @@ def add_tiredness(frames_df):
 def add_tiredness_short_term(frames_df, window=FPS*20):
     # Calculate the average absolute velocity
     frames_df['v_abs'] = np.sqrt(frames_df['v_x'] ** 2 + frames_df['v_y'] ** 2)
-    frames_df['v_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number'])['v_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 2)
+    frames_df['v_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number', 'period'])['v_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 2)
 
     # Calculate the average absolute acceleration
     frames_df['a_abs'] = np.sqrt(frames_df['a_x'] ** 2 + frames_df['a_y'] ** 2)
-    frames_df['a_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number'])['a_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 3)
+    frames_df['a_abs_avg'] = round(frames_df.groupby(['team', 'jersey_number', 'period'])['a_abs'].transform(lambda x: x.rolling(window=window, min_periods=1).mean()), 3)
 
     # Calculate the tiredness and fill NaN values with 0
-    frames_df['tiredness_short'] = round(frames_df['v_abs_avg'] - frames_df['a_abs_avg']**2, 2)
+    frames_df['tiredness_short'] = round(frames_df['v_abs_avg'] - frames_df['a_abs_avg'], 2)
     frames_df['tiredness_short'] = frames_df['tiredness_short'].fillna(0)
 
     # Set 'tiredness_short' to None for the ball
