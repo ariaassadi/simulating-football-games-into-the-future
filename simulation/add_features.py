@@ -116,10 +116,10 @@ def add_velocity_xy(frames_df, delta_frames=1, smooth=False):
     frames_df.loc[consecutive_frames, 'v_x'] = (frames_df['x'] - past_df['x']) * FPS / delta_frames
     frames_df.loc[consecutive_frames, 'v_y'] = (frames_df['y'] - past_df['y']) * FPS / delta_frames
 
-    # Clip velocity to Usain Bolt's max speed
-    usain_bolt_max_speed = 13
-    frames_df['v_x'] = frames_df['v_x'].clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed)
-    frames_df['v_y'] = frames_df['v_y'].clip(lower=-usain_bolt_max_speed, upper=usain_bolt_max_speed)
+    # Set velocity values to None if they exceed Usain Bolt's max speed
+    usain_bolt_max_speed = 12.42
+    frames_df['v_x'] = np.where(np.abs(frames_df['v_x']) > usain_bolt_max_speed, None, frames_df['v_x'])
+    frames_df['v_y'] = np.where(np.abs(frames_df['v_y']) > usain_bolt_max_speed, None, frames_df['v_y'])
 
     # Smooth the velocities, if specified
     if smooth:
@@ -158,15 +158,15 @@ def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
     frames_df.loc[consecutive_frames, 'a_x'] = (frames_df['x'] - 2 * past_df['x'] + more_past_df['x']) * FPS / (delta_frames ** 2)
     frames_df.loc[consecutive_frames, 'a_y'] = (frames_df['y'] - 2 * past_df['y'] + more_past_df['y']) * FPS / (delta_frames ** 2)
 
-    # Clip acceleration values to reasonable limits
-    max_acceleration = 10  # This is a very high acceleration
-    frames_df['a_x'] = frames_df['a_x'].clip(lower=-max_acceleration, upper=max_acceleration)
-    frames_df['a_y'] = frames_df['a_y'].clip(lower=-max_acceleration, upper=max_acceleration)
+    # Set acceleration values to None if they exceed Usain Bolt's max acceleration
+    usain_bolt_max_acc = 9.5
+    frames_df['a_x'] = np.where(np.abs(frames_df['a_x']) > usain_bolt_max_acc, None, frames_df['a_x'])
+    frames_df['a_y'] = np.where(np.abs(frames_df['a_y']) > usain_bolt_max_acc, None, frames_df['a_y'])
 
     # Smooth the accelerations, if specified
     if smooth:
         # Apply Exponential Moving Average smoothing on the acceleration columns
-        def smooth_acceleration_xy_ema(frames_df, alpha=0.2):
+        def smooth_acceleration_xy_ema(frames_df, alpha=0.6):
             # Group by unique combinations of 'team' and 'jersey_number'
             grouped = frames_df.groupby(['team', 'jersey_number', 'period'])
             
@@ -177,7 +177,7 @@ def add_acceleration_xy(frames_df, delta_frames=1, smooth=False):
             frames_df['a_x'] = grouped['a_x'].transform(apply_ema)
             frames_df['a_y'] = grouped['a_y'].transform(apply_ema)
             
-        smooth_acceleration_xy_ema(frames_df, alpha=0.2)
+        smooth_acceleration_xy_ema(frames_df, alpha=0.6)
 
     # Round the results to two decimals
     frames_df['a_x'] = frames_df['a_x'].round(2)
