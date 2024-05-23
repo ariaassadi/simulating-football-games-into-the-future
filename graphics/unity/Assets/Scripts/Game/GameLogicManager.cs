@@ -283,7 +283,7 @@ namespace GameVisualization
             player.player_name = game.player;
             // Convert x velocity and y velocity to the combined velocity
             player.v = Mathf.Sqrt(Mathf.Pow(game.v_x, 2) + Mathf.Pow(-game.v_y, 2));
-            player.orientation = Mathf.Deg2Rad * (game.orientation) - 90;
+            player.orientation = Mathf.Deg2Rad * ((game.orientation));
             return player;
         }
 

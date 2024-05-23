@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.IO;
+using System;
 using UnityEngine.Networking;
 
 using Utils;
@@ -129,7 +130,7 @@ namespace Tools
             // Create a new plane and apply a texture to it
             // squareMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
             // squareMaterial.SetFloat("_Surface", 1); // 1 represents transparent
-            Vector3 position = new Vector3(52.5f, 0.01f, 34f);
+            Vector3 position = new Vector3(52.5f, 0.01f, -34f);
 
             pitch = Instantiate(pitchPrefab, position, Quaternion.identity);
             pitch.tag = "PitchOverlay";
@@ -203,7 +204,7 @@ namespace Tools
         {
             PlayerData playerCopy = new PlayerData();
             playerCopy.jersey_number = player.jersey_number;
-            playerCopy.y = player.y - 34f;
+            playerCopy.y = player.y + 34f;
             playerCopy.x = player.x - 52.5f;
             playerCopy.v = player.v;
             playerCopy.orientation = player.orientation;
@@ -358,7 +359,7 @@ namespace Tools
         private Color GenerateRandomColor()
         {
             // Generate a random color
-            return new Color(Random.value, Random.value, Random.value);
+            return new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
         }
 
         private Color GenerateColorFromData(Color color, float value)

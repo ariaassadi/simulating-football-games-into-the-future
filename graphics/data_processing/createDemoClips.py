@@ -90,7 +90,7 @@ for match_id in match_clips:
                 ms = (frame - second_half_frame) * 40
             minutes = ms // 60000 + (45 if period != 1 else 0)
             seconds = (ms % 60000) // 1000
-            return f'{minutes}:{seconds:02d}'
+            return f'{minutes}-{seconds:02d}'
 
         period = 1 if start_frame < second_half_frame else 2
         start_time = frames_to_time(start_frame, period, second_half_frame)

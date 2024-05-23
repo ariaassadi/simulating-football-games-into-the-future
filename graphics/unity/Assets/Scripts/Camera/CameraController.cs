@@ -236,7 +236,7 @@ public class CameraController : MonoBehaviour
                 settings.horizontalSpeed -= 1f;
                 break;
             case "RotationSpeed":
-                settings.rotationSpeed -= 1f;
+                settings.rotationSpeed -= 10f;
                 break;
             case "VerticalSpeed":
                 settings.verticalSpeed -= 1f;

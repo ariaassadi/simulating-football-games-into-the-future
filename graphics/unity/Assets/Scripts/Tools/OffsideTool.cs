@@ -140,12 +140,12 @@ namespace Tools
             if (team == "away_team")
             {
                 offsideLineAway.SetPosition(0, new Vector3(x, 0.1f, 0));
-                offsideLineAway.SetPosition(1, new Vector3(x, 0.1f, 68));
+                offsideLineAway.SetPosition(1, new Vector3(x, 0.1f, -68));
             }
             else
             {
                 offsideLineHome.SetPosition(0, new Vector3(x, 0.1f, 0));
-                offsideLineHome.SetPosition(1, new Vector3(x, 0.1f, 68));
+                offsideLineHome.SetPosition(1, new Vector3(x, 0.1f, -68));
             }
         }
 

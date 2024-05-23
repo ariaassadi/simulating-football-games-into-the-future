@@ -54,7 +54,7 @@
       },
       {
         "action": "Camera Tilt",
-        "key": "right mouse"
+        "key": "right mouse button"
       }
     ]
   }

@@ -204,7 +204,9 @@ namespace GameVisualization
         private string ParseTimeRangeFromJson(GameInfo game)
         {
             string startTime = game.Clip.Split('_')[1];
+            startTime = startTime.Replace('-', ':');
             string endTime = game.Clip.Split('_')[2].Replace(".json", "");
+            endTime = endTime.Replace('-', ':');
             return $"{startTime} - {endTime}";
         }
         /// <summary>
