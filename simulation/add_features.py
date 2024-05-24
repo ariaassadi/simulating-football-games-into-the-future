@@ -344,8 +344,8 @@ def add_distance_to_onside(frames_df):
 # Add data from the Football Manager
 def add_FM_data(frames_df, fm_players_df):
     # List of feature to add together with their corresponding data types
-    fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Position', 'Specific Position']
-    fm_types = ['category', 'float64', 'Int8', 'Int8', 'Int8', 'Int8', 'category', 'category']
+    fm_features = ['Nationality', 'Height', 'Weight', 'Acc', 'Pac', 'Sta', 'Age', 'Position', 'Specific Position']
+    fm_types = ['category', 'float64', 'Int8', 'Int8', 'Int8', 'Int8', 'Int8', 'category', 'category']
     
     # Create a dictionary to map features to types
     type_dict = dict(zip(fm_features, fm_types))
