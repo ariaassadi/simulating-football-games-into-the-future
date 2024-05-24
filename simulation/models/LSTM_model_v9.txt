@@ -12,3 +12,6 @@ Execution time: 106 minutes
 Training results:
 loss: [1.64, 1.55, 1.53, 1.52, 1.52]
 val_loss: [1.51, 1.53, 1.48, 1.47, 1.48]
+
+Testing results:
+test_loss: 1.638
