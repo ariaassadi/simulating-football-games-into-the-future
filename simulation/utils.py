@@ -41,37 +41,35 @@ def google_sheet_to_df(url):
     return data_df
 
 # Load a list with frames_df from the 'processed/' folder
-def load_processed_frames(n_matches=None, match_id=None, match_ids=None):
-    # Create DataFrame for storing all frames
+def load_processed_frames(match_id=None, match_ids=None):
+    # Create a list for storing all frames DataFrames
     frames_list = []
 
-    # Load frames_df
+    # Load frames DataFrames
     for selected_season in seasons:
         for selected_competition in competitions:
             # Define paths
             DATA_FOLDER_PROCESSED = f"{DATA_LOCAL_FOLDER}/data/{selected_season}/{selected_competition}/processed"
 
-            # Find all frames parquet files
+            # Find all frames parquet files and extract the available match IDs from the file paths
             match_paths = glob.glob(os.path.join(DATA_FOLDER_PROCESSED, "*.parquet"))
+            available_match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths]
 
-            # Extract the IDs without the ".parquet" extension
+            # Determine match_ids to load
             if match_id:
                 # Only load the match with the given match_id
-                match_ids = [match_id]
+                match_ids_to_load = [match_id]
             elif match_ids:
-                # Load all matches with the specified match_ids
-                match_ids = match_ids
-            elif n_matches:
-                # Only load the specified number of matches
-                match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths][0:n_matches]
+                # Load only the specified match_ids
+                match_ids_to_load = match_ids
             else:
-                # Load all matches
-                match_ids = [os.path.splitext(os.path.basename(path))[0] for path in match_paths]
+                match_ids_to_load = available_match_ids
 
-            # For all matches
-            for match_id in match_ids:
+            # For all matches in match_ids_to_load
+            for current_match_id in match_ids_to_load:
                 # Convert parquet file to a DataFrame
-                file_path_match = f"{DATA_FOLDER_PROCESSED}/{match_id}.parquet"
+                file_path_match = os.path.join(DATA_FOLDER_PROCESSED, f"{current_match_id}.parquet")
+
                 if os.path.exists(file_path_match):
                     frames_df = pd.read_parquet(file_path_match)
                     
@@ -79,7 +77,6 @@ def load_processed_frames(n_matches=None, match_id=None, match_ids=None):
                     frames_list.append(frames_df)
 
     return frames_list
-
 
 # Load Football Manager data
 def load_FM_data():
@@ -287,6 +284,9 @@ def prepare_df(frames_df, numerical_cols, categorical_cols, positions, downsampl
     # Drop rows with NaN values in the labels (y)
     frames_df.dropna(subset=y_cols, inplace=True)
 
+    # Drop rows with NaN values in the numericl_cols
+    frames_df.dropna(subset=numerical_cols, inplace=True)
+
     # TODO: Play around to see if this helps with a large number of games
     # Drop rows where ball is not in motion
     # frames_df = frames_df[frames_df['ball_in_motion']]
@@ -354,6 +354,10 @@ def prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_col
     for col in categorical_cols:
         # Raise ValueError if we have NaN values in the column
         if X_data_df[col].isnull().any():
+            # Print the rows where NaN values are found
+            nan_rows = X_data_df[X_data_df[col].isnull()][['specific_position', 'team_name', 'jersey_number', 'match_id']]
+            print(f"NaN values found in {col} column in the following rows:\n{nan_rows}")
+        
             raise ValueError(f"NaN values found in {col} column. Please handle these before continuing.")
 
         X_data_df[col] = X_data_df[col].map(embedding_mapping[col])
@@ -470,8 +474,6 @@ def sequentialize_data(X_df, y_df, numerical_cols, sequence_length, downsampling
     X_df = X_df.sort_values(by=['team_name', 'jersey_number', 'period', 'match_id'])
 
     # Print error if none of the rows can be sequentialized
-    # TODO: Test adding add_can_be_sequentialized() to prepare_df() 
-    # X_df = add_can_be_sequentialized(X_df, sequence_length, downsampling_factor)
     if not X_df['can_be_sequentialized'].any():
         raise ValueError("No frames can be sequentialized based on the provided parameters.")
 
@@ -514,7 +516,7 @@ def extract_sequentialized_columns(X_df, categorical_cols):
 # Create a DataFrame with data ready for LSTM, either by usig a list of match_ids or a preloaded frames_df
 def prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions, downsampling_factor):
     # Definie columns to temporarely give to prepare_data()
-    all_unchanged_cols = ['team_name', 'jersey_number', 'match_id', 'period', 'frame', 'can_be_sequentialized'] + unchanged_cols
+    all_unchanged_cols = list(set(['team_name', 'jersey_number', 'match_id', 'period', 'frame', 'can_be_sequentialized'] + unchanged_cols))
 
     # Prepare data
     X_df, y_df = prepare_data(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, positions, downsampling_factor, all_unchanged_cols, sequence_length)
@@ -631,10 +633,12 @@ def run_model(match_ids, model_name, downsampling_factor_testing=1, preloaded_fr
     # Load model
     model = load_tf_model(f'models/{model_name}.h5', euclidean_distance_loss=True)
 
+    # Definie the unchanged columns that we want to keep in 'frames_df'
+    unchanged_cols = ['ball_in_motion', 'minute', 'second'] + y_cols
+
     # Prepare the input data for LSTM model
     if "LSTM" in model_name:
         # Create the DataFrame that will recieve the predictions
-        unchanged_cols = ['ball_in_motion', 'minute', 'second'] + y_cols
         frames_df = prepare_LSTM_df(match_ids, preloaded_frames_df, numerical_cols, categorical_cols, unchanged_cols, sequence_length, positions_with_ball, downsampling_factor_testing)
 
         # Extract the rows containing the ball in 'frames_df'
@@ -648,12 +652,15 @@ def run_model(match_ids, model_name, downsampling_factor_testing=1, preloaded_fr
         # Prepare X_test_input and y_test
         X_test_input, y_test = prepare_EL_input_data(match_ids, numerical_cols, categorical_cols, positions, downsampling_factor_testing, preloaded_frames_df=preloaded_frames_df)
 
-        # Create the DataFrame that will recieve the predictions by first creating a list
+        # Create the DataFrame that will recieve the predictions concatenating a list of prepared DataFrames
         frames_list = load_processed_frames(match_ids=match_ids) if match_ids else [preloaded_frames_df]
-        frames_df = pd.concat([
-            prepare_df(current_frames_df, numerical_cols, categorical_cols, positions_with_ball, downsampling_factor_testing)
-            for current_frames_df in frames_list
-        ], axis=0)
+        prepared_frames = []
+
+        for current_frames_df in frames_list:
+            columns_to_keep = list(set(numerical_cols + categorical_cols + unchanged_cols + ['frame', 'position', 'team_name']))
+            prepared_df = prepare_df(current_frames_df[columns_to_keep].copy(), numerical_cols, categorical_cols, positions_with_ball, downsampling_factor_testing)
+            prepared_frames.append(prepared_df)
+        frames_df = pd.concat(prepared_frames, axis=0)
 
         # Extract the rows containing the ball in 'frames_df'
         frames_df, ball_frames_df = extract_ball_frames(frames_df)
@@ -724,12 +731,12 @@ def write_testing_error(model_name, error):
             print("Testing results added to the file.")
 
 # Test an existing model
-def test_model(model_name, downsampling_factor_testing=1):
+def test_model(model_name, downsampling_factor_testing=5):
     # Extract n_matches to find the correct test_ids
-    _, test_ids, _ = split_match_ids(240)
+    _, test_ids, _ = split_match_ids(560)
 
     # Evaluate the model
-    error = evaluate_model(test_ids[0:10], model_name, downsampling_factor_testing)
+    error = evaluate_model(test_ids, model_name, downsampling_factor_testing)
     print(f"Error: {error} m")
 
     # Write error to txt files
@@ -741,8 +748,6 @@ def print_column_variance(match_ids, model_name, column_to_analyze):
     frames_df = run_model(match_ids, model_name)
     error = total_error_loss(frames_df)
     frames_df = add_pred_error(frames_df)
-
-    print(frames_df['pred_error'])
 
     # Convert 'pred_error' to numeric, coercing non-numeric values to NaN
     # frames_df['pred_error'] = pd.to_numeric(frames_df['pred_error'], errors='coerce')
