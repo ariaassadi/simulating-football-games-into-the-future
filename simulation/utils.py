@@ -643,7 +643,8 @@ def run_model(match_ids, model_name, downsampling_factor_testing=5, preloaded_fr
     model = load_tf_model(f'models/{model_name}.h5', euclidean_distance_loss=True)
 
     # Definie the unchanged columns that we want to keep in 'frames_df'
-    unchanged_cols = ['ball_in_motion', 'minute', 'second', 'period', 'frame', 'position', 'team_name'] + y_cols
+    unchanged_cols = ['ball_in_motion', 'match_id', 'minute', 'second', 'period', 'frame', 'position', 'team_name'] + y_cols
+    unchanged_cols += ['nationality', 'height', 'weight', 'acc', 'pac', 'sta', 'age']
 
     # Prepare the input data for LSTM model
     if "LSTM" in model_name:
@@ -661,8 +662,6 @@ def run_model(match_ids, model_name, downsampling_factor_testing=5, preloaded_fr
 
     # Prepare the input data for non-LSTM model
     else:
-        unchanged_cols = ['ball_in_motion', 'minute', 'second', 'period', 'frame', 'team_name'] + y_cols
-
         # Definie columns to temporarely give to prepare_data()
         all_unchanged_cols = [col for col in unchanged_cols if col not in numerical_cols and col not in categorical_cols]
 
@@ -712,7 +711,7 @@ def run_model(match_ids, model_name, downsampling_factor_testing=5, preloaded_fr
 
     # Smooth the predicted coordinates
     # smooth_predictions_xy(frames_df, alpha=0.98)
-
+    
     # Add the 'ball_frames_df' to 'frames_df'
     frames_df = pd.concat([frames_df, ball_frames_df], ignore_index=True)
 
