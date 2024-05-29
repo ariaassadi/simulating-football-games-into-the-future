@@ -19,7 +19,7 @@ draw_offsides = False
 draw_prediction_lines = True
 
 player_size = 300
-ball_size = 180
+ball_size = 120
 predicted_player_size = 0.8 * player_size
 predicted_ball_size = 0.8 * ball_size
 offside_line_thickness = 4
@@ -37,9 +37,10 @@ color_ball_light = ajax_black_light
 
 # Helper functions
 def get_frame_data(frames_df, frame):
-    home_team_frame_df = frames_df[(frames_df['team'] == 'home_team') & (frames_df['frame'] == frame)]
-    away_team_frame_df = frames_df[(frames_df['team'] == 'away_team') & (frames_df['frame'] == frame)]
-    ball_frame_df = frames_df[(frames_df['team'] == 'ball') & (frames_df['frame'] == frame)]
+    teams = frames_df['team_name'].unique()
+    home_team_frame_df = frames_df[(frames_df['team_name'] == teams[0]) & (frames_df['frame'] == frame)]
+    away_team_frame_df = frames_df[(frames_df['team_name'] == teams[1]) & (frames_df['frame'] == frame)]
+    ball_frame_df = frames_df[(frames_df['team_name'] == 'ball') & (frames_df['frame'] == frame)]
     return home_team_frame_df, away_team_frame_df, ball_frame_df
 
 # Draw a legend underneth the pitch
@@ -54,15 +55,16 @@ def draw_legend(ax, home_team, away_team):
     ax.text(pitch_length/2 - 0, y_legend, 'Ball', ha='left', va='center', fontsize=14)
 
     # Away team
-    ax.scatter(pitch_length/2 + 14, y_legend, s=player_size, color=color_away_team, edgecolors=color_edge, linewidth=1.8, zorder=2)
-    ax.text(pitch_length/2 + 16, y_legend, away_team, ha='left', va='center', fontsize=14)
+    ax.scatter(pitch_length/2 + 16, y_legend, s=player_size, color=color_away_team, edgecolors=color_edge, linewidth=1.8, zorder=2)
+    ax.text(pitch_length/2 + 18, y_legend, away_team, ha='left', va='center', fontsize=14)
 
 # Create a gif file with a game snippet
-def visualize_game_animation(frames_df, start_frame, end_frame):
+def visualize_game_animation(frames_df, start_frame, end_frame, image_frame=None):
     # Find DataFrames for each team and the ball
-    home_team_df = frames_df[frames_df['team'] == 'home_team']
-    away_team_df = frames_df[frames_df['team'] == 'away_team']
-    ball_df = frames_df[frames_df['team'] == 'ball']
+    teams = frames_df['team_name'].unique()
+    home_team_df = frames_df[frames_df['team_name'] == teams[0]]
+    away_team_df = frames_df[frames_df['team_name'] == teams[1]]
+    ball_df = frames_df[frames_df['team_name'] == 'ball']
 
     # Find the name of the home and away team
     home_team = home_team_df.iloc[0]['team_name']
@@ -88,7 +90,8 @@ def visualize_game_animation(frames_df, start_frame, end_frame):
         ball_frame_df = ball_df[ball_df['frame'] == frame]
 
         # Plot the time stamp
-        time_stamp = f"{home_team_frame_df.iloc[0]['minute']}:{home_team_frame_df.iloc[0]['second']}:{home_team_frame_df.iloc[0]['frame'] % FPS}"
+        frame_df = frames_df[frames_df['frame'] == frame]
+        time_stamp = f"{frame_df.iloc[0]['minute'] + 45 if frame_df.iloc[0]['period'] == 2 else frame_df.iloc[0]['minute']}:{frame_df.iloc[0]['second']}"
         ax['pitch'].text(0, 70, time_stamp, ha='left', fontsize=18)
 
         # Scatter the positions of the home players
@@ -159,7 +162,7 @@ def visualize_game_animation(frames_df, start_frame, end_frame):
             ax['pitch'].scatter(home_team_frame_df[home_team_frame_df["offside"].notna()]['x'], home_team_frame_df[home_team_frame_df["offside"].notna()]['y'], s=player_size, color=ajax_grey, alpha=0.35, edgecolors=color_edge, linewidth=1.8, zorder=4)
             ax['pitch'].scatter(away_team_frame_df[away_team_frame_df["offside"].notna()]['x'], away_team_frame_df[away_team_frame_df["offside"].notna()]['y'], s=player_size, color=ajax_grey, alpha=0.35, edgecolors=color_edge, linewidth=1.8, zorder=4)
 
-            # Draw offisde line(s)
+            # Draw offside line(s)
             x_home_team_offside = home_team_frame_df["offside"].max()
             if not pd.isna(x_home_team_offside):
                 offside_line_home = patches.Rectangle((x_home_team_offside - 0.4, 0), width=0.8, height=pitch_width, color=ajax_yellow, zorder=0)
@@ -182,8 +185,13 @@ def visualize_game_animation(frames_df, start_frame, end_frame):
     # Save the animation as a GIF file
     animation.save(gif_name, writer='pillow')
 
-# Example usage:
-# visualize_game_snippet(frames_df, 0, 1600)
+    # Also store a PNG
+    if image_frame is not None:
+        # Update and save the single frame as PNG
+        update_scatter(image_frame)
+        fig.canvas.draw()  # Update canvas
+        image_path = f"images/predictions/{home_team}_vs_{away_team}_frame_{image_frame}.png"
+        fig.savefig(image_path)
 
 # Draw a legend underneth the pitch
 def draw_prediction_legend(ax, model_name, home_team, away_team):
@@ -205,17 +213,18 @@ def draw_prediction_legend(ax, model_name, home_team, away_team):
     ax.text(pitch_length/2 + 18, y_predicted, 'Predicted', ha='left', va='center', fontsize=14)
 
     # Ball
-    ax.scatter(pitch_length/2 - 2, y_legend, s=ball_size*0.5, color=color_ball, edgecolors=color_edge, linewidth=1.8, zorder=2)
-    ax.text(pitch_length/2 - 0, y_legend, 'Ball', ha='left', va='center', fontsize=14)
+    ax.scatter(pitch_length/2 - 2, y_legend - 0.925, s=ball_size*0.5, color=color_ball, edgecolors=color_edge, linewidth=1.8, zorder=2)
+    ax.text(pitch_length/2 - 0, y_legend - 0.925, 'Ball', ha='left', va='center', fontsize=14)
 
 # Example usage:
 # visualize_frame_prediction(frames_df, 0, 100, "naive_static")
 # Visualize an animation of predictions made by a model
-def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name):
+def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name, image_frame=None):
     # Find DataFrames for each team and the ball
-    home_team_df = frames_df[frames_df['team'] == 'home_team']
-    away_team_df = frames_df[frames_df['team'] == 'away_team']
-    ball_df = frames_df[frames_df['team'] == 'ball']
+    teams = frames_df['team_name'].unique()
+    home_team_df = frames_df[frames_df['team_name'] == teams[0]]
+    away_team_df = frames_df[frames_df['team_name'] == teams[1]]
+    ball_df = frames_df[frames_df['team_name'] == 'ball']
 
     # Find the name of the home and away team
     home_team = home_team_df.iloc[0]['team_name'] if not home_team_df.empty else 'Home'
@@ -281,8 +290,8 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
         # Draw general information for this frame
         frame_df = frames_df[frames_df['frame'] == frame]
         if not frame_df.empty:
-            frame_text.set_text(f"{frame_df.iloc[0]['minute']}:{frame_df.iloc[0]['second']}:{frame_df.iloc[0]['frame'] % FPS}")
-            pred_error = frame_df[frame_df['team'] != 'ball']['pred_error'].mean()  # Don't include ball
+            frame_text.set_text(f"{frame_df.iloc[0]['minute'] + 45 if frame_df.iloc[0]['period'] == 2 else frame_df.iloc[0]['minute']}:{frame_df.iloc[0]['second']}")
+            pred_error = frame_df[frame_df['team_name'] != 'ball']['pred_error'].mean()  # Don't include ball
             if pred_error is not None:
                 error_text.set_text(f"Error: {pred_error:.2f} m")
 
@@ -298,8 +307,17 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
         frames.append(image)
 
     # Save frames as GIF
-    gif_path = f"animations/{home_team}_vs_{away_team}_{model_name}_frames_{start_frame}-{end_frame}.gif"
-    imageio.mimsave(gif_path, frames, fps=8)
+    model_name_text = model_name.replace(' ', '_').lower()
+    gif_path = f"animations/{home_team}_vs_{away_team}_{model_name_text}_frames_{start_frame}-{end_frame}.gif"
+    imageio.mimsave(gif_path, frames, fps=25)
+
+    # Also store a PNG
+    if image_frame is not None:
+        # Update and save the single frame as PNG
+        update(image_frame)
+        fig.canvas.draw()  # Update canvas
+        image_path = f"images/predictions/{home_team}_vs_{away_team}_{model_name_text}_frame_{image_frame}.png"
+        fig.savefig(image_path)
 
 # Visualize the result from a training session
 def visualize_training_results(training_results, model_name):
@@ -322,3 +340,4 @@ def visualize_training_results(training_results, model_name):
     # Save figure
     save_path = f"images/models/training_results_{model_name}.png"
     plt.savefig(save_path)
+    
