@@ -14,3 +14,6 @@ val_loss: [1.67, 1.67, 1.66]
 
 Testing results:
 test_loss: 1.79
+
+Testing results on the same dataset as LSTM:
+test_loss: 1.76
