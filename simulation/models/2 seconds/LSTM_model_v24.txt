@@ -1,17 +1,18 @@
-2024-05-29
+2024-05-27
 epochs=3
-matches=200
+matches=140
 sequence_length=10
-numerical_cols=['x', 'y', 'a_x', 'a_y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg', 'distance_to_onside']
+numerical_cols=['x', 'y', 'v_x', 'v_y', 'distance_to_ball', 'v_x_avg', 'v_y_avg']
 categorical_cols=['position']
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
 l2=0.001
+Feature Importance Experiment
 
-Execution time: 250 minutes
+Execution time: 163 minutes
 
 Training results:
-loss: [1.65, 1.53, 1.51]
-val_loss: [1.56, 1.51, 1.5]
+loss: [1.62, 1.53, 1.51]
+val_loss: [1.53, 1.56, 1.53]
 
 Testing results:
-test_loss: 1.622
+test_loss: 1.649
