@@ -8,7 +8,12 @@ FPS = 25
 pitch_length = 105
 pitch_width = 68
 normalize = True
-y_cols = ['x_future', 'y_future']
+
+# Define the columns that we want to predict
+y_cols = ['x_future', 'y_future']             # Standard y_cols for 2 seconds model
+# y_cols = ['x_future_25', 'y_future_25']     # Use this if you want 1 second model
+# y_cols = ['x_future_50', 'y_future_50']     # Use this if you want 2 seconds model
+# y_cols = ['x_future_75', 'y_future_75']     # Use this if you want 3 seconds model
 
 # Train, test, val
 train_size = 0.7
