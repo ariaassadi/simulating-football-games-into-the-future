@@ -177,7 +177,7 @@ def visualize_game_animation(frames_df, start_frame, end_frame, image_frame=None
         draw_legend(ax['pitch'], home_team, away_team)
 
     # Create the animation
-    animation = FuncAnimation(fig, update_scatter, frames=range(start_frame, end_frame+1), repeat=False, interval=40)
+    animation = FuncAnimation(fig, update_scatter, frames=range(start_frame, end_frame+1), interval=40)
 
     # Specify the GIF file path
     gif_name = f"animations/{home_team}_vs_{away_team}_frames_{start_frame}-{end_frame}.gif"
@@ -309,7 +309,7 @@ def visualize_prediction_animation(frames_df, start_frame, end_frame, model_name
     # Save frames as GIF
     model_name_text = model_name.replace(' ', '_').lower()
     gif_path = f"animations/{home_team}_vs_{away_team}_{model_name_text}_frames_{start_frame}-{end_frame}.gif"
-    imageio.mimsave(gif_path, frames, fps=25)
+    imageio.mimsave(gif_path, frames, fps=25, loop=0)
 
     # Also store a PNG
     if image_frame is not None:
