@@ -1,17 +1,17 @@
-2024-05-29
+2024-05-30
 epochs=3
 matches=200
 sequence_length=10
-numerical_cols=['x', 'y', 'distance_to_ball', 'tiredness', 'v_x_avg', 'v_y_avg', 'distance_to_onside']
+numerical_cols=['x', 'y', 'distance_to_ball', 'v_x_avg', 'v_y_avg']
 categorical_cols=['position']
 positions=['Attacking Midfielder', 'Central Midfielder', 'Centre-Back', 'Defensive Midfielder', 'Forward', 'Full-Back', 'Goalkeeper', 'Wide Midfielder', 'Winger']
 l2=0.001
 
-Execution time: 240 minutes
+Execution time: 266 minutes
 
 Training results:
-loss: [1.66, 1.54, 1.53]
-val_loss: [1.6, 1.53, 1.52]
+loss: [1.67, 1.53, 1.51]
+val_loss: [1.56, 1.52, 1.51]
 
 Testing results:
-test_loss: 1.634
+test_loss: 1.628
