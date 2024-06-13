@@ -107,3 +107,12 @@ signality/
 ```
 
 Now your data is prepared and you should have everything you need to start utilizing the intricacies of this folder. Good luck!
+
+## Key Files
+
+This repository contains many files and folders. The most important ones in this directory are:
+
+* `add_features.ipynb` - Learn how features are added to the unprocessed data.
+* `model_training.ipynb` - Understand how models are trained and created.
+* `model_evaluation.ipynb` - Discover how models are evaluated.
+* `model_predictions.ipynb` - See how to use models to create predictions.
