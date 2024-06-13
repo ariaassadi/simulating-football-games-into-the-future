@@ -1,9 +1,0 @@
-2024-04-23
-epochs=3
-numerical_cols=['Price', 'Number of Sales', 'Total Sales (kr)', 'Dryck Sales (kr)', 'Mat Sales (kr)', 'Snacks Sales (kr)', 'Sport Sales (kr)', 'Bil Sales (kr)', 'Average Increase']
-categorical_cols=['Category', 'Machine Group', 'Month']
-l2=1e-05
-
-Training results:
-loss: [154.86, 149.1, 148.02]
-val_loss: [157.6, 154.48, 155.14]
