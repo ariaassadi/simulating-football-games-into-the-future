@@ -143,7 +143,8 @@ for match_id in match_clips:
         i += 1
         # concat the new_df to the schedule_df
         schedule_df = pd.concat([schedule_df, new_df])
-        
+
+# A whole game half:  
 # filtered_df = frames_df[frames_df['period'] == 1]
 
 # print(filtered_df.info())
@@ -155,24 +156,6 @@ for match_id in match_clips:
 # formated_json = {'game': filtered_df.to_dict(orient='records')}
 # with open(f'{path}/data/clips/{file_name}', 'w') as f:
 #     json.dump(formated_json, f, indent=2)
-
-
-# write to db
-# if write_to_db:
-#     # Connect to the SQLite database
-#     conn = sqlite3.connect(path_to_db)
-
-#     # Iterate over each DataFrame in frames_dfs and write it to the database
-
-#     if (i==0):
-#         table_name = f'games'
-#         frames_df.to_sql(table_name, conn, if_exists='replace')
-#     else:
-#         table_name = f'games'
-#         frames_df.to_sql(table_name, conn, if_exists='append')
-
-#     # Close the connection
-#     conn.close()
 
 # filtered_df['team_name'] = filtered_df['team_name'].astype(str)    
 
@@ -186,8 +169,6 @@ for match_id in match_clips:
 # home_team_color = home_colors_dict[home_team_name]
 # away_team_color = select_away_team_color(home_team_color, home_colors_dict[away_team_name], away_colors_dict[away_team_name])
 
-
-
 # new_df = pd.DataFrame({'match_id': match_id,
 #                     'home_team_name': home_team_name,
 #                     'away_team_name': away_team_name,
@@ -199,6 +180,8 @@ for match_id in match_clips:
 #                     index=[i])
 # # concat the new_df to the schedule_df
 # schedule_df = pd.concat([schedule_df, new_df])
+
+
 
 write_to_db = True
 
