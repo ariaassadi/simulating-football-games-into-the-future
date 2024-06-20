@@ -1,0 +1,23 @@
+# Unity specific
+Library/
+Temp/
+obj/
+Builds/
+Logs/*
+*.csproj.user
+*.suo
+*.sln.user
+*.pidb
+
+# Data
+# *.sqlite
+*.csv
+Assets/Static/Coordinates*
+
+# Logs
+Assets/*.log
+Assets/*.txt
+
+# Builds
+2sec*
+UnityPlayer.so

@@ -1,0 +1,61 @@
+{
+    "controls": [
+      {
+        "action": "Fast Back",
+        "key": "j"
+      },
+      {
+        "action": "Play/Pause",
+        "key": "k"
+      },
+      {
+        "action": "Fast Forward",
+        "key": "l"
+      },
+      {
+        "action": "Step Backward",
+        "key": ","
+      },
+      {
+        "action": "Step Forward",
+        "key": "."
+      },
+      {
+        "action": "Birds Eye View",
+        "key": "b"
+      },
+      {
+        "action": "Reset Camera",
+        "key": "n"
+      },
+      {
+        "action": "Move Forward",
+        "key": "w"
+      },
+      {
+        "action": "Move Backward",
+        "key": "s"
+      },
+      {
+        "action": "Move Left",
+        "key": "a"
+      },
+      {
+        "action": "Move Right",
+        "key": "d"
+      },
+      {
+        "action": "Move Up",
+        "key": "space"
+      },
+      {
+        "action": "Move Down",
+        "key": "left shift"
+      },
+      {
+        "action": "Camera Tilt",
+        "key": "right mouse button"
+      }
+    ]
+  }
+  

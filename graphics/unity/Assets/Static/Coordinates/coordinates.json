@@ -1,0 +1,114 @@
+{
+  "players": [
+    {
+      "player_name": "Keylor Navas",
+      "team": "home",
+      "coordinates": [5.0, 0.0, 0.0]
+    },
+    {
+      "player_name": "Carvajal",
+      "team": "home",
+      "coordinates": [15.0, 0.0, -24.0]
+    },
+    {
+      "player_name": "Sergio Ramos",
+      "team": "home",
+      "coordinates": [15.0, 0.0, -8.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Pepe",
+      "coordinates": [15.0, 0.0, 8.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Marcelo",
+      "coordinates": [15.0, 0.0, 24.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Luka Modric",
+      "coordinates": [30.0, 0.0, -16.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Casimiro",
+      "coordinates": [30.0, 0.0, 0.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Toni Kroos",
+      "coordinates": [30.0, 0.0, 16.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Gareth Bale",
+      "coordinates": [45.0, 0.0, -16.0]
+    },
+    {
+      "team": "home",
+      "player_name": "Karim Benzema",
+      "coordinates": [45.0, 0.0, 0]
+    },
+    {
+      "team": "home",
+      "player_name": "Cristiano Goatnaldo",
+      "coordinates": [45.0, 0.0, 16]
+    },
+    {
+      "team": "away",
+      "player_name": "Marc-Andre ter Stegen",
+      "coordinates": [100.0, 0.0, 0.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Dani Alves",
+      "coordinates": [95.0, 0.0, -24.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Harry Maguire",
+      "coordinates": [95.0, 0.0, -8.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Gererd Pique",
+      "coordinates": [95.0, 0.0, 8.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Jordi Alba",
+      "coordinates": [95.0, 0.0, 24.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Xavi",
+      "coordinates": [80.0, 0.0, -16.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Sergio Busquets",
+      "coordinates": [80.0, 0.0, 0.5]
+    },
+    {
+      "team": "away",
+      "player_name": "Andres Iniesta",
+      "coordinates": [80.0, 0.0, 16.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Lionel Pessi",
+      "coordinates": [65.0, 0.0, -16.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Luis Suarez",
+      "coordinates": [65.0, 0.0, 0.0]
+    },
+    {
+      "team": "away",
+      "player_name": "Neymar",
+      "coordinates": [65.0, 0.0, 16.0]
+    }
+  ]
+}
