@@ -1276,4 +1276,7 @@
     <ProjectCapability Remove="AssemblyReferences" />
     <ProjectCapability Remove="ReferenceManagerAssemblies" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Parquet.Net" Version="4.23.5" />
+  </ItemGroup>
 </Project>
